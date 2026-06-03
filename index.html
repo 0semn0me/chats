@@ -40,8 +40,8 @@
     .mine .bubble{border-bottom-right-radius:3px}
     .theirs .bubble{border-bottom-left-radius:3px}
     .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
+    .bubble audio{display:block;max-width:240px;outline:none;margin:4px 0}
     
-    /* MENU DE REAÇÕES, EDIÇÃO E EXCLUSÃO EXPANDIDO */
     .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;gap:8px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);animation:fadeIn 0.15s ease;max-width:280px;overflow-x:auto;white-space:nowrap;align-items:center}
     .react-menu::-webkit-scrollbar{height:3px}
     .react-menu::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
@@ -51,7 +51,6 @@
     .react-opt{font-size:18px;cursor:pointer;transition:transform 0.1s;padding:0 2px;display:inline-block}
     .react-opt:hover{transform:scale(1.25)}
     
-    /* BOTÕES EXTRA DE GERENCIAMENTO DA MSG */
     .msg-action-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;padding:2px 4px;border-radius:4px;transition:background 0.1s}
     .msg-action-btn:hover{background:#333;color:#fff}
     .msg-action-btn.btn-del:hover{color:#E24B4A;background:rgba(226,75,74,0.1)}
@@ -96,11 +95,11 @@
     .camera-header span{font-size:13px;color:#aaa;display:flex;align-items:center;gap:4px}
     .camera-container{position:relative;width:100%;max-width:320px;height:180px;margin:0 auto;background:#000;border-radius:8px;overflow:hidden;border:0.5px solid #333}
     #camera-video{width:100%;height:100%;object-fit:cover}
-    .camera-controls{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:10px}
+    .camera-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;max-width:320px;margin-left:auto;margin-right:auto}
     .btn-snap{width:44px;height:44px;border-radius:50%;background:#E24B4A;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
     .btn-snap:hover{background:#c0392b}
-    .btn-cam-flip{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px}
-    .btn-cam-flip:hover{color:#ccc}
+    .btn-cam-control{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center}
+    .btn-cam-control:hover{color:#ccc}
 
     #inputbar{display:flex;gap:8px;padding:8px 14px;border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:flex-end}
     #msg-input{flex:1;font-size:14px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;font-family:var(--font-sans);resize:none;height:38px;max-height:100px;line-height:20px}
@@ -113,17 +112,26 @@
     #send-btn{padding:7px 13px;font-size:15px;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;display:flex;align-items:center;height:38px}
     #send-btn:hover{background:#3C3489}
     #send-btn:disabled{opacity:0.4;cursor:default}
+    
+    /* DESIGN DO GRAVADOR LATERAL */
+    #audio-rec-btn{color:#888}
+    #audio-rec-btn.recording{color:#E24B4A;background:rgba(226,75,74,0.1);animation:pulseRed 1.5s infinite;border-color:#E24B4A}
+    #audio-rec-btn.paused{color:#D4A017;background:rgba(212,160,23,0.1);border-color:#D4A017}
+    @keyframes pulseRed { 0%{box-shadow:0 0 0 0 rgba(226,75,74,0.4)} 70%{box-shadow:0 0 0 6px rgba(226,75,74,0)} 100%{box-shadow:0 0 0 0 rgba(226,75,74,0)} }
+
     @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
     .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
     .avatar-pick:hover{border-color:#534AB7}
     .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
     .av-icon{font-size:24px;color:#555;pointer-events:none}
     .login-row{display:flex;align-items:center;gap:14px;width:260px}
-    #paste-preview{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    
+    /* PREVIEWS */
+    #paste-preview, #audio-preview{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
     #paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid #333}
-    #paste-preview span{flex:1;font-size:12px;color:#888}
-    #paste-preview button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
-    #paste-preview button:hover{color:#aaa}
+    #paste-preview span, #audio-preview span{flex:1;font-size:12px;color:#888}
+    #paste-preview button, #audio-preview button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
+    #paste-preview button:hover, #audio-preview button:hover{color:#aaa}
 
     #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);animation:fadeIn 0.2s ease}
     #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8)}
@@ -197,21 +205,33 @@
         <video id="camera-video" autoplay playsinline muted></video>
       </div>
       <div class="camera-controls">
-        <button class="btn-cam-flip" id="camera-flip" title="Mudar câmera"><i class="ti ti-camera-rotate"></i></button>
-        <button class="btn-snap" id="camera-snap" title="Tirar e enviar foto"><i class="ti ti-aperture"></i></button>
-        <div style="width:32px"></div>
+        <button class="btn-cam-control" id="gallery-trigger-btn" title="Escolher da Galeria"><i class="ti ti-folder"></i></button>
+        <button class="btn-snap" id="camera-snap" title="Tirar e enviar foto"></button>
+        <button class="btn-cam-control" id="camera-flip" title="Mudar câmera"><i class="ti ti-camera-rotate"></i></button>
       </div>
     </div>
 
+    <input type="file" id="gallery-input" accept="image/*" style="display:none"/>
+
     <div id="paste-preview">
-      <img id="paste-img" src="" alt="imagem colada"/>
+      <img id="paste-img" src="" alt="imagem"/>
       <span>Imagem pronta — pressione Enter ou clique Enviar</span>
       <button id="paste-cancel" aria-label="Cancelar"><i class="ti ti-x"></i></button>
     </div>
+
+    <div id="audio-preview">
+      <i class="ti ti-microphone" style="color:#E24B4A;font-size:16px"></i>
+      <span id="audio-preview-status">Áudio gravado pronto para envio</span>
+      <button id="audio-cancel" aria-label="Descartar Áudio"><i class="ti ti-x"></i></button>
+    </div>
+
     <div id="inputbar">
+      <button class="btn-icon" id="audio-rec-btn" aria-label="Gravar Áudio"><i class="ti ti-microphone"></i></button>
+      
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500"></textarea>
+      
       <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <button class="btn-icon" id="camera-btn" aria-label="Câmera"><i class="ti ti-camera"></i></button>
+      <button class="btn-icon" id="camera-btn" aria-label="Câmera e Galeria"><i class="ti ti-camera"></i></button>
       <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
     </div>
   </div>
@@ -224,7 +244,7 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
@@ -246,6 +266,12 @@
   let videoStream = null;
   let currentFacingMode = 'user';
 
+  // Variáveis para gravação de áudio
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let audioRecordedBlob = null;
+  let audioState = 'idle'; // idle, recording, paused, ready
+
   const EMOJIS = ['😁','😆','🥹','😅','😂','🤣','🥲','☺️','😊','😋','😚','😙','😗','😘','🥰','😍','🤩','😎','🥳','🤓','🧐','🤨','🤪','😜','😝','😛','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😱','😨','😰','😥','😓','🤗','🤔','😡','🤬','🤯','😳','🥵','🥶','🤫','🫠','🤥','😶','😐','😑','😬','🙄','😯','🤑','🤕','🤒','😷','🤧','🤮','🤢','🥴','🤐','😵','😵‍💫','🫨','🫥','🫡','🫣','🥱','😴','🤤','🤠','🤡','👽','💀','👻','🤖','😈','👿','💩','👍','👎','👌','✌️','🤞','🫰','🤟','🤘','🤙','👋','🙌','👏','🙏','💪','❤️','🩷','🩵','💜','🖤','💔','❤️‍🔥','✨','🌟','⭐','💥','🔥','💻','📱','💸','💵','🪙','💎','🔧','🔨','⚙️','💣','☕','🥤','🍺','🍻','🍕','🍔','🍟','🍿','🍩','☀️','❄️','⚡','🌈'];
 
   const USER_COLORS = ['#7C6CF5','#E05A7A','#3BB88C','#E08A2E','#4FA3DC','#C55FD6','#5DC26A','#E0674E','#6EC6C6','#D4A017'];
@@ -257,7 +283,7 @@
   function darken(hex){return hex+'bb';}
   function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-  function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
+  function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.audio)return '🎵 Mensagem de áudio';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
 
   function dispararNotificacao(data) {
     if (data.name === myName || isInitialLoad || document.visibilityState === 'visible' || data.type === 'system' || data.isDeleted) return;
@@ -265,6 +291,7 @@
       let corpo = "";
       if (data.sticker) corpo = "Enviou um emoji: " + data.sticker;
       else if (data.image) corpo = "Enviou uma imagem 🖼";
+      else if (data.audio) corpo = "Enviou um áudio 🎵";
       else corpo = data.text || "";
 
       new Notification(`Chatzão - ${data.name}`, {
@@ -285,7 +312,6 @@
     await updateDoc(docRef, { reactions: novasReacoes });
   }
 
-  // FUNÇÕES PARA EXCLUIR E EDITAR NO FIREBASE
   async function apagarMensagem(msgId) {
     if(confirm("Deseja mesmo apagar essa mensagem?")) {
       const docRef = doc(db, 'mensagens', msgId);
@@ -294,6 +320,7 @@
         text: "Mensagem apagada",
         image: null,
         sticker: null,
+        audio: null,
         reactions: {}
       });
     }
@@ -353,7 +380,6 @@
 
     const b=document.createElement('div');b.className='bubble';
     
-    // Customização caso a mensagem tenha sido apagada
     if(data.isDeleted) {
       b.style.background='#1a1a1a';
       b.style.color='#666';
@@ -378,11 +404,13 @@
       img.addEventListener('click',()=>abrirImagemNoLightbox(data.image));
       b.style.padding='4px';b.style.background='transparent';b.style.border='none';
       b.appendChild(img);
+    }else if(data.audio){
+      const aud=document.createElement('audio');aud.src=data.audio;aud.controls=true;aud.controlsList="nodownload";
+      b.appendChild(aud);
     }else{
       const t=document.createElement('span');t.textContent=data.text||'';b.appendChild(t);
     }
 
-    // MENU COMPLETO: REAÇÕES + AÇÕES DE EDIÇÃO/EXCLUSÃO
     const rm = document.createElement('div');
     rm.className = 'react-menu';
     
@@ -397,13 +425,12 @@
       rm.appendChild(opt);
     });
 
-    // Se a mensagem for minha, libera os botões de Editar e Apagar no painel flutuante
     if(mine) {
       const sep = document.createElement('span');
       sep.className = 'menu-sep';
       rm.appendChild(sep);
 
-      if(!data.image && !data.sticker) {
+      if(!data.image && !data.sticker && !data.audio) {
         const editBtn = document.createElement('button');
         editBtn.className = 'msg-action-btn';
         editBtn.innerHTML = `<i class="ti ti-edit" title="Editar"></i>`;
@@ -431,7 +458,7 @@
     hint.addEventListener('click', (evt) => {
       evt.stopPropagation();
       cancelEdit();
-      replyTo={name:data.name,text:data.text,sticker:data.sticker,id};
+      replyTo={name:data.name,text:data.text,sticker:data.sticker,audio:data.audio,id};
       document.getElementById('rb-name').textContent=data.name;
       document.getElementById('rb-name').style.color=userColor(data.name);
       document.getElementById('rb-text').textContent=shortText(data);
@@ -454,7 +481,6 @@
     wrapper.appendChild(b);
     w.appendChild(wrapper);
 
-    // Adiciona marcação sutil de mensagem editada ao lado do horário
     const meta=document.createElement('div');meta.className='meta';
     meta.innerHTML = fmt(data.ts) + (data.isEdited ? ` <span class="edited-tag">(editada)</span>` : '');
     w.appendChild(meta);
@@ -497,7 +523,6 @@
   async function enviar(payload){
     const btn=document.getElementById('send-btn');btn.disabled=true;
     try{
-      // Se estiver no modo de edição, atualiza a mensagem antiga ao invés de criar nova
       if(editTargetId && payload.text) {
         const docRef = doc(db, 'mensagens', editTargetId);
         await updateDoc(docRef, {
@@ -508,7 +533,7 @@
         return;
       }
 
-      const msg={type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,replyTo:replyTo||null,...payload};
+      const msg={type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,audio:null,replyTo:replyTo||null,...payload};
       await addDoc(col,msg);
       cancelReply();
     }finally{btn.disabled=false;}
@@ -552,6 +577,7 @@
   function sair(){
     if(unsubscribeSnapshot) unsubscribeSnapshot();
     stopCamera();
+    descartarAudioGravado();
     localStorage.removeItem('chatzao_name');
     localStorage.removeItem('chatzao_avatar');
     myName = '';
@@ -582,15 +608,21 @@
     if(stickerOpen){renderStickers('');document.getElementById('sticker-input').focus();}
   }
 
-  // SISTEMA DE CÂMERA EM RESOLUÇÃO MÁXIMA E NATIVA DO DISPOSITIVO
+  // CONTROLE DO PAINEL DE CÂMERA (COM PERMISSÃO EXPLÍCITA)
   async function startCamera() {
+    const confirmacao = confirm("Deseja conceder acesso à câmera para tirar fotos em tempo real?");
+    if(!confirmacao) {
+      toggleCamera(false);
+      return;
+    }
+
     const video = document.getElementById('camera-video');
     stopCamera();
     
     const constraints = {
       video: {
         facingMode: currentFacingMode,
-        width: { ideal: 1920 },  // Solicita Full HD nativo ao dispositivo
+        width: { ideal: 1920 },
         height: { ideal: 1080 }
       },
       audio: false
@@ -600,12 +632,11 @@
       videoStream = await navigator.mediaDevices.getUserMedia(constraints);
       video.srcObject = videoStream;
     } catch (err) {
-      alert("Não foi possível acessar a câmera nas configurações ideais. Tentando modo padrão...");
       try {
         videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
         video.srcObject = videoStream;
       } catch {
-        alert("Erro completo ao abrir câmera.");
+        alert("Não foi possível acessar a câmera do dispositivo.");
         toggleCamera(false);
       }
     }
@@ -641,20 +672,171 @@
     const video = document.getElementById('camera-video');
     const canvas = document.createElement('canvas');
     
-    // ATENÇÃO: Captura usando as dimensões REAIS da stream de vídeo atual do sensor (Sem perdas!)
     canvas.width = video.videoWidth || 1280;
     canvas.height = video.videoHeight || 720;
     
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Converte para JPEG sem aplicar compressão agressiva (Fica limpo e nítido!)
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
-    
     enviar({ image: imgData });
     toggleCamera(false);
   }
 
+  // SISTEMA DE GALERIA (COM PERMISSÃO EXPLÍCITA)
+  document.getElementById('gallery-trigger-btn').addEventListener('click', () => {
+    const autorizou = confirm("Deseja dar acesso aos seus arquivos para escolher uma foto da Galeria?");
+    if(autorizou) {
+      document.getElementById('gallery-input').click();
+    }
+  });
+
+  document.getElementById('gallery-input').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if(!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = ev => {
+      // Envia com a qualidade original nativa da foto selecionada
+      enviar({ image: ev.target.result });
+      toggleCamera(false);
+      e.target.value = ''; // Limpa input
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // SISTEMA DE GRAVAÇÃO DE ÁUDIO AVANÇADO (INICIAR, PAUSAR, ENVIAR)
+  const audioBtn = document.getElementById('audio-rec-btn');
+  
+  async function gerenciarCliqueAudio() {
+    if (audioState === 'idle') {
+      // Inicia Gravação
+      audioChunks = [];
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = e => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            audioRecordedBlob = reader.result; // Armazena base64 de alta qualidade
+            document.getElementById('audio-preview').style.display = 'flex';
+            audioState = 'ready';
+            atualizarInterfaceAudio();
+          };
+          reader.readAsDataURL(blob);
+          
+          // Desliga o microfone fisicamente do celular
+          stream.getTracks().forEach(t => t.stop());
+        };
+
+        mediaRecorder.start(200); // grava em blocos estáveis
+        audioState = 'recording';
+      } catch (err) {
+        alert("Não foi possível acessar seu microfone para gravação.");
+        audioState = 'idle';
+      }
+    } 
+    else if (audioState === 'recording') {
+      // Pausa Gravação
+      if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.pause();
+        audioState = 'paused';
+      }
+    } 
+    else if (audioState === 'paused') {
+      // Retoma Gravação
+      if (mediaRecorder && mediaRecorder.state === 'paused') {
+        mediaRecorder.resume();
+        audioState = 'recording';
+      }
+    }
+    else if (audioState === 'ready') {
+      alert("Você já tem uma gravação pronta! Clique em Enviar ou descarte no (X).");
+    }
+    atualizarInterfaceAudio();
+  }
+
+  function finalizarEPrepararAudio() {
+    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
+      mediaRecorder.stop();
+    }
+  }
+
+  function atualizarInterfaceAudio() {
+    audioBtn.className = 'btn-icon';
+    if (audioState === 'recording') {
+      audioBtn.classList.add('recording');
+      audioBtn.innerHTML = '<i class="ti ti-player-pause" title="Pausar Gravação"></i>';
+    } else if (audioState === 'paused') {
+      audioBtn.classList.add('paused');
+      audioBtn.innerHTML = '<i class="ti ti-player-play" title="Continuar Gravação"></i>';
+    } else if (audioState === 'ready') {
+      audioBtn.innerHTML = '<i class="ti ti-check" style="color:#1D9E75"></i>';
+    } else {
+      audioBtn.innerHTML = '<i class="ti ti-microphone"></i>';
+    }
+  }
+
+  function descartarAudioGravado() {
+    audioRecordedBlob = null;
+    audioChunks = [];
+    audioState = 'idle';
+    document.getElementById('audio-preview').style.display = 'none';
+    atualizarInterfaceAudio();
+  }
+
+  audioBtn.addEventListener('click', gerenciarCliqueAudio);
+  document.getElementById('audio-cancel').addEventListener('click', descartarAudioGravado);
+
+  // GATILHOS DE ENVIO INTEGRADOS
+  function dispararEnvio() {
+    // Se há áudio pronto gravado ou pausado
+    if (audioState === 'recording' || audioState === 'paused') {
+      if(confirm("Deseja concluir e enviar o áudio gravado atual?")) {
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            enviar({ audio: reader.result });
+            descartarAudioGravado();
+          };
+          reader.readAsDataURL(blob);
+        };
+        mediaRecorder.stop();
+        return;
+      }
+      return;
+    }
+    
+    if (audioState === 'ready' && audioRecordedBlob) {
+      const aud = audioRecordedBlob;
+      descartarAudioGravado();
+      enviar({ audio: aud });
+      return;
+    }
+
+    if(pasteImageData){
+      const img=pasteImageData; pasteImageData=null;
+      document.getElementById('paste-preview').style.display='none';
+      document.getElementById('paste-img').src='';
+      enviar({image:img}); 
+      return;
+    }
+    const inputEl = document.getElementById('msg-input');
+    const v=inputEl.value.trim();
+    if(v){
+      inputEl.value=''; 
+      enviar({text:v});
+    }
+  }
+
+  // EVENTOS PADRÃO DO CHAT
   document.getElementById('enter-btn').addEventListener('click', entrar);
   document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
   document.getElementById('reply-cancel').addEventListener('click', cancelReply);
@@ -675,7 +857,6 @@
         else { if (height > max_size) { width *= max_size / height; height = max_size; } }
         canvas.width = width; canvas.height = height;
         canvas.getContext('2d').drawImage(imgObj, 0, 0, width, height);
-        
         myAvatar = canvas.toDataURL('image/jpeg', 0.7); 
         document.getElementById('avatar-pick').innerHTML = `<img src="${myAvatar}" alt="avatar"/>`;
       };
@@ -708,41 +889,17 @@
     document.getElementById('paste-img').src = '';
   });
 
-  function dispararEnvio() {
-    if(pasteImageData){
-      const img=pasteImageData; pasteImageData=null;
-      document.getElementById('paste-preview').style.display='none';
-      document.getElementById('paste-img').src='';
-      enviar({image:img}); 
-      return;
-    }
-    const inputEl = document.getElementById('msg-input');
-    const v=inputEl.value.trim();
-    if(v){
-      inputEl.value=''; 
-      enviar({text:v});
-    }
-  }
-
   document.getElementById('msg-input').addEventListener('keydown', e => {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || ('ontouchstart' in window);
-
     if (e.key === 'Enter') {
       if (!isMobile) {
-        if (e.shiftKey) {
-          return;
-        } else {
-          e.preventDefault();
-          dispararEnvio();
-        }
-      } else {
-        return;
+        if (e.shiftKey) return;
+        e.preventDefault();
+        dispararEnvio();
       }
     }
     if(e.key==='Escape'){
-      cancelReply();
-      cancelEdit();
-      pasteImageData=null; 
+      cancelReply(); cancelEdit(); pasteImageData=null; 
       document.getElementById('paste-preview').style.display='none';
     }
   });
@@ -774,17 +931,13 @@
   window.addEventListener('DOMContentLoaded', () => {
     const savedName = localStorage.getItem('chatzao_name');
     const savedAvatar = localStorage.getItem('chatzao_avatar');
-
     if(savedName) document.getElementById('name-input').value = savedName;
     if(savedAvatar){
       myAvatar = savedAvatar;
       document.getElementById('avatar-pick').innerHTML = `<img src="${savedAvatar}" alt="avatar"/>`;
     }
-
     if(savedName && savedName.trim() !== '') {
-      setTimeout(() => {
-        entrar();
-      }, 500);
+      setTimeout(() => { entrar(); }, 500);
     }
   });
 </script>
