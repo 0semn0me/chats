@@ -36,7 +36,7 @@
     .msg.theirs{align-self:flex-start;align-items:flex-start}
     .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
     .mine .bubble-wrapper{flex-direction:row-reverse}
-    .bubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap}
+    .bubble(padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap}
     .mine .bubble{border-bottom-right-radius:3px}
     .theirs .bubble{border-bottom-left-radius:3px}
     .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
@@ -113,7 +113,13 @@
     #send-btn:hover{background:#3C3489}
     #send-btn:disabled{opacity:0.4;cursor:default}
     
-    /* DESIGN DO GRAVADOR LATERAL */
+    /* CONTEINER DO PROTETOR DO ÁUDIO + LIXEIRA */
+    .audio-wrapper-container{position:relative;display:inline-flex;flex-direction:column;align-items:center}
+    
+    /* LIXEIRA SECUNDÁRIA FLUTUANTE */
+    #audio-trash-float-btn{position:absolute;top:-42px;background:#E24B4A;color:#fff;border:none;border-radius:50%;width:34px;height:34px;display:none;align-items:center;justify-content:center;font-size:15px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.4);z-index:99;animation:fadeIn 0.15s ease}
+    #audio-trash-float-btn:hover{background:#c0392b;transform:scale(1.05)}
+
     #audio-rec-btn{color:#888}
     #audio-rec-btn.recording{color:#E24B4A;background:rgba(226,75,74,0.1);animation:pulseRed 1.5s infinite;border-color:#E24B4A}
     #audio-rec-btn.paused{color:#D4A017;background:rgba(212,160,23,0.1);border-color:#D4A017}
@@ -226,7 +232,11 @@
     </div>
 
     <div id="inputbar">
-      <button class="btn-icon" id="audio-rec-btn" aria-label="Gravar Áudio"><i class="ti ti-microphone"></i></button>
+      <!-- Estrutura do Áudio unificada com a lixeirinha flutuante por cima -->
+      <div class="audio-wrapper-container">
+        <button id="audio-trash-float-btn" title="Apagar / Cancelar gravação"><i class="ti ti-trash"></i></button>
+        <button class="btn-icon" id="audio-rec-btn" aria-label="Gravar Áudio"><i class="ti ti-microphone"></i></button>
+      </div>
       
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500"></textarea>
       
@@ -270,7 +280,8 @@
   let mediaRecorder = null;
   let audioChunks = [];
   let audioRecordedBlob = null;
-  let audioState = 'idle'; // idle, recording, paused, ready
+  let audioState = 'idle'; 
+  let globalAudioStream = null; // Guarda o stream para fechar em caso de descarte imediato
 
   const EMOJIS = ['😁','😆','🥹','😅','😂','🤣','🥲','☺️','😊','😋','😚','😙','😗','😘','🥰','😍','🤩','😎','🥳','🤓','🧐','🤨','🤪','😜','😝','😛','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😱','😨','😰','😥','😓','🤗','🤔','😡','🤬','🤯','😳','🥵','🥶','🤫','🫠','🤥','😶','😐','😑','😬','🙄','😯','🤑','🤕','🤒','😷','🤧','🤮','🤢','🥴','🤐','😵','😵‍💫','🫨','🫥','🫡','🫣','🥱','😴','🤤','🤠','🤡','👽','💀','👻','🤖','😈','👿','💩','👍','👎','👌','✌️','🤞','🫰','🤟','🤘','🤙','👋','🙌','👏','🙏','💪','❤️','🩷','🩵','💜','🖤','💔','❤️‍🔥','✨','🌟','⭐','💥','🔥','💻','📱','💸','💵','🪙','💎','🔧','🔨','⚙️','💣','☕','🥤','🍺','🍻','🍕','🍔','🍟','🍿','🍩','☀️','❄️','⚡','🌈'];
 
@@ -577,7 +588,7 @@
   function sair(){
     if(unsubscribeSnapshot) unsubscribeSnapshot();
     stopCamera();
-    descartarAudioGravado();
+    excluirEMortificarGravacao();
     localStorage.removeItem('chatzao_name');
     localStorage.removeItem('chatzao_avatar');
     myName = '';
@@ -608,7 +619,6 @@
     if(stickerOpen){renderStickers('');document.getElementById('sticker-input').focus();}
   }
 
-  // CONTROLE DO PAINEL DE CÂMERA (COM PERMISSÃO EXPLÍCITA)
   async function startCamera() {
     const confirmacao = confirm("Deseja conceder acesso à câmera para tirar fotos em tempo real?");
     if(!confirmacao) {
@@ -671,19 +681,15 @@
     if (!videoStream) return;
     const video = document.getElementById('camera-video');
     const canvas = document.createElement('canvas');
-    
     canvas.width = video.videoWidth || 1280;
     canvas.height = video.videoHeight || 720;
-    
     const ctx = canvas.getContext('2d');
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    
     const imgData = canvas.toDataURL('image/jpeg', 0.95);
     enviar({ image: imgData });
     toggleCamera(false);
   }
 
-  // SISTEMA DE GALERIA (COM PERMISSÃO EXPLÍCITA)
   document.getElementById('gallery-trigger-btn').addEventListener('click', () => {
     const autorizou = confirm("Deseja dar acesso aos seus arquivos para escolher uma foto da Galeria?");
     if(autorizou) {
@@ -694,48 +700,48 @@
   document.getElementById('gallery-input').addEventListener('change', e => {
     const file = e.target.files[0];
     if(!file) return;
-    
     const reader = new FileReader();
     reader.onload = ev => {
-      // Envia com a qualidade original nativa da foto selecionada
       enviar({ image: ev.target.result });
       toggleCamera(false);
-      e.target.value = ''; // Limpa input
+      e.target.value = ''; 
     };
     reader.readAsDataURL(file);
   });
 
-  // SISTEMA DE GRAVAÇÃO DE ÁUDIO AVANÇADO (INICIAR, PAUSAR, ENVIAR)
+
+  // 🎙️ SISTEMA DE GRAVAÇÃO DE ÁUDIO COM LIXEIRA FLUTUANTE DINÂMICA
   const audioBtn = document.getElementById('audio-rec-btn');
+  const trashFloatBtn = document.getElementById('audio-trash-float-btn');
   
   async function gerenciarCliqueAudio() {
     if (audioState === 'idle') {
-      // Inicia Gravação
       audioChunks = [];
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
+        globalAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(globalAudioStream);
         
         mediaRecorder.ondataavailable = e => {
           if (e.data.size > 0) audioChunks.push(e.data);
         };
 
         mediaRecorder.onstop = () => {
-          const blob = new Blob(audioChunks, { type: 'audio/webm' });
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            audioRecordedBlob = reader.result; // Armazena base64 de alta qualidade
-            document.getElementById('audio-preview').style.display = 'flex';
-            audioState = 'ready';
-            atualizarInterfaceAudio();
-          };
-          reader.readAsDataURL(blob);
-          
-          // Desliga o microfone fisicamente do celular
-          stream.getTracks().forEach(t => t.stop());
+          // Só processa se não tiver sido descartado pelo botão da lixeira
+          if(audioState !== 'idle') {
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              audioRecordedBlob = reader.result; 
+              document.getElementById('audio-preview').style.display = 'flex';
+              audioState = 'ready';
+              atualizarInterfaceAudio();
+            };
+            reader.readAsDataURL(blob);
+          }
+          fecharHardwareMicrofone();
         };
 
-        mediaRecorder.start(200); // grava em blocos estáveis
+        mediaRecorder.start(200); 
         audioState = 'recording';
       } catch (err) {
         alert("Não foi possível acessar seu microfone para gravação.");
@@ -743,14 +749,12 @@
       }
     } 
     else if (audioState === 'recording') {
-      // Pausa Gravação
       if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.pause();
         audioState = 'paused';
       }
     } 
     else if (audioState === 'paused') {
-      // Retoma Gravação
       if (mediaRecorder && mediaRecorder.state === 'paused') {
         mediaRecorder.resume();
         audioState = 'recording';
@@ -762,14 +766,36 @@
     atualizarInterfaceAudio();
   }
 
-  function finalizarEPrepararAudio() {
+  function fecharHardwareMicrofone() {
+    if (globalAudioStream) {
+      globalAudioStream.getTracks().forEach(t => t.stop());
+      globalAudioStream = null;
+    }
+  }
+
+  // 🗑️ Função exclusiva da lixeirinha flutuante (Exclui tudo no ato e some)
+  function excluirEMortificarGravacao() {
+    audioState = 'idle'; 
     if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
       mediaRecorder.stop();
     }
+    fecharHardwareMicrofone();
+    audioRecordedBlob = null;
+    audioChunks = [];
+    document.getElementById('audio-preview').style.display = 'none';
+    atualizarInterfaceAudio();
   }
 
   function atualizarInterfaceAudio() {
     audioBtn.className = 'btn-icon';
+    
+    // Controla visibilidade da Lixeira Secundária Flutuante
+    if (audioState === 'recording' || audioState === 'paused') {
+      trashFloatBtn.style.display = 'flex';
+    } else {
+      trashFloatBtn.style.display = 'none';
+    }
+
     if (audioState === 'recording') {
       audioBtn.classList.add('recording');
       audioBtn.innerHTML = '<i class="ti ti-player-pause" title="Pausar Gravação"></i>';
@@ -783,20 +809,16 @@
     }
   }
 
-  function descartarAudioGravado() {
-    audioRecordedBlob = null;
-    audioChunks = [];
-    audioState = 'idle';
-    document.getElementById('audio-preview').style.display = 'none';
-    atualizarInterfaceAudio();
-  }
-
   audioBtn.addEventListener('click', gerenciarCliqueAudio);
-  document.getElementById('audio-cancel').addEventListener('click', descartarAudioGravado);
+  trashFloatBtn.addEventListener('click', (e) => {
+    e.stopPropagation(); // Impede o clique de ir pro botão de baixo
+    excluirEMortificarGravacao();
+  });
+  document.getElementById('audio-cancel').addEventListener('click', excluirEMortificarGravacao);
+
 
   // GATILHOS DE ENVIO INTEGRADOS
   function dispararEnvio() {
-    // Se há áudio pronto gravado ou pausado
     if (audioState === 'recording' || audioState === 'paused') {
       if(confirm("Deseja concluir e enviar o áudio gravado atual?")) {
         mediaRecorder.onstop = () => {
@@ -804,7 +826,7 @@
           const reader = new FileReader();
           reader.onloadend = () => {
             enviar({ audio: reader.result });
-            descartarAudioGravado();
+            excluirEMortificarGravacao();
           };
           reader.readAsDataURL(blob);
         };
@@ -816,7 +838,7 @@
     
     if (audioState === 'ready' && audioRecordedBlob) {
       const aud = audioRecordedBlob;
-      descartarAudioGravado();
+      excluirEMortificarGravacao();
       enviar({ audio: aud });
       return;
     }
