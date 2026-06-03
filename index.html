@@ -141,8 +141,9 @@
     #audio-trash-btn{background:none;border:none;color:#888;cursor:pointer;font-size:14px;display:flex;align-items:center}
     #audio-trash-btn:hover{color:#E24B4A}
 
-    .btn-icon{background:none;border:none;color:#aaa;cursor:pointer;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background 0.1s, color 0.1s;flex-shrink:0}
-    .btn-icon:hover, .btn-icon.active{background:#2a2a2a;color:var(--theme-primary)}
+    /* Alteração para cor permanente apenas no "desenho" dos botões */
+    .btn-icon{background:none;border:none;color:var(--theme-primary) !important;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background 0.1s;flex-shrink:0}
+    .btn-icon:hover, .btn-icon.active{background:#2a2a2a}
     .btn-icon.recording{background:#E24B4A !important;color:#fff !important;animation:pulseAudio 1.5s infinite}
     .btn-icon.paused{background:#e08a2e !important;color:#fff !important}
     
@@ -413,7 +414,6 @@
     const prev = document.getElementById('cm-preview');
     if(prev) prev.style.background = cmPickedHex;
     
-    // Atualiza os botões dinamicamente em tempo real enquanto arrasta
     aplicarTemaGlobal(cmPickedHex, cmPickedText);
   }
 
@@ -628,14 +628,19 @@
     }finally{btn.disabled=false;}
   }
 
-  async function entrar(){
+  async function entrar(isExplicitLogin = false){
     const nome=document.getElementById('name-input').value.trim(); if(!nome)return;
     myName=nome; localStorage.setItem('chatzao_name', nome);
     if(myAvatar) localStorage.setItem('chatzao_avatar', myAvatar); else localStorage.removeItem('chatzao_avatar');
     try {
       document.getElementById('login').style.display='none'; document.getElementById('chat-area').style.display='flex';
       document.getElementById('me-label').innerHTML = myAvatar ? `<img src="${myAvatar}" style="width:24px;height:24px;border-radius:50%;object-fit:cover;margin-right:6px;"/> <b>${myName}</b>` : `você: ${myName}`;
-      await addDoc(col,{type:'system',text:myName+' entrou no chat',ts:serverTimestamp()});
+      
+      // Só envia o alerta de entrada se o usuário acabou de clicar explicitamente para logar (após trocar nome ou sair)
+      if (isExplicitLogin) {
+        await addDoc(col,{type:'system',text:myName+' entrou no chat',ts:serverTimestamp()});
+      }
+      
       startListening(); setTimeout(() => document.getElementById('msg-input').focus(), 300);
     }catch(e){ document.getElementById('login-err').style.display='block'; }
   }
@@ -746,11 +751,10 @@
     if(cameraOpen) {
       stickerOpen = false; toggleColorPanel(false);
       document.getElementById('sticker-panel').style.display = 'none';
-      document.getElementById('sticker-btn').classList.remove('active');
-      document.getElementById('camera-panel').style.display = 'block'; document.getElementById('camera-btn').classList.add('active');
+      document.getElementById('camera-panel').style.display = 'block';
       startCamera();
     } else {
-      document.getElementById('camera-panel').style.display = 'none'; document.getElementById('camera-btn').classList.remove('active'); stopCamera();
+      document.getElementById('camera-panel').style.display = 'none'; stopCamera();
     }
   }
 
@@ -763,13 +767,10 @@
 
   function toggleColorPanel(force) {
     colorPanelOpen = force !== undefined ? force : !colorPanelOpen;
-    const btn = document.getElementById('brush-btn');
     if(colorPanelOpen) {
       toggleCamera(false); toggleSticker(false);
-      btn.classList.add('active');
       openColorModal();
     } else {
-      btn.classList.remove('active');
       closeColorModal();
     }
   }
@@ -814,8 +815,8 @@
 
   const msgInput = document.getElementById('msg-input');
   msgInput.addEventListener('input', function() { this.style.height = '38px'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
-  document.getElementById('enter-btn').addEventListener('click', entrar);
-  document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
+  document.getElementById('enter-btn').addEventListener('click', () => entrar(true));
+  document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(true); });
   document.getElementById('reply-cancel').addEventListener('click', cancelReply);
   document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
   document.getElementById('logout-btn').addEventListener('click', sair);
@@ -854,7 +855,7 @@
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dispararEnvioCompleto(); } });
 
   // ===== PAINEL EMOJI + MÃOS =====
-  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","🫳","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
+  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","{1F573}","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
   const TONS_UNICODE = ["", "\u{1F3FB}", "\u{1F3FC}", "\u{1F3FD}", "\u{1F3FE}", "\u{1F3FF}"];
   const TONS_LABEL   = ["🖐️","🏻","🏼","🏽","🏾","🏿"];
   let tomAtual = 0;
@@ -922,7 +923,6 @@
     stickerOpen=force!==undefined?force:!stickerOpen;
     if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
     document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none';
-    document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
     if(stickerOpen){ buildStickerGrid(''); }
   }
 
@@ -940,7 +940,7 @@
     const savedName = localStorage.getItem('chatzao_name'); const savedAvatar = localStorage.getItem('chatzao_avatar');
     if(savedName) document.getElementById('name-input').value = savedName;
     if(savedAvatar){ myAvatar = savedAvatar; document.getElementById('avatar-pick').innerHTML = `<img src="${savedAvatar}" alt="av"/>`; }
-    if(savedName?.trim()) setTimeout(() => entrar(), 500);
+    if(savedName?.trim()) setTimeout(() => entrar(false), 500); // Falso indica login de carregamento automático (silencioso)
   });
 </script>
 </body>
