@@ -68,7 +68,6 @@
     #reply-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px}
     #reply-bar button:hover{color:#aaa}
     #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
-    #gif-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
     .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
     .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none}
     .panel-search input:focus{box-shadow:0 0 0 2px #534AB755}
@@ -79,13 +78,19 @@
     #sticker-grid span:hover{background:#2a2a2a}
     #sticker-grid::-webkit-scrollbar{width:4px}
     #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
-    #gif-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto}
-    #gif-grid img{width:100%;height:70px;object-fit:cover;border-radius:6px;cursor:pointer;border:0.5px solid #2a2a2a}
-    #gif-grid img:hover{opacity:0.8}
-    #gif-grid::-webkit-scrollbar{width:4px}
-    #gif-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
-    .panel-hint{font-size:12px;color:#555;padding:8px 14px;text-align:center;grid-column:1/-1}
     
+    /* NOVO PAINEL DE CÂMERA INTEGRADO */
+    #camera-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0;padding:10px 14px}
+    .camera-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .camera-header span{font-size:13px;color:#aaa;display:flex;align-items:center;gap:4px}
+    .camera-container{position:relative;width:100%;max-width:320px;height:180px;margin:0 auto;background:#000;border-radius:8px;overflow:hidden;border:0.5px solid #333}
+    #camera-video{width:100%;height:100%;object-fit:cover}
+    .camera-controls{display:flex;justify-content:center;align-items:center;gap:24px;margin-top:10px}
+    .btn-snap{width:44px;height:44px;border-radius:50%;background:#E24B4A;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+    .btn-snap:hover{background:#c0392b}
+    .btn-cam-flip{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px}
+    .btn-cam-flip:hover{color:#ccc}
+
     #inputbar{display:flex;gap:8px;padding:8px 14px;border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:flex-end}
     #msg-input{flex:1;font-size:14px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;font-family:var(--font-sans);resize:none;height:38px;max-height:100px;line-height:20px}
     #msg-input:focus{box-shadow:0 0 0 2px #534AB755}
@@ -109,7 +114,6 @@
     #paste-preview button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
     #paste-preview button:hover{color:#aaa}
 
-    /* ESTILOS DO NOVO VISUALIZADOR DE FOTOS SEGURO */
     #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);animation:fadeIn 0.2s ease}
     #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8)}
     #lightbox-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
@@ -161,14 +165,23 @@
       </div>
       <div id="sticker-grid"></div>
     </div>
-    <div id="gif-panel">
-      <div class="panel-search">
-        <i class="ti ti-photo-search" aria-hidden="true" style="font-size:16px;color:#888"></i>
-        <input id="gif-input" type="text" placeholder="Buscar GIF..." autocomplete="off"/>
-        <button class="panel-close" id="gif-close" aria-label="Fechar"><i class="ti ti-x"></i></button>
+
+    <!-- NOVO CONTEÚDO DO PAINEL DA CÂMERA -->
+    <div id="camera-panel">
+      <div class="camera-header">
+        <span><i class="ti ti-camera"></i> Câmera ao vivo</span>
+        <button class="panel-close" id="camera-close" aria-label="Fechar Câmera"><i class="ti ti-x"></i></button>
       </div>
-      <div id="gif-grid"></div>
+      <div class="camera-container">
+        <video id="camera-video" autoplay playsinline muted></video>
+      </div>
+      <div class="camera-controls">
+        <button class="btn-cam-flip" id="camera-flip" title="Mudar câmera"><i class="ti ti-camera-rotate"></i></button>
+        <button class="btn-snap" id="camera-snap" title="Tirar e enviar foto"><i class="ti ti-aperture"></i></button>
+        <div style="width:32px"></div> <!-- Espaçador para equilibrar o layout -->
+      </div>
     </div>
+
     <div id="paste-preview">
       <img id="paste-img" src="" alt="imagem colada"/>
       <span>Imagem pronta — pressione Enter ou clique Enviar</span>
@@ -177,7 +190,8 @@
     <div id="inputbar">
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500"></textarea>
       <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <button class="btn-icon" id="gif-btn" aria-label="GIF"><i class="ti ti-photo-search"></i></button>
+      <!-- SUBSTITUÍDO O BOTÃO DO GIF PELO BOTÃO DA CÂMERA -->
+      <button class="btn-icon" id="camera-btn" aria-label="Câmera"><i class="ti ti-camera"></i></button>
       <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
     </div>
   </div>
@@ -204,10 +218,14 @@
   const db = getFirestore(app);
   const col = collection(db, 'mensagens');
 
-  let myName='', myAvatar='', replyTo=null, gifOpen=false, stickerOpen=false, gifTimer=null, stickerTimer=null;
+  let myName='', myAvatar='', replyTo=null, cameraOpen=false, stickerOpen=false, stickerTimer=null;
   let isInitialLoad = true;
   let pasteImageData = null;
   let unsubscribeSnapshot = null;
+  
+  // Controle do fluxo de vídeo
+  let videoStream = null;
+  let currentFacingMode = 'user'; // 'user' = frontal, 'environment' = traseira
 
   const EMOJIS = ['😁','😆','🥹','😅','😂','🤣','🥲','☺️','😊','😋','😚','😙','😗','😘','🥰','😍','🤩','😎','🥳','🤓','🧐','🤨','🤪','😜','😝','😛','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😱','😨','😰','😥','😓','🤗','🤔','😡','🤬','🤯','😳','🥵','🥶','🤫','🫠','🤥','😶','😐','😑','😬','🙄','😯','🤑','🤕','🤒','😷','🤧','🤮','🤢','🥴','🤐','😵','😵‍💫','🫨','🫥','🫡','🫣','🥱','😴','🤤','🤠','🤡','👽','💀','👻','🤖','😈','👿','💩','👍','👎','👌','✌️','🤞','🫰','🤟','🤘','🤙','👋','🙌','👏','🙏','💪','❤️','🩷','🩵','💜','🖤','💔','❤️‍🔥','✨','🌟','⭐','💥','🔥','💻','📱','💸','💵','🪙','💎','🔧','🔨','⚙️','💣','☕','🥤','🍺','🍻','🍕','🍔','🍟','🍿','🍩','☀️','❄️','⚡','🌈'];
 
@@ -220,14 +238,13 @@
   function darken(hex){return hex+'bb';}
   function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-  function shortText(m){if(!m)return'';if(m.gif)return '🖼 GIF';if(m.image)return '🖼 Imagem';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
+  function shortText(m){if(!m)return'';if(m.image)return '🖼 Imagem';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
 
   function dispararNotificacao(data) {
     if (data.name === myName || isInitialLoad || document.visibilityState === 'visible' || data.type === 'system') return;
     if (Notification.permission === "granted") {
       let corpo = "";
       if (data.sticker) corpo = "Enviou um emoji: " + data.sticker;
-      else if (data.gif) corpo = "Enviou um GIF 🖼";
       else if (data.image) corpo = "Enviou uma imagem 🖼";
       else corpo = data.text || "";
 
@@ -249,7 +266,6 @@
     await updateDoc(docRef, { reactions: novasReacoes });
   }
 
-  // FUNÇÃO AUXILIAR PARA ABRIR A IMAGEM NO MODAL SEGURO
   function abrirImagemNoLightbox(src) {
     const lb = document.getElementById('lightbox');
     const lbImg = document.getElementById('lightbox-img');
@@ -293,14 +309,8 @@
 
     if(data.sticker){
       const sp=document.createElement('span');sp.style.fontSize='36px';sp.textContent=data.sticker;b.appendChild(sp);
-    }else if(data.gif){
-      const img=document.createElement('img');img.src=data.gif;img.alt='gif';img.loading='lazy';
-      // Correção aplicada também nos GIFs para abrir ampliado com segurança
-      img.addEventListener('click',()=>abrirImagemNoLightbox(data.gif));
-      b.appendChild(img);
     }else if(data.image){
       const img=document.createElement('img');img.src=data.image;img.alt='imagem';img.loading='lazy';img.style.cssText='max-width:220px;max-height:200px;border-radius:8px;display:block;cursor:pointer';
-      // NOVA LOGICA DO LIGHTBOX: Abre no modal interno sem usar abas bloqueadas
       img.addEventListener('click',()=>abrirImagemNoLightbox(data.image));
       b.style.padding='4px';b.style.background='transparent';b.style.border='none';
       b.appendChild(img);
@@ -328,7 +338,7 @@
     hint.title = "Responder mensagem";
     hint.addEventListener('click', (evt) => {
       evt.stopPropagation();
-      replyTo={name:data.name,text:data.text,gif:data.gif,sticker:data.sticker,id};
+      replyTo={name:data.name,text:data.text,sticker:data.sticker,id};
       document.getElementById('rb-name').textContent=data.name;
       document.getElementById('rb-name').style.color=userColor(data.name);
       document.getElementById('rb-text').textContent=shortText(data);
@@ -392,7 +402,7 @@
   async function enviar(payload){
     const btn=document.getElementById('send-btn');btn.disabled=true;
     try{
-      const msg={type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,gif:null,sticker:null,image:null,replyTo:replyTo||null,...payload};
+      const msg={type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,replyTo:replyTo||null,...payload};
       await addDoc(col,msg);
       cancelReply();
     }finally{btn.disabled=false;}
@@ -435,6 +445,7 @@
 
   function sair(){
     if(unsubscribeSnapshot) unsubscribeSnapshot();
+    stopCamera();
     localStorage.removeItem('chatzao_name');
     localStorage.removeItem('chatzao_avatar');
     myName = '';
@@ -457,44 +468,80 @@
     });
   }
 
-  async function searchGifs(q){
-    const grid=document.getElementById('gif-grid');
-    grid.innerHTML='<div class="panel-hint">Buscando...</div>';
-    const endpoint = q 
-      ? `https://tenor.googleapis.com/v2/search?q=${encodeURIComponent(q)}&key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif`
-      : `https://tenor.googleapis.com/v2/featured?key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif`;
-    try{
-      const res=await fetch(endpoint);
-      const data=await res.json();
-      if(!data.results?.length){grid.innerHTML='<div class="panel-hint">Nenhum resultado</div>';return;}
-      grid.innerHTML='';
-      for(const r of data.results){
-        const url=r.media_formats?.tinygif?.url;if(!url)continue;
-        const img=document.createElement('img');img.src=url;img.alt='gif';img.loading='lazy';
-        img.addEventListener('click',()=>{enviar({gif:url});toggleGif(false);});
-        grid.appendChild(img);
-      }
-    }catch{grid.innerHTML='<div class="panel-hint">Erro ao buscar GIFs</div>';}
-  }
-
   function toggleSticker(force){
     stickerOpen=force!==undefined?force:!stickerOpen;
-    if(stickerOpen){gifOpen=false;document.getElementById('gif-panel').style.display='none';document.getElementById('gif-btn').classList.remove('active');}
+    if(stickerOpen){toggleCamera(false);}
     document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none';
     document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
     if(stickerOpen){renderStickers('');document.getElementById('sticker-input').focus();}
   }
 
-  function toggleGif(force){
-    gifOpen=force!==undefined?force:!gifOpen;
-    if(gifOpen){stickerOpen=false;document.getElementById('sticker-panel').style.display='none';document.getElementById('sticker-btn').classList.remove('active');}
-    document.getElementById('gif-panel').style.display=gifOpen?'block':'none';
-    document.getElementById('gif-btn').classList.toggle('active',gifOpen);
-    if(gifOpen) {
-      document.getElementById('gif-input').value = ''; 
-      document.getElementById('gif-input').focus();
-      searchGifs('');
+  // LOGICA DO SISTEMA DE CÂMERA EM TEMPO REAL
+  async function startCamera() {
+    const video = document.getElementById('camera-video');
+    stopCamera(); // Garante o desligamento prévio
+    
+    const constraints = {
+      video: {
+        facingMode: currentFacingMode,
+        width: { ideal: 640 },
+        height: { ideal: 480 }
+      },
+      audio: false
+    };
+
+    try {
+      videoStream = await navigator.mediaDevices.getUserMedia(constraints);
+      video.srcObject = videoStream;
+    } catch (err) {
+      alert("Não foi possível acessar a câmera. Verifique as permissões do navegador.");
+      toggleCamera(false);
     }
+  }
+
+  function stopCamera() {
+    if (videoStream) {
+      videoStream.getTracks().forEach(track => track.stop());
+      videoStream = null;
+    }
+    const video = document.getElementById('camera-video');
+    if (video) video.srcObject = null;
+  }
+
+  function toggleCamera(force) {
+    cameraOpen = force !== undefined ? force : !cameraOpen;
+    if(cameraOpen) {
+      stickerOpen = false;
+      document.getElementById('sticker-panel').style.display = 'none';
+      document.getElementById('sticker-btn').classList.remove('active');
+      document.getElementById('camera-panel').style.display = 'block';
+      document.getElementById('camera-btn').classList.add('active');
+      startCamera();
+    } else {
+      document.getElementById('camera-panel').style.display = 'none';
+      document.getElementById('camera-btn').classList.remove('active');
+      stopCamera();
+    }
+  }
+
+  function snapPhoto() {
+    if (!videoStream) return;
+    const video = document.getElementById('camera-video');
+    const canvas = document.createElement('canvas');
+    
+    // Define dimensões otimizadas para compressão rápida no chat
+    canvas.width = 480;
+    canvas.height = 360;
+    
+    const ctx = canvas.getContext('2d');
+    // Desenha o frame atual do vídeo dentro do canvas
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    
+    // Converte para base64 comprimido de média-alta qualidade (75%)
+    const imgData = canvas.toDataURL('image/jpeg', 0.75);
+    
+    enviar({ image: imgData });
+    toggleCamera(false); // Fecha o painel após o envio automático
   }
 
   document.getElementById('enter-btn').addEventListener('click', entrar);
@@ -590,16 +637,19 @@
   document.getElementById('send-btn').addEventListener('click', dispararEnvio);
   document.getElementById('sticker-btn').addEventListener('click', () => toggleSticker());
   document.getElementById('sticker-close').addEventListener('click', () => toggleSticker(false));
-  document.getElementById('gif-btn').addEventListener('click', () => toggleGif());
-  document.getElementById('gif-close').addEventListener('click', () => toggleGif(false));
   document.getElementById('sticker-input').addEventListener('input', e => {
     clearTimeout(stickerTimer); stickerTimer=setTimeout(() => renderStickers(e.target.value.trim()), 200);
   });
-  document.getElementById('gif-input').addEventListener('input', e => {
-    clearTimeout(gifTimer); gifTimer=setTimeout(() => searchGifs(e.target.value.trim()), 400);
+
+  // GATILHOS E EVENTOS DA INTERFACE DA CÂMERA
+  document.getElementById('camera-btn').addEventListener('click', () => toggleCamera());
+  document.getElementById('camera-close').addEventListener('click', () => toggleCamera(false));
+  document.getElementById('camera-snap').addEventListener('click', snapPhoto);
+  document.getElementById('camera-flip').addEventListener('click', () => {
+    currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
+    if(cameraOpen) startCamera(); // Reinicia o fluxo usando a nova câmera alternada
   });
 
-  // AÇÕES PARA FECHAR O MODAL DE VISUALIZAÇÃO DE FOTO
   document.getElementById('lightbox-close').addEventListener('click', () => {
     document.getElementById('lightbox').style.display = 'none';
   });
