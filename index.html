@@ -105,17 +105,16 @@
     #sticker-grid::-webkit-scrollbar{width:4px}
     #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
 
-    /* Painel de mãos com tons de pele */
-    #maos-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
-    .tons-row{display:flex;align-items:center;gap:6px;padding:8px 14px;border-bottom:0.5px solid #222;overflow-x:auto}
-    .tons-row::-webkit-scrollbar{height:0}
-    .tom-btn{width:34px;height:34px;border-radius:50%;border:2px solid transparent;background:#2a2a2a;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    .tom-btn.ativo{border-color:#fff}
-    #maos-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:140px;overflow-y:auto}
-    #maos-grid span{font-size:26px;cursor:pointer;text-align:center;padding:2px;border-radius:6px;transition:background 0.1s;display:inline-block;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #maos-grid span:hover{background:#2a2a2a}
-    #maos-grid::-webkit-scrollbar{width:4px}
-    #maos-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
+    /* Popup de tom de pele */
+    #tom-popup{display:none;position:fixed;z-index:500;background:#2a2a2a;border:0.5px solid #444;border-radius:14px;padding:8px;box-shadow:0 6px 20px rgba(0,0,0,0.6);flex-direction:column;gap:4px;align-items:center}
+    #tom-popup.open{display:flex}
+    .tom-pop-btn{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .tom-pop-btn.ativo{border-color:#fff}
+    .tom-pop-btn:hover{background:#444}
+
+    /* Separador de mãos no sticker-grid */
+    .sticker-sep{grid-column:1/-1;height:1px;background:#2a2a2a;margin:4px 0}
+    .sticker-sec-label{grid-column:1/-1;font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;padding:2px 0}
     
     #camera-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0;padding:10px 14px}
     .camera-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -152,11 +151,21 @@
     #send-btn:hover{opacity:0.9}
     #send-btn:disabled{background:#333;color:#555;cursor:not-allowed}
 
-    #color-panel{display:none;position:absolute;bottom:56px;left:14px;background:#1e1e1e;border:0.5px solid #333;border-radius:var(--border-radius-lg);padding:10px;z-index:200;box-shadow:0 6px 20px rgba(0,0,0,0.6);width:160px}
-    .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-    .color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:transform 0.1s}
-    .color-dot:hover{transform:scale(1.15)}
-    .color-dot.active{border-color:#fff}
+    /* Color Picker Modal */
+    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+    #color-modal-overlay.open{display:flex}
+    #color-modal{background:#1a1a1a;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;box-shadow:0 -8px 30px rgba(0,0,0,0.5)}
+    .cm-handle{width:40px;height:4px;background:#444;border-radius:2px;margin:0 auto 16px}
+    .cm-title{font-size:16px;font-weight:600;color:#fff;text-align:center;margin-bottom:16px;letter-spacing:-0.3px}
+    #color-canvas{width:100%;height:160px;border-radius:10px;cursor:crosshair;touch-action:none;display:block}
+    .cm-hue-row{display:flex;align-items:center;gap:10px;margin-top:14px}
+    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:18px;border-radius:9px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+    #hue-slider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,0.3);box-shadow:0 1px 4px rgba(0,0,0,0.4);cursor:pointer}
+    .cm-preview{width:32px;height:32px;border-radius:50%;border:2px solid #555;flex-shrink:0}
+    .cm-footer{display:flex;gap:10px;margin-top:16px}
+    .cm-btn{flex:1;padding:11px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-sans);touch-action:manipulation}
+    .cm-btn-cancel{background:#2a2a2a;color:#aaa}
+    .cm-btn-apply{background:var(--theme-primary);color:var(--theme-text)}
 
     #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
     #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8)}
@@ -225,11 +234,6 @@
       <div id="sticker-grid"></div>
     </div>
 
-    <div id="maos-panel">
-      <div class="tons-row" id="tons-row"></div>
-      <div id="maos-grid"></div>
-    </div>
-
     <div id="camera-panel">
       <div class="camera-header">
         <span><i class="ti ti-camera"></i> Câmera (Qualidade Máxima)</span>
@@ -260,8 +264,20 @@
     </div>
 
     <div id="inputbar">
-      <div id="color-panel">
-        <div class="color-grid" id="color-grid"></div>
+      <div id="color-modal-overlay">
+        <div id="color-modal">
+          <div class="cm-handle"></div>
+          <div class="cm-title" id="cm-title">Cor do tema</div>
+          <canvas id="color-canvas" width="400" height="200"></canvas>
+          <div class="cm-hue-row">
+            <input type="range" id="hue-slider" min="0" max="360" value="260"/>
+            <div class="cm-preview" id="cm-preview"></div>
+          </div>
+          <div class="cm-footer">
+            <button class="cm-btn cm-btn-cancel" id="cm-cancel">Cancelar</button>
+            <button class="cm-btn cm-btn-apply" id="cm-apply">Aplicar</button>
+          </div>
+        </div>
       </div>
 
       <button class="btn-icon" id="brush-btn" aria-label="Alterar Tema Visual"><i class="ti ti-brush"></i></button>
@@ -277,7 +293,6 @@
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500" rows="1"></textarea>
       
       <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <button class="btn-icon" id="maos-btn" aria-label="Mãos e Gestos" title="Mãos e Gestos">🤝</button>
       <button class="btn-icon" id="camera-btn" aria-label="Câmera e Galeria"><i class="ti ti-camera"></i></button>
       <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
     </div>
@@ -311,13 +326,9 @@
 
   let mediaRecorder = null, audioChunks = [], audioRecordedBlob = null, audioState = 'idle', globalAudioStream = null, timerInterval = null, totalSeconds = 0;
 
-  // Emojis de rosto (painel principal)
-  const LISTA_EMOJIS_UNIFICADA = ["😀","😃","😄","🥹","😆","😁","😅","😂","🤣","😊","☺️","🥲","😇","🙂","🙃","😍","😌","😉","🥰","😘","😗","😋","😚","😙","😛","😝","😜","🤪","🤨","🧐","🥸","😎","🤓","🤩","🥳","😏","😔","😞","😒","😟","😕","🙁","😖","😣","☹️","😫","😩","🥺","😤","😭","😢","😠","😡","🤬","🤯","😳","🥵","😱","😶‍🌫️","🥶","😨","😰","😥","🤔","🤗","😓","🫣","🤭","🫢","🫠","🤫","🫡","🤥","😶","🫥","😑","🫤","😐","🫨","😬","🙄","😧","😦","😯","😮","😲","🥱","😪","🤤","😴","😮‍💨","😵","😵‍💫","🤢","🥴","🤐","🤮","🤧","😷","🤑","🤕","🤒"];
-
-  // Emojis de mãos com tons de pele
-  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","🫳","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
-  const TONS_PELE = ["","\u{1F3FB}","\u{1F3FC}","\u{1F3FD}","\u{1F3FE}","\u{1F3FF}"];
-  const TONS_LABEL = ["🖐️","🏻","🏼","🏽","🏾","🏿"];
+  // SUBSTITUIÇÃO COMPLETA DE EMOJIS CONFORME EXIGIDO NAS FOTOS (MÃOS LIMITADAS APENAS A BRANCO E MORENO)
+  const LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫🫠🫡🫣⏳🔧🔨⚙️💣🔥⚡✨🌟⭐❤️🩵🖤")
+    .concat(["👍🏼","👍🏾","👎🏼","👎🏾","👌🏼","👌🏾","✌🏼","✌🏾"]);
 
   const PALETA_CUSTOMIZADA = [
     { name: 'Roxo Master', hex: '#534AB7', text: '#ffffff' },
@@ -360,29 +371,105 @@
     aplicarTemaGlobal(salvoHex, salvoText);
   }
 
-  function renderizarGridCores() {
-    const grid = document.getElementById('color-grid');
-    grid.innerHTML = '';
-    const salvoHex = localStorage.getItem('chatzao_theme_hex') || '#534AB7';
-    
-    PALETA_CUSTOMIZADA.forEach(cor => {
-      const dot = document.createElement('div');
-      dot.className = 'color-dot' + (cor.hex.toLowerCase() === salvoHex.toLowerCase() ? ' active' : '');
-      dot.style.background = cor.hex;
-      dot.title = cor.name;
-      dot.addEventListener('click', () => {
-        localStorage.setItem('chatzao_theme_hex', cor.hex);
-        localStorage.setItem('chatzao_theme_text', cor.text);
-        aplicarTemaGlobal(cor.hex, cor.text);
-        renderizarGridCores();
-        const box = document.getElementById('messages');
-        const atBot = box.scrollTop + box.clientHeight >= box.scrollHeight - 100;
-        startListening();
-        if(atBot) setTimeout(() => box.scrollTop = box.scrollHeight, 150);
-      });
-      grid.appendChild(dot);
-    });
+  // ===== COLOR PICKER =====
+  let cmHue = 260, cmSaturation = 0.7, cmBrightness = 0.6;
+  let cmPickedHex = localStorage.getItem('chatzao_theme_hex') || '#534AB7';
+  let cmPickedText = localStorage.getItem('chatzao_theme_text') || '#ffffff';
+  let cmDragging = false;
+  let cmCursorX = 0.7, cmCursorY = 0.35;
+
+  function hsvToHex(h, s, v) {
+    const f=(n,k=(n+h/60)%6)=>v-v*s*Math.max(Math.min(k,4-k,1),0);
+    const r=Math.round(f(5)*255), g=Math.round(f(3)*255), b=Math.round(f(1)*255);
+    return '#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('');
   }
+  function hexToTextColor(hex) {
+    const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+    return (0.299*r+0.587*g+0.114*b) > 140 ? '#000000' : '#ffffff';
+  }
+
+  function drawColorCanvas() {
+    const canvas = document.getElementById('color-canvas');
+    if(!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    // Hue base
+    const hueHex = hsvToHex(cmHue, 1, 1);
+    ctx.clearRect(0,0,W,H);
+    // White -> hue gradient
+    const gradH = ctx.createLinearGradient(0,0,W,0);
+    gradH.addColorStop(0,'rgba(255,255,255,1)');
+    gradH.addColorStop(1, hueHex);
+    ctx.fillStyle = gradH; ctx.fillRect(0,0,W,H);
+    // Black gradient top->bottom
+    const gradV = ctx.createLinearGradient(0,0,0,H);
+    gradV.addColorStop(0,'rgba(0,0,0,0)');
+    gradV.addColorStop(1,'rgba(0,0,0,1)');
+    ctx.fillStyle = gradV; ctx.fillRect(0,0,W,H);
+    // Cursor
+    const cx = cmCursorX * W, cy = cmCursorY * H;
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI*2);
+    ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI*2);
+    ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=1; ctx.stroke();
+  }
+
+  function updateCmColor() {
+    const s = cmCursorX;
+    const v = 1 - cmCursorY;
+    cmPickedHex = hsvToHex(cmHue, s, v);
+    cmPickedText = hexToTextColor(cmPickedHex);
+    const prev = document.getElementById('cm-preview');
+    if(prev) prev.style.background = cmPickedHex;
+  }
+
+  function openColorModal() {
+    const overlay = document.getElementById('color-modal-overlay');
+    overlay.classList.add('open');
+    // restore saved hue from hex approx
+    setTimeout(() => { drawColorCanvas(); updateCmColor(); }, 30);
+  }
+  function closeColorModal() {
+    document.getElementById('color-modal-overlay').classList.remove('open');
+  }
+
+  function cmCanvasEvent(e) {
+    const canvas = document.getElementById('color-canvas');
+    const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    cmCursorX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    cmCursorY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+    drawColorCanvas(); updateCmColor();
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('color-canvas');
+    canvas.addEventListener('mousedown', e => { cmDragging=true; cmCanvasEvent(e); });
+    canvas.addEventListener('mousemove', e => { if(cmDragging) cmCanvasEvent(e); });
+    document.addEventListener('mouseup', () => cmDragging=false);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); cmDragging=true; cmCanvasEvent(e); }, {passive:false});
+    canvas.addEventListener('touchmove', e => { e.preventDefault(); if(cmDragging) cmCanvasEvent(e); }, {passive:false});
+    document.addEventListener('touchend', () => cmDragging=false);
+
+    document.getElementById('hue-slider').addEventListener('input', e => {
+      cmHue = parseInt(e.target.value); drawColorCanvas(); updateCmColor();
+    });
+    document.getElementById('cm-cancel').addEventListener('click', closeColorModal);
+    document.getElementById('color-modal-overlay').addEventListener('click', e => { if(e.target===document.getElementById('color-modal-overlay')) closeColorModal(); });
+    document.getElementById('cm-apply').addEventListener('click', () => {
+      localStorage.setItem('chatzao_theme_hex', cmPickedHex);
+      localStorage.setItem('chatzao_theme_text', cmPickedText);
+      aplicarTemaGlobal(cmPickedHex, cmPickedText);
+      const box = document.getElementById('messages');
+      const atBot = box.scrollTop + box.clientHeight >= box.scrollHeight - 100;
+      startListening();
+      if(atBot) setTimeout(() => box.scrollTop = box.scrollHeight, 150);
+      closeColorModal();
+    });
+  });
+
+  function renderizarGridCores() { /* legacy - não usado mais */ }
 
   async function reagir(msgId, emoji, reacoesAtuais) {
     const novasReacoes = { ...(reacoesAtuais || {}) };
@@ -682,16 +769,14 @@
 
   function toggleColorPanel(force) {
     colorPanelOpen = force !== undefined ? force : !colorPanelOpen;
-    const panel = document.getElementById('color-panel');
     const btn = document.getElementById('brush-btn');
     if(colorPanelOpen) {
       toggleCamera(false); toggleSticker(false);
-      panel.style.display = 'block';
       btn.classList.add('active');
-      renderizarGridCores();
+      openColorModal();
     } else {
-      panel.style.display = 'none';
       btn.classList.remove('active');
+      closeColorModal();
     }
   }
 
@@ -774,54 +859,90 @@
 
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dispararEnvioCompleto(); } });
 
-  // === PAINEL DE MAOS ===
-  let maosOpen = false;
-  let tomAtual = 0;
-
+  // ===== PAINEL EMOJI + MÃOS =====
+  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","🫳","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
   const TONS_UNICODE = ["", "\u{1F3FB}", "\u{1F3FC}", "\u{1F3FD}", "\u{1F3FE}", "\u{1F3FF}"];
+  const TONS_LABEL   = ["🖐️","🏻","🏼","🏽","🏾","🏿"];
+  let tomAtual = 0;
+  let tomPopupEmoji = null; // base emoji being configured
 
-  function renderMaosGrid() {
-    const grid = document.getElementById('maos-grid');
+  function buildStickerGrid(filter) {
+    const grid = document.getElementById('sticker-grid');
     grid.innerHTML = '';
-    const tom = TONS_UNICODE[tomAtual];
-    MAOS_BASE.forEach(base => {
-      const sp = document.createElement('span');
-      sp.textContent = base + tom;
-      sp.addEventListener('click', () => { enviar({ sticker: base + tom }); toggleMaos(false); });
+
+    // Rostos
+    const lbl1 = document.createElement('div'); lbl1.className='sticker-sec-label'; lbl1.textContent='EXPRESSÕES'; grid.appendChild(lbl1);
+    const rostos = filter ? LISTA_EMOJIS_UNIFICADA.filter(s=>s.includes(filter)) : LISTA_EMOJIS_UNIFICADA;
+    rostos.forEach(s => {
+      const sp=document.createElement('span'); sp.textContent=s;
+      sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);});
       grid.appendChild(sp);
     });
+
+    if(!filter) {
+      // Separator
+      const sep = document.createElement('div'); sep.className='sticker-sep'; grid.appendChild(sep);
+      const lbl2 = document.createElement('div'); lbl2.className='sticker-sec-label'; lbl2.textContent='MÃOS E GESTOS'; grid.appendChild(lbl2);
+
+      MAOS_BASE.forEach(base => {
+        const tom = TONS_UNICODE[tomAtual];
+        const full = base + tom;
+        const sp = document.createElement('span'); sp.textContent=full;
+        sp.addEventListener('click', (e) => { e.stopPropagation(); openTomPopup(base, sp); });
+        grid.appendChild(sp);
+      });
+    }
   }
 
-  function renderTons() {
-    const row = document.getElementById('tons-row');
-    row.innerHTML = '';
+  // Tom popup
+  function openTomPopup(base, anchorEl) {
+    let popup = document.getElementById('tom-popup');
+    if(!popup){
+      popup = document.createElement('div'); popup.id='tom-popup';
+      document.body.appendChild(popup);
+    }
+    popup.innerHTML = '';
     TONS_LABEL.forEach((label, i) => {
       const btn = document.createElement('button');
-      btn.className = 'tom-btn' + (i === tomAtual ? ' ativo' : '');
+      btn.className='tom-pop-btn'+(i===tomAtual?' ativo':'');
       btn.textContent = label;
-      btn.addEventListener('click', () => { tomAtual = i; renderTons(); renderMaosGrid(); });
-      row.appendChild(btn);
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        tomAtual = i;
+        const tom = TONS_UNICODE[i];
+        enviar({ sticker: base + tom });
+        popup.classList.remove('open');
+        toggleSticker(false);
+      });
+      popup.appendChild(btn);
     });
+    // Position near anchor
+    const rect = anchorEl.getBoundingClientRect();
+    popup.classList.add('open');
+    popup.style.left = Math.min(rect.left, window.innerWidth - 60) + 'px';
+    popup.style.top = (rect.top - popup.offsetHeight - 8) + 'px';
+    if(parseInt(popup.style.top) < 10) popup.style.top = (rect.bottom + 8) + 'px';
   }
 
-  function toggleMaos(force) {
-    maosOpen = force !== undefined ? force : !maosOpen;
-    if (maosOpen) { toggleCamera(false); toggleSticker(false); toggleColorPanel(false); }
-    document.getElementById('maos-panel').style.display = maosOpen ? 'block' : 'none';
-    document.getElementById('maos-btn').classList.toggle('active', maosOpen);
-    if (maosOpen) { renderTons(); renderMaosGrid(); }
-  }
+  document.addEventListener('click', () => {
+    const p = document.getElementById('tom-popup');
+    if(p) p.classList.remove('open');
+  });
 
   function toggleSticker(force){
-    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
-    document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none'; document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
-    if(stickerOpen){ document.getElementById('sticker-grid').innerHTML=''; LISTA_EMOJIS_UNIFICADA.forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); document.getElementById('sticker-grid').appendChild(sp); }); }
+    stickerOpen=force!==undefined?force:!stickerOpen;
+    if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
+    document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none';
+    document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
+    if(stickerOpen){ buildStickerGrid(''); }
   }
 
   document.getElementById('sticker-btn').addEventListener('click', () => toggleSticker());
-  document.getElementById('maos-btn').addEventListener('click', () => toggleMaos());
   document.getElementById('sticker-close').addEventListener('click', () => toggleSticker(false));
-  document.getElementById('sticker-input').addEventListener('input', e => { clearTimeout(stickerTimer); stickerTimer=setTimeout(() => { document.getElementById('sticker-grid').innerHTML=''; const f=e.target.value.trim(); LISTA_EMOJIS_UNIFICADA.filter(s=>s.includes(f)).forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); document.getElementById('sticker-grid').appendChild(sp); }); },200); });
+  document.getElementById('sticker-input').addEventListener('input', e => {
+    clearTimeout(stickerTimer);
+    stickerTimer=setTimeout(() => { buildStickerGrid(e.target.value.trim()); },200);
+  });
 
   document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display = 'none');
 
