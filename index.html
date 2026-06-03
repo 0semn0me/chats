@@ -40,7 +40,9 @@
     .mine .bubble{border-bottom-right-radius:3px}
     .theirs .bubble{border-bottom-left-radius:3px}
     .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
-    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 8px;display:none;gap:6px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);animation:fadeIn 0.15s ease;max-width:240px;overflow-x:auto;white-space:nowrap}
+    
+    /* MENU DE REAÇÕES, EDIÇÃO E EXCLUSÃO EXPANDIDO */
+    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;gap:8px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);animation:fadeIn 0.15s ease;max-width:280px;overflow-x:auto;white-space:nowrap;align-items:center}
     .react-menu::-webkit-scrollbar{height:3px}
     .react-menu::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
     .mine .react-menu{right:0}
@@ -48,6 +50,13 @@
     .bubble-wrapper:hover .react-menu{display:flex}
     .react-opt{font-size:18px;cursor:pointer;transition:transform 0.1s;padding:0 2px;display:inline-block}
     .react-opt:hover{transform:scale(1.25)}
+    
+    /* BOTÕES EXTRA DE GERENCIAMENTO DA MSG */
+    .msg-action-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;padding:2px 4px;border-radius:4px;transition:background 0.1s}
+    .msg-action-btn:hover{background:#333;color:#fff}
+    .msg-action-btn.btn-del:hover{color:#E24B4A;background:rgba(226,75,74,0.1)}
+    .menu-sep{width:1px;height:14px;background:#444;display:inline-block;margin:0 2px}
+
     .reactions-badge{position:absolute;bottom:-10px;background:#1e1e1e;border:0.5px solid #333;border-radius:10px;padding:1px 6px;font-size:12px;display:flex;gap:3px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.3);cursor:help}
     .mine .reactions-badge{right:8px}
     .theirs .reactions-badge{left:8px}
@@ -57,16 +66,19 @@
     .reply-hint:hover{color:#534AB7}
     .reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:0.85;border-left:3px solid rgba(255,255,255,0.3);width:100%}
     .meta{font-size:11px;color:#555;padding:2px 4px;display:flex;align-items:center;gap:4px}
+    .edited-tag{font-size:10px;color:#666;font-style:italic}
     .senders{display:flex;align-items:center;gap:5px;margin-bottom:3px}
     .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;overflow:hidden}
     .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
     .sys{align-self:center;font-size:11px;color:#555;background:#1a1a1a;padding:2px 12px;border-radius:99px}
-    #reply-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
-    #reply-bar .rb-content{flex:1;min-width:0}
-    #reply-bar .rb-name{font-size:12px;font-weight:500;margin-bottom:1px}
-    #reply-bar .rb-text{font-size:12px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    #reply-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px}
-    #reply-bar button:hover{color:#aaa}
+    
+    #reply-bar, #edit-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    .rb-content{flex:1;min-width:0}
+    .rb-name{font-size:12px;font-weight:500;margin-bottom:1px}
+    .rb-text{font-size:12px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .panel-bar-close{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px}
+    .panel-bar-close:hover{color:#aaa}
+
     #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
     .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
     .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none}
@@ -79,7 +91,6 @@
     #sticker-grid::-webkit-scrollbar{width:4px}
     #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
     
-    /* NOVO PAINEL DE CÂMERA INTEGRADO */
     #camera-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0;padding:10px 14px}
     .camera-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
     .camera-header span{font-size:13px;color:#aaa;display:flex;align-items:center;gap:4px}
@@ -149,14 +160,25 @@
       </div>
     </div>
     <div id="messages"></div>
+    
     <div id="reply-bar">
       <i class="ti ti-corner-up-left" aria-hidden="true" style="font-size:16px;color:#534AB7;flex-shrink:0"></i>
       <div class="rb-content">
         <div class="rb-name" id="rb-name"></div>
         <div class="rb-text" id="rb-text"></div>
       </div>
-      <button id="reply-cancel" aria-label="Cancelar resposta"><i class="ti ti-x"></i></button>
+      <button class="panel-bar-close" id="reply-cancel" aria-label="Cancelar resposta"><i class="ti ti-x"></i></button>
     </div>
+
+    <div id="edit-bar">
+      <i class="ti ti-edit" aria-hidden="true" style="font-size:16px;color:#534AB7;flex-shrink:0"></i>
+      <div class="rb-content">
+        <div class="rb-name" style="color:#534AB7">Editando sua mensagem...</div>
+        <div class="rb-text" id="eb-text"></div>
+      </div>
+      <button class="panel-bar-close" id="edit-cancel" aria-label="Cancelar edição"><i class="ti ti-x"></i></button>
+    </div>
+
     <div id="sticker-panel">
       <div class="panel-search">
         <i class="ti ti-mood-smile" aria-hidden="true" style="font-size:16px;color:#888"></i>
@@ -166,10 +188,9 @@
       <div id="sticker-grid"></div>
     </div>
 
-    <!-- NOVO CONTEÚDO DO PAINEL DA CÂMERA -->
     <div id="camera-panel">
       <div class="camera-header">
-        <span><i class="ti ti-camera"></i> Câmera ao vivo</span>
+        <span><i class="ti ti-camera"></i> Câmera (Qualidade Máxima)</span>
         <button class="panel-close" id="camera-close" aria-label="Fechar Câmera"><i class="ti ti-x"></i></button>
       </div>
       <div class="camera-container">
@@ -178,7 +199,7 @@
       <div class="camera-controls">
         <button class="btn-cam-flip" id="camera-flip" title="Mudar câmera"><i class="ti ti-camera-rotate"></i></button>
         <button class="btn-snap" id="camera-snap" title="Tirar e enviar foto"><i class="ti ti-aperture"></i></button>
-        <div style="width:32px"></div> <!-- Espaçador para equilibrar o layout -->
+        <div style="width:32px"></div>
       </div>
     </div>
 
@@ -190,7 +211,6 @@
     <div id="inputbar">
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500"></textarea>
       <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <!-- SUBSTITUÍDO O BOTÃO DO GIF PELO BOTÃO DA CÂMERA -->
       <button class="btn-icon" id="camera-btn" aria-label="Câmera"><i class="ti ti-camera"></i></button>
       <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
     </div>
@@ -204,7 +224,7 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
@@ -218,14 +238,13 @@
   const db = getFirestore(app);
   const col = collection(db, 'mensagens');
 
-  let myName='', myAvatar='', replyTo=null, cameraOpen=false, stickerOpen=false, stickerTimer=null;
+  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null;
   let isInitialLoad = true;
   let pasteImageData = null;
   let unsubscribeSnapshot = null;
   
-  // Controle do fluxo de vídeo
   let videoStream = null;
-  let currentFacingMode = 'user'; // 'user' = frontal, 'environment' = traseira
+  let currentFacingMode = 'user';
 
   const EMOJIS = ['😁','😆','🥹','😅','😂','🤣','🥲','☺️','😊','😋','😚','😙','😗','😘','🥰','😍','🤩','😎','🥳','🤓','🧐','🤨','🤪','😜','😝','😛','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😱','😨','😰','😥','😓','🤗','🤔','😡','🤬','🤯','😳','🥵','🥶','🤫','🫠','🤥','😶','😐','😑','😬','🙄','😯','🤑','🤕','🤒','😷','🤧','🤮','🤢','🥴','🤐','😵','😵‍💫','🫨','🫥','🫡','🫣','🥱','😴','🤤','🤠','🤡','👽','💀','👻','🤖','😈','👿','💩','👍','👎','👌','✌️','🤞','🫰','🤟','🤘','🤙','👋','🙌','👏','🙏','💪','❤️','🩷','🩵','💜','🖤','💔','❤️‍🔥','✨','🌟','⭐','💥','🔥','💻','📱','💸','💵','🪙','💎','🔧','🔨','⚙️','💣','☕','🥤','🍺','🍻','🍕','🍔','🍟','🍿','🍩','☀️','❄️','⚡','🌈'];
 
@@ -238,10 +257,10 @@
   function darken(hex){return hex+'bb';}
   function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-  function shortText(m){if(!m)return'';if(m.image)return '🖼 Imagem';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
+  function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
 
   function dispararNotificacao(data) {
-    if (data.name === myName || isInitialLoad || document.visibilityState === 'visible' || data.type === 'system') return;
+    if (data.name === myName || isInitialLoad || document.visibilityState === 'visible' || data.type === 'system' || data.isDeleted) return;
     if (Notification.permission === "granted") {
       let corpo = "";
       if (data.sticker) corpo = "Enviou um emoji: " + data.sticker;
@@ -264,6 +283,36 @@
       novasReacoes[myName] = emoji;
     }
     await updateDoc(docRef, { reactions: novasReacoes });
+  }
+
+  // FUNÇÕES PARA EXCLUIR E EDITAR NO FIREBASE
+  async function apagarMensagem(msgId) {
+    if(confirm("Deseja mesmo apagar essa mensagem?")) {
+      const docRef = doc(db, 'mensagens', msgId);
+      await updateDoc(docRef, {
+        isDeleted: true,
+        text: "Mensagem apagada",
+        image: null,
+        sticker: null,
+        reactions: {}
+      });
+    }
+  }
+
+  function iniciarEdicao(msgId, textoAtual) {
+    cancelReply();
+    editTargetId = msgId;
+    document.getElementById('eb-text').textContent = textoAtual;
+    document.getElementById('edit-bar').style.display = 'flex';
+    const input = document.getElementById('msg-input');
+    input.value = textoAtual;
+    input.focus();
+  }
+
+  function cancelEdit() {
+    editTargetId = null;
+    document.getElementById('edit-bar').style.display = 'none';
+    document.getElementById('msg-input').value = '';
   }
 
   function abrirImagemNoLightbox(src) {
@@ -303,6 +352,21 @@
     wrapper.className = 'bubble-wrapper';
 
     const b=document.createElement('div');b.className='bubble';
+    
+    // Customização caso a mensagem tenha sido apagada
+    if(data.isDeleted) {
+      b.style.background='#1a1a1a';
+      b.style.color='#666';
+      b.style.border='0.5px solid #222';
+      b.style.fontStyle='italic';
+      const t=document.createElement('span');
+      t.innerHTML=`<i class="ti ti-ban" style="font-size:12px;margin-right:3px"></i>Mensagem apagada`;
+      b.appendChild(t);
+      wrapper.appendChild(b);
+      w.appendChild(wrapper);
+      return w;
+    }
+
     b.style.background=mine?color+'dd':'#1e1e1e';
     b.style.color=mine?'#fff':'#e0e0e0';
     b.style.border=mine?'none':'0.5px solid #2a2a2a';
@@ -318,10 +382,11 @@
       const t=document.createElement('span');t.textContent=data.text||'';b.appendChild(t);
     }
 
+    // MENU COMPLETO: REAÇÕES + AÇÕES DE EDIÇÃO/EXCLUSÃO
     const rm = document.createElement('div');
     rm.className = 'react-menu';
     
-    EMOJIS.slice(0, 20).forEach(e => {
+    EMOJIS.slice(0, 10).forEach(e => {
       const opt = document.createElement('span');
       opt.className = 'react-opt';
       opt.textContent = e;
@@ -331,6 +396,33 @@
       });
       rm.appendChild(opt);
     });
+
+    // Se a mensagem for minha, libera os botões de Editar e Apagar no painel flutuante
+    if(mine) {
+      const sep = document.createElement('span');
+      sep.className = 'menu-sep';
+      rm.appendChild(sep);
+
+      if(!data.image && !data.sticker) {
+        const editBtn = document.createElement('button');
+        editBtn.className = 'msg-action-btn';
+        editBtn.innerHTML = `<i class="ti ti-edit" title="Editar"></i>`;
+        editBtn.addEventListener('click', (evt) => {
+          evt.stopPropagation();
+          iniciarEdicao(id, data.text);
+        });
+        rm.appendChild(editBtn);
+      }
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'msg-action-btn btn-del';
+      delBtn.innerHTML = `<i class="ti ti-trash" title="Apagar"></i>`;
+      delBtn.addEventListener('click', (evt) => {
+        evt.stopPropagation();
+        apagarMensagem(id);
+      });
+      rm.appendChild(delBtn);
+    }
     wrapper.appendChild(rm);
 
     const hint = document.createElement('i');
@@ -338,6 +430,7 @@
     hint.title = "Responder mensagem";
     hint.addEventListener('click', (evt) => {
       evt.stopPropagation();
+      cancelEdit();
       replyTo={name:data.name,text:data.text,sticker:data.sticker,id};
       document.getElementById('rb-name').textContent=data.name;
       document.getElementById('rb-name').style.color=userColor(data.name);
@@ -361,7 +454,9 @@
     wrapper.appendChild(b);
     w.appendChild(wrapper);
 
-    const meta=document.createElement('div');meta.className='meta';meta.textContent=fmt(data.ts);
+    // Adiciona marcação sutil de mensagem editada ao lado do horário
+    const meta=document.createElement('div');meta.className='meta';
+    meta.innerHTML = fmt(data.ts) + (data.isEdited ? ` <span class="edited-tag">(editada)</span>` : '');
     w.appendChild(meta);
     return w;
   }
@@ -402,6 +497,17 @@
   async function enviar(payload){
     const btn=document.getElementById('send-btn');btn.disabled=true;
     try{
+      // Se estiver no modo de edição, atualiza a mensagem antiga ao invés de criar nova
+      if(editTargetId && payload.text) {
+        const docRef = doc(db, 'mensagens', editTargetId);
+        await updateDoc(docRef, {
+          text: payload.text,
+          isEdited: true
+        });
+        cancelEdit();
+        return;
+      }
+
       const msg={type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,replyTo:replyTo||null,...payload};
       await addDoc(col,msg);
       cancelReply();
@@ -476,16 +582,16 @@
     if(stickerOpen){renderStickers('');document.getElementById('sticker-input').focus();}
   }
 
-  // LOGICA DO SISTEMA DE CÂMERA EM TEMPO REAL
+  // SISTEMA DE CÂMERA EM RESOLUÇÃO MÁXIMA E NATIVA DO DISPOSITIVO
   async function startCamera() {
     const video = document.getElementById('camera-video');
-    stopCamera(); // Garante o desligamento prévio
+    stopCamera();
     
     const constraints = {
       video: {
         facingMode: currentFacingMode,
-        width: { ideal: 640 },
-        height: { ideal: 480 }
+        width: { ideal: 1920 },  // Solicita Full HD nativo ao dispositivo
+        height: { ideal: 1080 }
       },
       audio: false
     };
@@ -494,8 +600,14 @@
       videoStream = await navigator.mediaDevices.getUserMedia(constraints);
       video.srcObject = videoStream;
     } catch (err) {
-      alert("Não foi possível acessar a câmera. Verifique as permissões do navegador.");
-      toggleCamera(false);
+      alert("Não foi possível acessar a câmera nas configurações ideais. Tentando modo padrão...");
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+        video.srcObject = videoStream;
+      } catch {
+        alert("Erro completo ao abrir câmera.");
+        toggleCamera(false);
+      }
     }
   }
 
@@ -529,24 +641,24 @@
     const video = document.getElementById('camera-video');
     const canvas = document.createElement('canvas');
     
-    // Define dimensões otimizadas para compressão rápida no chat
-    canvas.width = 480;
-    canvas.height = 360;
+    // ATENÇÃO: Captura usando as dimensões REAIS da stream de vídeo atual do sensor (Sem perdas!)
+    canvas.width = video.videoWidth || 1280;
+    canvas.height = video.videoHeight || 720;
     
     const ctx = canvas.getContext('2d');
-    // Desenha o frame atual do vídeo dentro do canvas
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     
-    // Converte para base64 comprimido de média-alta qualidade (75%)
-    const imgData = canvas.toDataURL('image/jpeg', 0.75);
+    // Converte para JPEG sem aplicar compressão agressiva (Fica limpo e nítido!)
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
     
     enviar({ image: imgData });
-    toggleCamera(false); // Fecha o painel após o envio automático
+    toggleCamera(false);
   }
 
   document.getElementById('enter-btn').addEventListener('click', entrar);
   document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
   document.getElementById('reply-cancel').addEventListener('click', cancelReply);
+  document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
   document.getElementById('logout-btn').addEventListener('click', sair);
 
   document.getElementById('avatar-pick').addEventListener('click', () => document.getElementById('avatar-file').click());
@@ -628,7 +740,8 @@
       }
     }
     if(e.key==='Escape'){
-      cancelReply(); 
+      cancelReply();
+      cancelEdit();
       pasteImageData=null; 
       document.getElementById('paste-preview').style.display='none';
     }
@@ -641,13 +754,12 @@
     clearTimeout(stickerTimer); stickerTimer=setTimeout(() => renderStickers(e.target.value.trim()), 200);
   });
 
-  // GATILHOS E EVENTOS DA INTERFACE DA CÂMERA
   document.getElementById('camera-btn').addEventListener('click', () => toggleCamera());
   document.getElementById('camera-close').addEventListener('click', () => toggleCamera(false));
   document.getElementById('camera-snap').addEventListener('click', snapPhoto);
   document.getElementById('camera-flip').addEventListener('click', () => {
     currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user';
-    if(cameraOpen) startCamera(); // Reinicia o fluxo usando a nova câmera alternada
+    if(cameraOpen) startCamera();
   });
 
   document.getElementById('lightbox-close').addEventListener('click', () => {
