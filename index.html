@@ -7,7 +7,13 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{--font-sans:system-ui,-apple-system,sans-serif;--border-radius-md:8px;--border-radius-lg:12px}
+    :root{
+      --font-sans:system-ui,-apple-system,sans-serif;
+      --border-radius-md:8px;
+      --border-radius-lg:12px;
+      --theme-primary: #534AB7;
+      --theme-text: #ffffff;
+    }
     html,body{height:100%;height:100dvh;background:#0e0e0e;overflow:hidden;}
     body{display:flex;flex-direction:column;}
     #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:#0e0e0e;overflow:hidden}
@@ -15,12 +21,12 @@
     #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
     #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
     #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
-    #login input:focus{box-shadow:0 0 0 2px #534AB755}
-    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer}
-    #login button:hover{background:#3C3489}
+    #login input:focus{box-shadow:0 0 0 2px rgba(83,74,183,0.33)}
+    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:#fff;cursor:pointer}
+    #login button:hover{opacity:0.9}
     #login .err{font-size:13px;color:#E24B4A;display:none}
     .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
-    .avatar-pick:hover{border-color:#534AB7}
+    .avatar-pick:hover{border-color:var(--theme-primary)}
     .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
     .av-icon{font-size:24px;color:#555;pointer-events:none}
     .login-row{display:flex;align-items:center;gap:14px;width:260px}
@@ -28,12 +34,12 @@
     #chat-area{display:none;flex-direction:column;height:100%;background:#0e0e0e}
     #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:#161616}
     #topbar .title{font-size:15px;font-weight:500;color:#fff;display:flex;align-items:center;gap:6px}
+    #topbar .btn-lock-clear{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;display:inline-flex;align-items:center;padding:4px;transition:color 0.2s;margin-left:4px}
+    #topbar .btn-lock-clear:hover{color:#E24B4A}
     #topbar .right{display:flex;align-items:center;gap:12px}
     #topbar .me{font-size:12px;color:#eee;display:flex;align-items:center}
     #topbar .btn-logout{background:none;border:none;color:#888;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:3px}
     #topbar .btn-logout:hover{color:#E24B4A}
-    #topbar .btn-clear-all{background:none;border:none;color:#555;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:3px;transition:color 0.2s}
-    #topbar .btn-clear-all:hover{color:#E24B4A}
     .pill{font-size:11px;color:#1D9E75;background:#0a2e1f;padding:2px 10px;border-radius:99px}
     
     #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
@@ -51,7 +57,7 @@
     .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
     .bubble audio{display:block;max-width:240px;outline:none;margin:4px 0}
     
-    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;gap:8px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);animation:fadeIn 0.15s ease;max-width:280px;overflow-x:auto;white-space:nowrap;align-items:center}
+    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;gap:8px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);max-width:280px;overflow-x:auto;white-space:nowrap;align-items:center}
     .react-menu::-webkit-scrollbar{height:3px}
     .react-menu::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
     .mine .react-menu{right:0}
@@ -71,7 +77,7 @@
     .react-user-badge{color:#aaa;font-size:10px;margin-left:2px;font-weight:bold}
     .reply-hint{opacity:0;transition:opacity 0.15s;font-size:14px;color:#555;cursor:pointer}
     .bubble-wrapper:hover .reply-hint{opacity:1}
-    .reply-hint:hover{color:#534AB7}
+    .reply-hint:hover{color:var(--theme-primary)}
     .reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:0.85;border-left:3px solid rgba(255,255,255,0.3);width:100%}
     .meta{font-size:11px;color:#555;padding:2px 4px;display:flex;align-items:center;gap:4px}
     .edited-tag{font-size:10px;color:#666;font-style:italic}
@@ -90,10 +96,10 @@
     #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
     .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
     .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none}
-    .panel-search input:focus{box-shadow:0 0 0 2px #534AB755}
+    .panel-search input:focus{box-shadow:0 0 0 2px rgba(83,74,183,0.33)}
     .panel-close{background:none;border:none;cursor:pointer;color:#666;font-size:18px;line-height:1;padding:2px 6px}
     .panel-close:hover{color:#aaa}
-    #sticker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto}
+    #sticker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:140px;overflow-y:auto}
     #sticker-grid span{font-size:26px;cursor:pointer;text-align:center;padding:2px;border-radius:6px;transition:background 0.1s;display:inline-block}
     #sticker-grid span:hover{background:#2a2a2a}
     #sticker-grid::-webkit-scrollbar{width:4px}
@@ -110,18 +116,40 @@
     .btn-cam-control{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center}
     .btn-cam-control:hover{color:#ccc}
 
-    <input type="file" id="gallery-input" accept="image/*" style="display:none"/>
-
-    <div id="paste-preview", #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    #paste-preview, #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
     #paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid #333}
     #paste-preview span, #audio-preview-bar span{flex:1;font-size:12px;color:#888}
     #paste-preview button, #audio-preview-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
     #paste-preview button:hover, #audio-preview-bar button:hover{color:#aaa}
 
-    #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px);animation:fadeIn 0.2s ease}
+    #inputbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0;position:relative}
+    .audio-controls-container{display:flex;align-items:center;position:relative}
+    
+    #audio-float-panel{display:none;position:absolute;left:48px;top:50%;transform:translateY(-50%);background:#222;border:0.5px solid #333;padding:4px 12px;border-radius:20px;align-items:center;gap:10px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.5);white-space:nowrap}
+    #audio-timer{font-size:13px;color:#fff;font-family:monospace;font-weight:bold}
+    #audio-trash-btn{background:none;border:none;color:#888;cursor:pointer;font-size:14px;display:flex;align-items:center}
+    #audio-trash-btn:hover{color:#E24B4A}
+
+    .btn-icon{background:none;border:none;color:#aaa;cursor:pointer;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background 0.1s, color 0.1s;flex-shrink:0}
+    .btn-icon:hover, .btn-icon.active{background:#2a2a2a;color:var(--theme-primary)}
+    .btn-icon.recording{background:#E24B4A !important;color:#fff !important;animation:pulseAudio 1.5s infinite}
+    .btn-icon.paused{background:#e08a2e !important;color:#fff !important}
+    
+    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:9px 14px;font-size:14px;color:#fff;outline:none;resize:none;max-height:100px;font-family:var(--font-sans);line-height:1.4}
+    #send-btn{background:var(--theme-primary);border:none;color:#fff;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.1s}
+    #send-btn:hover{opacity:0.9}
+    #send-btn:disabled{background:#333;color:#555;cursor:not-allowed}
+
+    #color-panel{display:none;position:absolute;bottom:56px;left:14px;background:#1e1e1e;border:0.5px solid #333;border-radius:var(--border-radius-lg);padding:10px;z-index:200;box-shadow:0 6px 20px rgba(0,0,0,0.6);width:160px}
+    .color-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .color-dot{width:28px;height:28px;border-radius:50%;cursor:pointer;border:1.5px solid transparent;transition:transform 0.1s}
+    .color-dot:hover{transform:scale(1.15)}
+    .color-dot.active{border-color:#fff}
+
+    #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
     #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8)}
     #lightbox-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    @keyframes fadeIn { from { opacity:0; transform:translateY(5px) translateX(-50%); } to { opacity:1; transform:translateY(0) translateX(-50%); } }
+    @keyframes pulseAudio { 0% {box-shadow: 0 0 0 0 rgba(226,75,74,0.4)} 70% {box-shadow: 0 0 0 8px rgba(226,75,74,0)} 100% {box-shadow: 0 0 0 0 rgba(226,75,74,0)} }
   </style>
 </head>
 <body>
@@ -145,9 +173,12 @@
   
   <div id="chat-area">
     <div id="topbar">
-      <span class="title"><i class="ti ti-messages" aria-hidden="true" style="font-size:16px"></i>Chatzão</span>
+      <span class="title">
+        <i class="ti ti-messages" aria-hidden="true" style="font-size:16px"></i>
+        Chatzão
+        <button class="btn-lock-clear" id="lock-clear-btn" title="Limpar histórico geral (Requer Senha Master)"><i class="ti ti-lock"></i></button>
+      </span>
       <div class="right">
-        <button class="btn-clear-all" id="clear-all-btn" title="Limpar histórico geral (Requer senha)"><i class="ti ti-trash-x"></i>Limpar Chat</button>
         <span class="me" id="me-label"></span>
         <button class="btn-logout" id="logout-btn" title="Sair do chat e editar perfil"><i class="ti ti-logout"></i>Sair</button>
         <span class="pill" id="online-label">● conectado</span>
@@ -156,7 +187,7 @@
     <div id="messages"></div>
     
     <div id="reply-bar">
-      <i class="ti ti-corner-up-left" aria-hidden="true" style="font-size:16px;color:#534AB7;flex-shrink:0"></i>
+      <i class="ti ti-corner-up-left" aria-hidden="true" style="font-size:16px;color:var(--theme-primary);flex-shrink:0"></i>
       <div class="rb-content">
         <div class="rb-name" id="rb-name"></div>
         <div class="rb-text" id="rb-text"></div>
@@ -165,9 +196,9 @@
     </div>
 
     <div id="edit-bar">
-      <i class="ti ti-edit" aria-hidden="true" style="font-size:16px;color:#534AB7;flex-shrink:0"></i>
+      <i class="ti ti-edit" aria-hidden="true" style="font-size:16px;color:var(--theme-primary);flex-shrink:0"></i>
       <div class="rb-content">
-        <div class="rb-name" style="color:#534AB7">Editando sua mensagem...</div>
+        <div class="rb-name" style="color:var(--theme-primary)">Editando sua mensagem...</div>
         <div class="rb-text" id="eb-text"></div>
       </div>
       <button class="panel-bar-close" id="edit-cancel" aria-label="Cancelar edição"><i class="ti ti-x"></i></button>
@@ -212,6 +243,12 @@
     </div>
 
     <div id="inputbar">
+      <div id="color-panel">
+        <div class="color-grid" id="color-grid"></div>
+      </div>
+
+      <button class="btn-icon" id="brush-btn" aria-label="Alterar Tema Visual"><i class="ti ti-brush"></i></button>
+
       <div class="audio-controls-container">
         <div id="audio-float-panel">
           <span id="audio-timer">00:00</span>
@@ -250,13 +287,27 @@
   const db = getFirestore(app);
   const col = collection(db, 'mensagens');
 
-  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null;
+  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null, colorPanelOpen=false;
   let isInitialLoad = true, pasteImageData = null, unsubscribeSnapshot = null;
   let videoStream = null, currentFacingMode = 'user';
 
   let mediaRecorder = null, audioChunks = [], audioRecordedBlob = null, audioState = 'idle', globalAudioStream = null, timerInterval = null, totalSeconds = 0;
 
-  const LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫🫠🫡🫣⏳🔧🔨⚙️💣🔥⚡✨🌟⭐👍👎👌✌️❤️🩵🖤");
+  // SUBSTITUIÇÃO COMPLETA DE EMOJIS CONFORME EXIGIDO NAS FOTOS (MÃOS LIMITADAS APENAS A BRANCO E MORENO)
+  const LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫🫠🫡🫣⏳🔧🔨⚙️💣🔥⚡✨🌟⭐❤️🩵🖤")
+    .concat(["👍🏼","👍🏾","👎🏼","👎🏾","👌🏼","👌🏾","✌🏼","✌🏾"]);
+
+  const PALETA_CUSTOMIZADA = [
+    { name: 'Roxo Master', hex: '#534AB7', text: '#ffffff' },
+    { name: 'Verde Claro', hex: '#a6e22e', text: '#000000' },
+    { name: 'Verde Musgo', hex: '#3bb88c', text: '#ffffff' },
+    { name: 'Ciano Azulado', hex: '#6ec6c6', text: '#000000' },
+    { name: 'Azul Claro', hex: '#4fa3dc', text: '#ffffff' },
+    { name: 'Laranja Quente', hex: '#e08a2e', text: '#ffffff' },
+    { name: 'Rosa Choque', hex: '#e05a7a', text: '#ffffff' },
+    { name: 'Branco Puro', hex: '#ffffff', text: '#000000' }
+  ];
+
   const USER_COLORS = ['#7C6CF5','#E05A7A','#3BB88C','#E08A2E','#4FA3DC','#C55FD6','#5DC26A','#E0674E','#6EC6C6','#D4A017'];
   const colorCache = {};
 
@@ -268,6 +319,48 @@
   function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
   function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.audio)return '🎵 Áudio';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
+
+  function aplicarTemaGlobal(hex, textHex) {
+    document.documentElement.style.setProperty('--theme-primary', hex);
+    document.documentElement.style.setProperty('--theme-text', textHex);
+    const elementsToUpdate = document.querySelectorAll('.btn-icon.active, #send-btn, #enter-btn');
+    elementsToUpdate.forEach(el => {
+      if(el.id === 'send-btn' || el.id === 'enter-btn') {
+        el.style.background = hex;
+        el.style.color = textHex;
+      }
+    });
+  }
+
+  function carregarTemaSalvo() {
+    const salvoHex = localStorage.getItem('chatzao_theme_hex') || '#534AB7';
+    const salvoText = localStorage.getItem('chatzao_theme_text') || '#ffffff';
+    aplicarTemaGlobal(salvoHex, salvoText);
+  }
+
+  function renderizarGridCores() {
+    const grid = document.getElementById('color-grid');
+    grid.innerHTML = '';
+    const salvoHex = localStorage.getItem('chatzao_theme_hex') || '#534AB7';
+    
+    PALETA_CUSTOMIZADA.forEach(cor => {
+      const dot = document.createElement('div');
+      dot.className = 'color-dot' + (cor.hex.toLowerCase() === salvoHex.toLowerCase() ? ' active' : '');
+      dot.style.background = cor.hex;
+      dot.title = cor.name;
+      dot.addEventListener('click', () => {
+        localStorage.setItem('chatzao_theme_hex', cor.hex);
+        localStorage.setItem('chatzao_theme_text', cor.text);
+        aplicarTemaGlobal(cor.hex, cor.text);
+        renderizarGridCores();
+        const box = document.getElementById('messages');
+        const atBot = box.scrollTop + box.clientHeight >= box.scrollHeight - 100;
+        startListening();
+        if(atBot) setTimeout(() => box.scrollTop = box.scrollHeight, 150);
+      });
+      grid.appendChild(dot);
+    });
+  }
 
   async function reagir(msgId, emoji, reacoesAtuais) {
     const novasReacoes = { ...(reacoesAtuais || {}) };
@@ -284,10 +377,9 @@
     }
   }
 
-  // FUNÇÃO EXCLUSIVA DE LIMPEZA GERAL PROTEGIDA POR SENHA MASTER
   async function limparHistoricoGeral() {
     const senhaMestre = "220399"; 
-    const inputSenha = prompt("Atenção! Esta ação apagará permanentemente TODAS as mensagens para todos os usuários.\n\nDigite a senha master para continuar:");
+    const inputSenha = prompt("Atenção! Esta ação apagará permanentemente TODAS as mensagens para todos os usuários.\n\nDigite a senha mestre para continuar:");
     
     if (inputSenha !== senhaMestre) {
       if(inputSenha !== null) alert("Senha incorreta! Operação cancelada.");
@@ -333,7 +425,7 @@
     }
 
     if(data.replyTo){
-      const rp=document.createElement('div'); rp.className='reply-preview'; rp.style.background=mine?darken(color)+'33':'#1e1e1e'; rp.style.borderLeftColor=userColor(data.replyTo.name||'');
+      const rp=document.createElement('div'); rp.className='reply-preview'; rp.style.background=mine?'rgba(255,255,255,0.05)':'#1e1e1e'; rp.style.borderLeftColor=userColor(data.replyTo.name||'');
       rp.innerHTML=`<span style="font-size:11px;font-weight:500;color:${userColor(data.replyTo.name||'')};">${data.replyTo.name||''}</span><br><span style="color:#999">${shortText(data.replyTo)}</span>`;
       w.appendChild(rp);
     }
@@ -347,7 +439,17 @@
       wrapper.appendChild(b); w.appendChild(wrapper); return w;
     }
 
-    b.style.background=mine?color+'dd':'#1e1e1e'; b.style.color=mine?'#fff':'#e0e0e0'; b.style.border=mine?'none':'0.5px solid #2a2a2a';
+    if (mine) {
+      const currentBg = localStorage.getItem('chatzao_theme_hex') || '#534AB7';
+      const currentTxt = localStorage.getItem('chatzao_theme_text') || '#ffffff';
+      b.style.background = currentBg;
+      b.style.color = currentTxt;
+      b.style.border = 'none';
+    } else {
+      b.style.background = '#1e1e1e';
+      b.style.color = '#e0e0e0';
+      b.style.border = '0.5px solid #2a2a2a';
+    }
 
     if(data.sticker){ const sp=document.createElement('span'); sp.style.fontSize='36px'; sp.textContent=data.sticker; b.appendChild(sp); }
     else if(data.image){
@@ -539,7 +641,7 @@
   function toggleCamera(force) {
     cameraOpen = force !== undefined ? force : !cameraOpen;
     if(cameraOpen) {
-      stickerOpen = false;
+      stickerOpen = false; toggleColorPanel(false);
       document.getElementById('sticker-panel').style.display = 'none';
       document.getElementById('sticker-btn').classList.remove('active');
       document.getElementById('camera-panel').style.display = 'block'; document.getElementById('camera-btn').classList.add('active');
@@ -556,6 +658,22 @@
     enviar({ image: canvas.toDataURL('image/jpeg', 0.95) }); toggleCamera(false);
   }
 
+  function toggleColorPanel(force) {
+    colorPanelOpen = force !== undefined ? force : !colorPanelOpen;
+    const panel = document.getElementById('color-panel');
+    const btn = document.getElementById('brush-btn');
+    if(colorPanelOpen) {
+      toggleCamera(false); toggleSticker(false);
+      panel.style.display = 'block';
+      btn.classList.add('active');
+      renderizarGridCores();
+    } else {
+      panel.style.display = 'none';
+      btn.classList.remove('active');
+    }
+  }
+
+  document.getElementById('brush-btn').addEventListener('click', () => toggleColorPanel());
   document.getElementById('camera-btn').addEventListener('click', () => toggleCamera());
   document.getElementById('camera-close').addEventListener('click', () => toggleCamera(false));
   document.getElementById('camera-snap').addEventListener('click', snapPhoto);
@@ -602,7 +720,7 @@
   document.getElementById('logout-btn').addEventListener('click', sair);
   document.getElementById('send-btn').addEventListener('click', dispararEnvioCompleto);
   
-  document.getElementById('clear-all-btn').addEventListener('click', limparHistoricoGeral);
+  document.getElementById('lock-clear-btn').addEventListener('click', limparHistoricoGeral);
 
   document.getElementById('avatar-pick').addEventListener('click', () => document.getElementById('avatar-file').click());
   document.getElementById('avatar-file').addEventListener('change', e => {
@@ -635,7 +753,7 @@
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dispararEnvioCompleto(); } });
 
   function toggleSticker(force){
-    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ toggleCamera(false); }
+    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
     document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none'; document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
     if(stickerOpen){ document.getElementById('sticker-grid').innerHTML=''; LISTA_EMOJIS_UNIFICADA.forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); document.getElementById('sticker-grid').appendChild(sp); }); }
   }
@@ -647,6 +765,7 @@
   document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display = 'none');
 
   window.addEventListener('DOMContentLoaded', () => {
+    carregarTemaSalvo();
     const savedName = localStorage.getItem('chatzao_name'); const savedAvatar = localStorage.getItem('chatzao_avatar');
     if(savedName) document.getElementById('name-input').value = savedName;
     if(savedAvatar){ myAvatar = savedAvatar; document.getElementById('avatar-pick').innerHTML = `<img src="${savedAvatar}" alt="av"/>`; }
