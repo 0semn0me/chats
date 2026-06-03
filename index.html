@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-  <title>Chatzão - Completo</title>
+  <title>Chatzão - Áudio Corrigido</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -85,7 +85,7 @@
     .panel-bar-close{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px}
     .panel-bar-close:hover{color:#aaa}
 
-    #sticker-panel, #gif-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
+    #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
     .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
     .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none}
     .panel-search input:focus{box-shadow:0 0 0 2px #534AB755}
@@ -94,12 +94,8 @@
     #sticker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto}
     #sticker-grid span{font-size:26px;cursor:pointer;text-align:center;padding:2px;border-radius:6px;transition:background 0.1s;display:inline-block}
     #sticker-grid span:hover{background:#2a2a2a}
-    
-    #gif-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto}
-    #gif-grid img{width:100%;height:70px;object-fit:cover;border-radius:6px;cursor:pointer;border:0.5px solid #2a2a2a}
-    .panel-hint{font-size:12px;color:#555;padding:8px 14px;text-align:center;grid-column:1/-1}
-    #sticker-grid::-webkit-scrollbar, #gif-grid::-webkit-scrollbar{width:4px}
-    #sticker-grid::-webkit-scrollbar-thumb, #gif-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
+    #sticker-grid::-webkit-scrollbar{width:4px}
+    #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
     
     #camera-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0;padding:10px 14px}
     .camera-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -124,7 +120,6 @@
     #send-btn:hover{background:#3C3489}
     #send-btn:disabled{opacity:0.4;cursor:default}
     
-    /* MODAL DE CONTROLE DE ÁUDIO E CONTADORES */
     .audio-controls-container{position:relative;display:inline-flex;flex-direction:column;align-items:center;flex-shrink:0}
     #audio-float-panel{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#1e1e1e;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;align-items:center;gap:8px;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,0.6);animation:fadeIn 0.15s ease;white-space:nowrap}
     #audio-timer{font-size:12px;font-weight:bold;color:#E24B4A;font-family:monospace;padding:0 2px}
@@ -135,7 +130,6 @@
     #audio-rec-btn.paused{color:#D4A017;background:rgba(212,160,23,0.1);border-color:#D4A017}
     @keyframes pulseRed { 0%{box-shadow:0 0 0 0 rgba(226,75,74,0.4)} 70%{box-shadow:0 0 0 6px rgba(226,75,74,0)} 100%{box-shadow:0 0 0 0 rgba(226,75,74,0)} }
 
-    /* PREVIEWS */
     #paste-preview, #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
     #paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid #333}
     #paste-preview span, #audio-preview-bar span{flex:1;font-size:12px;color:#888}
@@ -205,15 +199,6 @@
       <div id="sticker-grid"></div>
     </div>
 
-    <div id="gif-panel">
-      <div class="panel-search">
-        <i class="ti ti-photo-search" aria-hidden="true" style="font-size:16px;color:#888"></i>
-        <input id="gif-input" type="text" placeholder="Buscar GIF..." autocomplete="off"/>
-        <button class="panel-close" id="gif-close" aria-label="Fechar"><i class="ti ti-x"></i></button>
-      </div>
-      <div id="gif-grid"></div>
-    </div>
-
     <div id="camera-panel">
       <div class="camera-header">
         <span><i class="ti ti-camera"></i> Câmera (Qualidade Máxima)</span>
@@ -255,7 +240,6 @@
       <textarea id="msg-input" placeholder="Mensagem..." maxlength="500" rows="1"></textarea>
       
       <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <button class="btn-icon" id="gif-btn" aria-label="GIFs"><i class="ti ti-photo-search"></i></button>
       <button class="btn-icon" id="camera-btn" aria-label="Câmera e Galeria"><i class="ti ti-camera"></i></button>
       <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
     </div>
@@ -283,11 +267,10 @@
   const db = getFirestore(app);
   const col = collection(db, 'mensagens');
 
-  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, gifOpen=false, stickerTimer=null, gifTimer=null;
+  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null;
   let isInitialLoad = true, pasteImageData = null, unsubscribeSnapshot = null;
   let videoStream = null, currentFacingMode = 'user';
 
-  // Áudio e Timer
   let mediaRecorder = null, audioChunks = [], audioRecordedBlob = null, audioState = 'idle', globalAudioStream = null, timerInterval = null, totalSeconds = 0;
 
   const LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫🫠🫡🫣⏳🔧🔨⚙️💣🔥⚡✨🌟⭐👍👎👌✌️❤️🩵🖤");
@@ -301,7 +284,7 @@
   function darken(hex){return hex+'bb';}
   function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
-  function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.gif)return '🖼 GIF';if(m.audio)return '🎵 Áudio';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
+  function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.audio)return '🎵 Áudio';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
 
   async function reagir(msgId, emoji, reacoesAtuais) {
     const novasReacoes = { ...(reacoesAtuais || {}) };
@@ -313,7 +296,7 @@
   async function apagarMensagem(msgId) {
     if(confirm("Deseja mesmo apagar essa mensagem?")) {
       await updateDoc(doc(db, 'mensagens', msgId), {
-        isDeleted: true, text: "Mensagem apagada", image: null, gif: null, sticker: null, audio: null, reactions: {}
+        isDeleted: true, text: "Mensagem apagada", image: null, sticker: null, audio: null, reactions: {}
       });
     }
   }
@@ -357,9 +340,9 @@
     b.style.background=mine?color+'dd':'#1e1e1e'; b.style.color=mine?'#fff':'#e0e0e0'; b.style.border=mine?'none':'0.5px solid #2a2a2a';
 
     if(data.sticker){ const sp=document.createElement('span'); sp.style.fontSize='36px'; sp.textContent=data.sticker; b.appendChild(sp); }
-    else if(data.image || data.gif){
-      const img=document.createElement('img'); img.src=data.image || data.gif; img.loading='lazy'; img.style.cssText='max-width:220px;max-height:200px;border-radius:8px;display:block;cursor:pointer';
-      img.addEventListener('click',()=>abrirImagemNoLightbox(data.image || data.gif));
+    else if(data.image){
+      const img=document.createElement('img'); img.src=data.image; img.loading='lazy'; img.style.cssText='max-width:220px;max-height:200px;border-radius:8px;display:block;cursor:pointer';
+      img.addEventListener('click',()=>abrirImagemNoLightbox(data.image));
       b.style.cssText='padding:4px;background:transparent;border:none'; b.appendChild(img);
     }else if(data.audio){
       const aud=document.createElement('audio'); aud.src=data.audio; aud.controls=true; aud.controlsList="nodownload"; b.appendChild(aud);
@@ -374,7 +357,7 @@
 
     if(mine) {
       const sep = document.createElement('span'); sep.className = 'menu-sep'; rm.appendChild(sep);
-      if(!data.image && !data.gif && !data.sticker && !data.audio) {
+      if(!data.image && !data.sticker && !data.audio) {
         const editBtn = document.createElement('button'); editBtn.className = 'msg-action-btn'; editBtn.innerHTML = `<i class="ti ti-edit"></i>`;
         editBtn.addEventListener('click', (e) => { e.stopPropagation(); iniciarEdicao(id, data.text); });
         rm.appendChild(editBtn);
@@ -387,7 +370,7 @@
 
     const hint = document.createElement('i'); hint.className = 'ti ti-corner-up-left reply-hint';
     hint.addEventListener('click', (e) => {
-      e.stopPropagation(); cancelEdit(); replyTo={name:data.name,text:data.text,image:data.image,gif:data.gif,sticker:data.sticker,audio:data.audio,id};
+      e.stopPropagation(); cancelEdit(); replyTo={name:data.name,text:data.text,image:data.image,sticker:data.sticker,audio:data.audio,id};
       document.getElementById('rb-name').textContent=data.name; document.getElementById('rb-name').style.color=userColor(data.name);
       document.getElementById('rb-text').textContent=shortText(data); document.getElementById('reply-bar').style.display='flex';
       document.getElementById('msg-input').focus();
@@ -425,7 +408,7 @@
         await updateDoc(doc(db, 'mensagens', editTargetId), { text: payload.text, isEdited: true });
         cancelEdit(); return;
       }
-      await addDoc(col,{type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,gif:null,audio:null,replyTo:replyTo||null,...payload});
+      await addDoc(col,{type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,audio:null,replyTo:replyTo||null,...payload});
       cancelReply();
     }finally{btn.disabled=false;}
   }
@@ -448,7 +431,7 @@
     document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.display='flex';
   }
 
-  // 🎙️ TIMER E GERENCIADOR DE ÁUDIO
+  // CONTROLE DE ÁUDIO REFEITO E TRATADO PARA MOBILE / IOS
   const audioBtn = document.getElementById('audio-rec-btn');
   const floatPanel = document.getElementById('audio-float-panel');
   const timerLabel = document.getElementById('audio-timer');
@@ -469,23 +452,36 @@
       audioChunks = []; totalSeconds = 0; timerLabel.textContent = "00:00";
       try {
         globalAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(globalAudioStream);
+        
+        // Define tipos de container aceitos no iOS/Android sem corromper
+        let options = { mimeType: 'audio/mp3' };
+        if (!MediaRecorder.isTypeSupported('audio/mp3')) {
+          options = MediaRecorder.isTypeSupported('audio/aac') ? { mimeType: 'audio/aac' } : { mimeType: '' };
+        }
+
+        mediaRecorder = new MediaRecorder(globalAudioStream, options);
         mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
         mediaRecorder.onstop = () => {
-          if (audioState !== 'idle') {
-            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+          if (audioState !== 'idle' && audioChunks.length > 0) {
+            const blob = new Blob(audioChunks, { type: options.mimeType || 'audio/mp4' });
             const reader = new FileReader();
             reader.onloadend = () => {
-              audioRecordedBlob = reader.result;
-              document.getElementById('audio-preview-bar').style.display = 'flex';
-              audioState = 'ready'; actualizarInterfaceAudio();
+              if (reader.result && reader.result.startsWith('data:audio')) {
+                audioRecordedBlob = reader.result;
+                document.getElementById('audio-preview-bar').style.display = 'flex';
+                audioState = 'ready';
+              } else {
+                limparEMortificarGravacao();
+              }
+              actualizarInterfaceAudio();
             };
             reader.readAsDataURL(blob);
+          } else {
+            fecharHardwareMicrofone();
           }
-          fecharHardwareMicrofone();
         };
         mediaRecorder.start(200); audioState = 'recording'; startTimer();
-      } catch { alert("Microfone indisponível."); audioState = 'idle'; }
+      } catch (err) { alert("Microfone indisponível ou permissão negada."); audioState = 'idle'; }
     } else if (audioState === 'recording') {
       if (mediaRecorder?.state === 'recording') { mediaRecorder.pause(); audioState = 'paused'; stopTimer(); }
     } else if (audioState === 'paused') {
@@ -498,7 +494,9 @@
   
   function limparEMortificarGravacao() {
     audioState = 'idle'; stopTimer(); totalSeconds = 0;
-    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) mediaRecorder.stop();
+    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
+      try { mediaRecorder.stop(); } catch(e){}
+    }
     fecharHardwareMicrofone(); audioRecordedBlob = null; audioChunks = [];
     document.getElementById('audio-preview-bar').style.display = 'none'; actualizarInterfaceAudio();
   }
@@ -516,7 +514,7 @@
   document.getElementById('audio-trash-btn').addEventListener('click', (e) => { e.stopPropagation(); limparEMortificarGravacao(); });
   document.getElementById('audio-preview-cancel').addEventListener('click', limparEMortificarGravacao);
 
-  // 📷 SISTEMA DE CÂMERA E GALERIA DE VOLTA
+  // 📷 SISTEMA DE CÂMERA E GALERIA
   async function startCamera() {
     if(!confirm("Permitir acesso à câmera?")) { toggleCamera(false); return; }
     const video = document.getElementById('camera-video'); stopCamera();
@@ -534,9 +532,9 @@
   function toggleCamera(force) {
     cameraOpen = force !== undefined ? force : !cameraOpen;
     if(cameraOpen) {
-      stickerOpen = false; gifOpen = false;
-      document.getElementById('sticker-panel').style.display = 'none'; document.getElementById('gif-panel').style.display = 'none';
-      document.getElementById('sticker-btn').classList.remove('active'); document.getElementById('gif-btn').classList.remove('active');
+      stickerOpen = false;
+      document.getElementById('sticker-panel').style.display = 'none';
+      document.getElementById('sticker-btn').classList.remove('active');
       document.getElementById('camera-panel').style.display = 'block'; document.getElementById('camera-btn').classList.add('active');
       startCamera();
     } else {
@@ -567,9 +565,18 @@
   function dispararEnvioCompleto() {
     if (audioState === 'recording' || audioState === 'paused') {
       mediaRecorder.onstop = () => {
-        const blob = new Blob(audioChunks, { type: 'audio/webm' });
-        const reader = new FileReader(); reader.onloadend = () => { enviar({ audio: reader.result }); limparEMortificarGravacao(); };
-        reader.readAsDataURL(blob);
+        if(audioChunks.length > 0) {
+          const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/mp4' });
+          const reader = new FileReader(); reader.onloadend = () => { 
+            if(reader.result && reader.result.startsWith('data:audio')) {
+              enviar({ audio: reader.result }); 
+            }
+            limparEMortificarGravacao(); 
+          };
+          reader.readAsDataURL(blob);
+        } else {
+          limparEMortificarGravacao();
+        }
       };
       mediaRecorder.stop(); return;
     }
@@ -580,7 +587,6 @@
     if(v){ inputEl.value=''; inputEl.style.height = '38px'; enviar({text:v}); }
   }
 
-  // Interações e outros painéis
   const msgInput = document.getElementById('msg-input');
   msgInput.addEventListener('input', function() { this.style.height = '38px'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
   document.getElementById('enter-btn').addEventListener('click', entrar);
@@ -620,36 +626,15 @@
 
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dispararEnvioCompleto(); } });
 
-  // Emojis e GIFs
   function toggleSticker(force){
-    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ gifOpen=false; toggleCamera(false); document.getElementById('gif-panel').style.display='none'; }
+    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ toggleCamera(false); }
     document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none'; document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
     if(stickerOpen){ document.getElementById('sticker-grid').innerHTML=''; LISTA_EMOJIS_UNIFICADA.forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); document.getElementById('sticker-grid').appendChild(sp); }); }
-  }
-  async function searchGifs(q){
-    const grid=document.getElementById('gif-grid'); grid.innerHTML='<div class="panel-hint">Buscando...</div>';
-    const endpoint = q ? `https://tenor.googleapis.com/v2/search?q=${encodeURIComponent(q)}&key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif` : `https://tenor.googleapis.com/v2/featured?key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif`;
-    try{
-      const res=await fetch(endpoint); const data=await res.json();
-      if(!data.results?.length){ grid.innerHTML='<div class="panel-hint">Nenhum resultado</div>'; return; }
-      grid.innerHTML=''; data.results.forEach(r => {
-        const url=r.media_formats?.tinygif?.url; if(!url) return;
-        const img=document.createElement('img'); img.src=url; img.addEventListener('click', ()=>{ enviar({gif:url}); toggleGif(false); }); grid.appendChild(img);
-      });
-    }catch{ grid.innerHTML='<div class="panel-hint">Erro ao carregar GIFs</div>'; }
-  }
-  function toggleGif(force){
-    gifOpen=force!==undefined?force:!gifOpen; if(gifOpen){ stickerOpen=false; toggleCamera(false); document.getElementById('sticker-panel').style.display='none'; }
-    document.getElementById('gif-panel').style.display=gifOpen?'block':'none'; document.getElementById('gif-btn').classList.toggle('active',gifOpen);
-    if(gifOpen) { document.getElementById('gif-input').value=''; searchGifs(''); }
   }
 
   document.getElementById('sticker-btn').addEventListener('click', () => toggleSticker());
   document.getElementById('sticker-close').addEventListener('click', () => toggleSticker(false));
-  document.getElementById('gif-btn').addEventListener('click', () => toggleGif());
-  document.getElementById('gif-close').addEventListener('click', () => toggleGif(false));
   document.getElementById('sticker-input').addEventListener('input', e => { clearTimeout(stickerTimer); stickerTimer=setTimeout(() => { document.getElementById('sticker-grid').innerHTML=''; const f=e.target.value.trim(); LISTA_EMOJIS_UNIFICADA.filter(s=>s.includes(f)).forEach(s=>{ const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); document.getElementById('sticker-grid').appendChild(sp); }); },200); });
-  document.getElementById('gif-input').addEventListener('input', e => { clearTimeout(gifTimer); gifTimer=setTimeout(() => searchGifs(e.target.value.trim()), 400); });
 
   document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display = 'none');
 
