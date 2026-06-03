@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-  <title>Chatzão - Áudio Corrigido</title>
+  <title>Chatzão - Geral</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
@@ -32,6 +32,8 @@
     #topbar .me{font-size:12px;color:#eee;display:flex;align-items:center}
     #topbar .btn-logout{background:none;border:none;color:#888;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:3px}
     #topbar .btn-logout:hover{color:#E24B4A}
+    #topbar .btn-clear-all{background:none;border:none;color:#555;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:3px;transition:color 0.2s}
+    #topbar .btn-clear-all:hover{color:#E24B4A}
     .pill{font-size:11px;color:#1D9E75;background:#0a2e1f;padding:2px 10px;border-radius:99px}
     
     #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
@@ -108,29 +110,9 @@
     .btn-cam-control{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center}
     .btn-cam-control:hover{color:#ccc}
 
-    #inputbar{display:flex;gap:8px;padding:12px 14px 8px 14px;border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:flex-end;position:relative}
-    #msg-input{flex:1;font-size:14px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;font-family:var(--font-sans);resize:none;height:38px;max-height:100px;line-height:20px}
-    #msg-input:focus{box-shadow:0 0 0 2px #534AB755}
-    #msg-input::placeholder{color:#555}
-    
-    .btn-icon{padding:0;font-size:17px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#888;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;height:38px;width:38px;flex-shrink:0}
-    .btn-icon:hover{background:#252525;color:#ccc}
-    .btn-icon.active{background:#252525;color:#534AB7;border-color:#534AB7}
-    #send-btn{padding:7px 13px;font-size:15px;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;display:flex;align-items:center;height:38px;flex-shrink:0}
-    #send-btn:hover{background:#3C3489}
-    #send-btn:disabled{opacity:0.4;cursor:default}
-    
-    .audio-controls-container{position:relative;display:inline-flex;flex-direction:column;align-items:center;flex-shrink:0}
-    #audio-float-panel{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#1e1e1e;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;align-items:center;gap:8px;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,0.6);animation:fadeIn 0.15s ease;white-space:nowrap}
-    #audio-timer{font-size:12px;font-weight:bold;color:#E24B4A;font-family:monospace;padding:0 2px}
-    #audio-trash-btn{background:#E24B4A;color:#fff;border:none;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer}
-    #audio-trash-btn:hover{background:#c0392b}
+    <input type="file" id="gallery-input" accept="image/*" style="display:none"/>
 
-    #audio-rec-btn.recording{color:#E24B4A;background:rgba(226,75,74,0.1);border-color:#E24B4A;animation:pulseRed 1.5s infinite}
-    #audio-rec-btn.paused{color:#D4A017;background:rgba(212,160,23,0.1);border-color:#D4A017}
-    @keyframes pulseRed { 0%{box-shadow:0 0 0 0 rgba(226,75,74,0.4)} 70%{box-shadow:0 0 0 6px rgba(226,75,74,0)} 100%{box-shadow:0 0 0 0 rgba(226,75,74,0)} }
-
-    #paste-preview, #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    <div id="paste-preview", #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
     #paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid #333}
     #paste-preview span, #audio-preview-bar span{flex:1;font-size:12px;color:#888}
     #paste-preview button, #audio-preview-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
@@ -147,7 +129,7 @@
 <div id="app">
   <div id="login">
     <h2><span style="font-size:30px;display:block;text-align:center;margin-bottom:4px">💬</span>Chatzão</h2>
-    <p>Entre com seu nome ou apelido para conversar</p>
+    <p>Nome ou Apelido</p>
     <div class="login-row">
       <div class="avatar-pick" id="avatar-pick" title="Clique para escolher foto de perfil">
         <i class="ti ti-camera av-icon" aria-hidden="true"></i>
@@ -165,6 +147,7 @@
     <div id="topbar">
       <span class="title"><i class="ti ti-messages" aria-hidden="true" style="font-size:16px"></i>Chatzão</span>
       <div class="right">
+        <button class="btn-clear-all" id="clear-all-btn" title="Limpar histórico geral (Requer senha)"><i class="ti ti-trash-x"></i>Limpar Chat</button>
         <span class="me" id="me-label"></span>
         <button class="btn-logout" id="logout-btn" title="Sair do chat e editar perfil"><i class="ti ti-logout"></i>Sair</button>
         <span class="pill" id="online-label">● conectado</span>
@@ -253,7 +236,7 @@
 
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
@@ -298,6 +281,33 @@
       await updateDoc(doc(db, 'mensagens', msgId), {
         isDeleted: true, text: "Mensagem apagada", image: null, sticker: null, audio: null, reactions: {}
       });
+    }
+  }
+
+  // FUNÇÃO EXCLUSIVA DE LIMPEZA GERAL PROTEGIDA POR SENHA MASTER
+  async function limparHistoricoGeral() {
+    const senhaMestre = "220399"; 
+    const inputSenha = prompt("Atenção! Esta ação apagará permanentemente TODAS as mensagens para todos os usuários.\n\nDigite a senha master para continuar:");
+    
+    if (inputSenha !== senhaMestre) {
+      if(inputSenha !== null) alert("Senha incorreta! Operação cancelada.");
+      return;
+    }
+
+    if(!confirm("Tem certeza absoluta de que quer limpar o chat inteiro agora?")) return;
+
+    try {
+      const snapshot = await getDocs(col);
+      const batch = writeBatch(db);
+      
+      snapshot.forEach((documento) => {
+        batch.delete(doc(db, 'mensagens', documento.id));
+      });
+
+      await batch.commit();
+      alert("Histórico geral deletado com sucesso!");
+    } catch (e) {
+      alert("Erro ao tentar limpar o banco de dados.");
     }
   }
 
@@ -431,7 +441,6 @@
     document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.display='flex';
   }
 
-  // CONTROLE DE ÁUDIO REFEITO E TRATADO PARA MOBILE / IOS
   const audioBtn = document.getElementById('audio-rec-btn');
   const floatPanel = document.getElementById('audio-float-panel');
   const timerLabel = document.getElementById('audio-timer');
@@ -453,7 +462,6 @@
       try {
         globalAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         
-        // Define tipos de container aceitos no iOS/Android sem corromper
         let options = { mimeType: 'audio/mp3' };
         if (!MediaRecorder.isTypeSupported('audio/mp3')) {
           options = MediaRecorder.isTypeSupported('audio/aac') ? { mimeType: 'audio/aac' } : { mimeType: '' };
@@ -514,7 +522,6 @@
   document.getElementById('audio-trash-btn').addEventListener('click', (e) => { e.stopPropagation(); limparEMortificarGravacao(); });
   document.getElementById('audio-preview-cancel').addEventListener('click', limparEMortificarGravacao);
 
-  // 📷 SISTEMA DE CÂMERA E GALERIA
   async function startCamera() {
     if(!confirm("Permitir acesso à câmera?")) { toggleCamera(false); return; }
     const video = document.getElementById('camera-video'); stopCamera();
@@ -561,7 +568,6 @@
     reader.readAsDataURL(file);
   });
 
-  // DISPARAR ENVIOS GERAIS
   function dispararEnvioCompleto() {
     if (audioState === 'recording' || audioState === 'paused') {
       mediaRecorder.onstop = () => {
@@ -595,6 +601,8 @@
   document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
   document.getElementById('logout-btn').addEventListener('click', sair);
   document.getElementById('send-btn').addEventListener('click', dispararEnvioCompleto);
+  
+  document.getElementById('clear-all-btn').addEventListener('click', limparHistoricoGeral);
 
   document.getElementById('avatar-pick').addEventListener('click', () => document.getElementById('avatar-file').click());
   document.getElementById('avatar-file').addEventListener('change', e => {
