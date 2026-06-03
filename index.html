@@ -36,7 +36,7 @@
     .msg.theirs{align-self:flex-start;align-items:flex-start}
     .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
     .mine .bubble-wrapper{flex-direction:row-reverse}
-    .bubble(padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap}
+    .bubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap}
     .mine .bubble{border-bottom-right-radius:3px}
     .theirs .bubble{border-bottom-left-radius:3px}
     .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
@@ -101,31 +101,31 @@
     .btn-cam-control{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center}
     .btn-cam-control:hover{color:#ccc}
 
-    #inputbar{display:flex;gap:8px;padding:8px 14px;border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:flex-end}
+    #inputbar{display:flex;gap:8px;padding:12px 14px 8px 14px;border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:flex-end;position:relative}
     #msg-input{flex:1;font-size:14px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;font-family:var(--font-sans);resize:none;height:38px;max-height:100px;line-height:20px}
     #msg-input:focus{box-shadow:0 0 0 2px #534AB755}
     #msg-input::placeholder{color:#555}
     
-    .btn-icon{padding:7px 10px;font-size:17px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;height:38px}
+    .btn-icon{padding:0;font-size:17px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#888;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;height:38px;width:38px;flex-shrink:0}
     .btn-icon:hover{background:#252525;color:#ccc}
     .btn-icon.active{background:#252525;color:#534AB7;border-color:#534AB7}
-    #send-btn{padding:7px 13px;font-size:15px;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;display:flex;align-items:center;height:38px}
+    #send-btn{padding:7px 13px;font-size:15px;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;display:flex;align-items:center;height:38px;flex-shrink:0}
     #send-btn:hover{background:#3C3489}
     #send-btn:disabled{opacity:0.4;cursor:default}
     
-    /* CONTEINER DO PROTETOR DO ÁUDIO + LIXEIRA */
-    .audio-wrapper-container{position:relative;display:inline-flex;flex-direction:column;align-items:center}
+    /* CONTEINER DO ÁUDIO REPOSICIONADO */
+    .audio-wrapper-container{position:relative;display:inline-flex;flex-direction:column;align-items:center;flex-shrink:0}
     
-    /* LIXEIRA SECUNDÁRIA FLUTUANTE */
-    #audio-trash-float-btn{position:absolute;top:-42px;background:#E24B4A;color:#fff;border:none;border-radius:50%;width:34px;height:34px;display:none;align-items:center;justify-content:center;font-size:15px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.4);z-index:99;animation:fadeIn 0.15s ease}
-    #audio-trash-float-btn:hover{background:#c0392b;transform:scale(1.05)}
+    /* LIXEIRA CORRIGIDA ACIMA DO BOTÃO SEM CORTAR */
+    #audio-trash-float-btn{position:absolute;bottom:46px;left:50%;transform:translateX(-50%);background:#E24B4A;color:#fff;border:none;border-radius:50%;width:34px;height:34px;display:none;align-items:center;justify-content:center;font-size:14px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,0.5);z-index:99;animation:fadeIn 0.15s ease}
+    #audio-trash-float-btn:hover{background:#c0392b;transform:translateX(-50%) scale(1.05)}
 
     #audio-rec-btn{color:#888}
     #audio-rec-btn.recording{color:#E24B4A;background:rgba(226,75,74,0.1);animation:pulseRed 1.5s infinite;border-color:#E24B4A}
     #audio-rec-btn.paused{color:#D4A017;background:rgba(212,160,23,0.1);border-color:#D4A017}
     @keyframes pulseRed { 0%{box-shadow:0 0 0 0 rgba(226,75,74,0.4)} 70%{box-shadow:0 0 0 6px rgba(226,75,74,0)} 100%{box-shadow:0 0 0 0 rgba(226,75,74,0)} }
 
-    @keyframes fadeIn { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; transform:aria-label translate(-50%, 5px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
     .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
     .avatar-pick:hover{border-color:#534AB7}
     .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
@@ -232,7 +232,6 @@
     </div>
 
     <div id="inputbar">
-      <!-- Estrutura do Áudio unificada com a lixeirinha flutuante por cima -->
       <div class="audio-wrapper-container">
         <button id="audio-trash-float-btn" title="Apagar / Cancelar gravação"><i class="ti ti-trash"></i></button>
         <button class="btn-icon" id="audio-rec-btn" aria-label="Gravar Áudio"><i class="ti ti-microphone"></i></button>
@@ -276,12 +275,11 @@
   let videoStream = null;
   let currentFacingMode = 'user';
 
-  // Variáveis para gravação de áudio
   let mediaRecorder = null;
   let audioChunks = [];
   let audioRecordedBlob = null;
   let audioState = 'idle'; 
-  let globalAudioStream = null; // Guarda o stream para fechar em caso de descarte imediato
+  let globalAudioStream = null;
 
   const EMOJIS = ['😁','😆','🥹','😅','😂','🤣','🥲','☺️','😊','😋','😚','😙','😗','😘','🥰','😍','🤩','😎','🥳','🤓','🧐','🤨','🤪','😜','😝','😛','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😱','😨','😰','😥','😓','🤗','🤔','😡','🤬','🤯','😳','🥵','🥶','🤫','🫠','🤥','😶','😐','😑','😬','🙄','😯','🤑','🤕','🤒','😷','🤧','🤮','🤢','🥴','🤐','😵','😵‍💫','🫨','🫥','🫡','🫣','🥱','😴','🤤','🤠','🤡','👽','💀','👻','🤖','😈','👿','💩','👍','👎','👌','✌️','🤞','🫰','🤟','🤘','🤙','👋','🙌','👏','🙏','💪','❤️','🩷','🩵','💜','🖤','💔','❤️‍🔥','✨','🌟','⭐','💥','🔥','💻','📱','💸','💵','🪙','💎','🔧','🔨','⚙️','💣','☕','🥤','🍺','🍻','🍕','🍔','🍟','🍿','🍩','☀️','❄️','⚡','🌈'];
 
@@ -710,7 +708,7 @@
   });
 
 
-  // 🎙️ SISTEMA DE GRAVAÇÃO DE ÁUDIO COM LIXEIRA FLUTUANTE DINÂMICA
+  // 🎙️ SISTEMA DE GRAVAÇÃO DE ÁUDIO CORRIGIDO
   const audioBtn = document.getElementById('audio-rec-btn');
   const trashFloatBtn = document.getElementById('audio-trash-float-btn');
   
@@ -726,7 +724,6 @@
         };
 
         mediaRecorder.onstop = () => {
-          // Só processa se não tiver sido descartado pelo botão da lixeira
           if(audioState !== 'idle') {
             const blob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
@@ -773,7 +770,6 @@
     }
   }
 
-  // 🗑️ Função exclusiva da lixeirinha flutuante (Exclui tudo no ato e some)
   function excluirEMortificarGravacao() {
     audioState = 'idle'; 
     if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
@@ -789,7 +785,6 @@
   function atualizarInterfaceAudio() {
     audioBtn.className = 'btn-icon';
     
-    // Controla visibilidade da Lixeira Secundária Flutuante
     if (audioState === 'recording' || audioState === 'paused') {
       trashFloatBtn.style.display = 'flex';
     } else {
@@ -811,13 +806,12 @@
 
   audioBtn.addEventListener('click', gerenciarCliqueAudio);
   trashFloatBtn.addEventListener('click', (e) => {
-    e.stopPropagation(); // Impede o clique de ir pro botão de baixo
+    e.stopPropagation(); 
     excluirEMortificarGravacao();
   });
   document.getElementById('audio-cancel').addEventListener('click', excluirEMortificarGravacao);
 
 
-  // GATILHOS DE ENVIO INTEGRADOS
   function dispararEnvio() {
     if (audioState === 'recording' || audioState === 'paused') {
       if(confirm("Deseja concluir e enviar o áudio gravado atual?")) {
@@ -858,7 +852,6 @@
     }
   }
 
-  // EVENTOS PADRÃO DO CHAT
   document.getElementById('enter-btn').addEventListener('click', entrar);
   document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(); });
   document.getElementById('reply-cancel').addEventListener('click', cancelReply);
