@@ -22,7 +22,7 @@
     #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
     #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
     #login input:focus{box-shadow:0 0 0 2px rgba(83,74,183,0.33)}
-    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:#fff;cursor:pointer}
+    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
     #login button:hover{opacity:0.9}
     #login .err{font-size:13px;color:#E24B4A;display:none}
     .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
@@ -147,7 +147,7 @@
     .btn-icon.paused{background:#e08a2e !important;color:#fff !important}
     
     #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:9px 14px;font-size:14px;color:#fff;outline:none;resize:none;max-height:100px;font-family:var(--font-sans);line-height:1.4}
-    #send-btn{background:var(--theme-primary);border:none;color:#fff;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.1s}
+    #send-btn{background:var(--theme-primary);border:none;color:var(--theme-text);width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.1s}
     #send-btn:hover{opacity:0.9}
     #send-btn:disabled{background:#333;color:#555;cursor:not-allowed}
 
@@ -326,9 +326,11 @@
 
   let mediaRecorder = null, audioChunks = [], audioRecordedBlob = null, audioState = 'idle', globalAudioStream = null, timerInterval = null, totalSeconds = 0;
 
-  // SUBSTITUIÇÃO COMPLETA DE EMOJIS CONFORME EXIGIDO NAS FOTOS (MÃOS LIMITADAS APENAS A BRANCO E MORENO)
-  const LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😎🤩🥳😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫🫠🫡🫣⏳🔧🔨⚙️💣🔥⚡✨🌟⭐❤️🩵🖤")
-    .concat(["👍🏼","👍🏾","👎🏼","👎🏾","👌🏼","👌🏾","✌🏼","✌🏾"]);
+  // REAÇÕES DEFINIDAS PELO USUÁRIO (30 EMOJIS)
+  const LISTA_REACOES = ["🤣","🥹","😁","🙃","🥲","😌","😋","😜","😝","🤪","🤓","😎","🧐","🥳","🤩","😤","🤬","🤔","😓","🥶","😶‍🌫️","🤯","🤫","🫠","🫢","🫣","🙄","😬","😵","😪"];
+
+  // RESTANTE DOS EMOJIS COMPACTADOS PARA O PAINEL GERAL
+  const LISTA_EMOJIS_UNIFICADA = Array.from("😀😃😄🥹😆😁😅😂🤣😊☺️🥲😇🙂🙃😍😌😉🥰😘😗😋😚😙😛😝😜🤪🤨🧐🥸😎🤓🤩🥳😏😔😞😒😟😕🙁😖😣☹️😫😩🥺😤😭😢😠😡🤬🤯😳🥵😱😶‍🌫️🥶😨😰😥🤔🤗😓🫣🤭🫢🫠🤫🫡🤥😶🫥😑🫤😐🫨😬🙄😧😦😯😮😲🥱😪🤤😴😮‍💨😵😵‍💫🤢🥴🤐🤮🤧😷🤑🤕🤒");
 
   const PALETA_CUSTOMIZADA = [
     { name: 'Roxo Master', hex: '#534AB7', text: '#ffffff' },
@@ -356,13 +358,6 @@
   function aplicarTemaGlobal(hex, textHex) {
     document.documentElement.style.setProperty('--theme-primary', hex);
     document.documentElement.style.setProperty('--theme-text', textHex);
-    const elementsToUpdate = document.querySelectorAll('.btn-icon.active, #send-btn, #enter-btn');
-    elementsToUpdate.forEach(el => {
-      if(el.id === 'send-btn' || el.id === 'enter-btn') {
-        el.style.background = hex;
-        el.style.color = textHex;
-      }
-    });
   }
 
   function carregarTemaSalvo() {
@@ -393,20 +388,16 @@
     if(!canvas) return;
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    // Hue base
     const hueHex = hsvToHex(cmHue, 1, 1);
     ctx.clearRect(0,0,W,H);
-    // White -> hue gradient
     const gradH = ctx.createLinearGradient(0,0,W,0);
     gradH.addColorStop(0,'rgba(255,255,255,1)');
     gradH.addColorStop(1, hueHex);
     ctx.fillStyle = gradH; ctx.fillRect(0,0,W,H);
-    // Black gradient top->bottom
     const gradV = ctx.createLinearGradient(0,0,0,H);
     gradV.addColorStop(0,'rgba(0,0,0,0)');
     gradV.addColorStop(1,'rgba(0,0,0,1)');
     ctx.fillStyle = gradV; ctx.fillRect(0,0,W,H);
-    // Cursor
     const cx = cmCursorX * W, cy = cmCursorY * H;
     ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI*2);
     ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
@@ -421,12 +412,14 @@
     cmPickedText = hexToTextColor(cmPickedHex);
     const prev = document.getElementById('cm-preview');
     if(prev) prev.style.background = cmPickedHex;
+    
+    // Atualiza os botões dinamicamente em tempo real enquanto arrasta
+    aplicarTemaGlobal(cmPickedHex, cmPickedText);
   }
 
   function openColorModal() {
     const overlay = document.getElementById('color-modal-overlay');
     overlay.classList.add('open');
-    // restore saved hue from hex approx
     setTimeout(() => { drawColorCanvas(); updateCmColor(); }, 30);
   }
   function closeColorModal() {
@@ -455,7 +448,10 @@
     document.getElementById('hue-slider').addEventListener('input', e => {
       cmHue = parseInt(e.target.value); drawColorCanvas(); updateCmColor();
     });
-    document.getElementById('cm-cancel').addEventListener('click', closeColorModal);
+    document.getElementById('cm-cancel').addEventListener('click', () => {
+      carregarTemaSalvo();
+      closeColorModal();
+    });
     document.getElementById('color-modal-overlay').addEventListener('click', e => { if(e.target===document.getElementById('color-modal-overlay')) closeColorModal(); });
     document.getElementById('cm-apply').addEventListener('click', () => {
       localStorage.setItem('chatzao_theme_hex', cmPickedHex);
@@ -468,8 +464,6 @@
       closeColorModal();
     });
   });
-
-  function renderizarGridCores() { /* legacy - não usado mais */ }
 
   async function reagir(msgId, emoji, reacoesAtuais) {
     const novasReacoes = { ...(reacoesAtuais || {}) };
@@ -570,7 +564,7 @@
     }else{ const t=document.createElement('span'); t.textContent=data.text||''; b.appendChild(t); }
 
     const rm = document.createElement('div'); rm.className = 'react-menu';
-    LISTA_EMOJIS_UNIFICADA.slice(0, 10).forEach(e => {
+    LISTA_REACOES.forEach(e => {
       const opt = document.createElement('span'); opt.className = 'react-opt'; opt.textContent = e;
       opt.addEventListener('click', (evt) => { evt.stopPropagation(); reagir(id, e, data.reactions); });
       rm.appendChild(opt);
@@ -864,13 +858,11 @@
   const TONS_UNICODE = ["", "\u{1F3FB}", "\u{1F3FC}", "\u{1F3FD}", "\u{1F3FE}", "\u{1F3FF}"];
   const TONS_LABEL   = ["🖐️","🏻","🏼","🏽","🏾","🏿"];
   let tomAtual = 0;
-  let tomPopupEmoji = null; // base emoji being configured
 
   function buildStickerGrid(filter) {
     const grid = document.getElementById('sticker-grid');
     grid.innerHTML = '';
 
-    // Rostos
     const lbl1 = document.createElement('div'); lbl1.className='sticker-sec-label'; lbl1.textContent='EXPRESSÕES'; grid.appendChild(lbl1);
     const rostos = filter ? LISTA_EMOJIS_UNIFICADA.filter(s=>s.includes(filter)) : LISTA_EMOJIS_UNIFICADA;
     rostos.forEach(s => {
@@ -880,7 +872,6 @@
     });
 
     if(!filter) {
-      // Separator
       const sep = document.createElement('div'); sep.className='sticker-sep'; grid.appendChild(sep);
       const lbl2 = document.createElement('div'); lbl2.className='sticker-sec-label'; lbl2.textContent='MÃOS E GESTOS'; grid.appendChild(lbl2);
 
@@ -894,7 +885,6 @@
     }
   }
 
-  // Tom popup
   function openTomPopup(base, anchorEl) {
     let popup = document.getElementById('tom-popup');
     if(!popup){
@@ -916,7 +906,6 @@
       });
       popup.appendChild(btn);
     });
-    // Position near anchor
     const rect = anchorEl.getBoundingClientRect();
     popup.classList.add('open');
     popup.style.left = Math.min(rect.left, window.innerWidth - 60) + 'px';
