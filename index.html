@@ -690,8 +690,17 @@
 
   function sair(){
     if(unsubscribeSnapshot) unsubscribeSnapshot(); stopCamera(); limparEMortificarGravacao();
+    
+    // Limpa os dados salvos no navegador
     localStorage.removeItem('chatzao_name'); localStorage.removeItem('chatzao_avatar');
-    document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.display='flex';
+    
+    // Limpa os campos de texto e imagem da tela de login para que não apareçam novamente
+    document.getElementById('name-input').value = '';
+    document.getElementById('avatar-pick').innerHTML = `<i class="ti ti-camera av-icon" aria-hidden="true"></i>`;
+    myAvatar = ''; // Limpa a variável interna da foto de perfil
+    
+    // Altera as telas
+    document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.flexDirection='column'; document.getElementById('login').style.display='flex';
   }
 
   const audioBtn = document.getElementById('audio-rec-btn');
