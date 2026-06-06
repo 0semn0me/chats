@@ -7,7 +7,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{\n      --font-sans:system-ui,-apple-system,sans-serif;
+    :root{
+      --font-sans:system-ui,-apple-system,sans-serif;
       --border-radius-md:8px;
       --border-radius-lg:12px;
       --theme-primary: #E24B4A;
@@ -15,771 +16,316 @@
     }
     html,body{height:100%;height:100dvh;background:#0e0e0e;overflow:hidden;}
     body{display:flex;flex-direction:column;}
-    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:#0e0e0e;overflow:hidden;position:relative;}
+    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:#0e0e0e;overflow:hidden}
     #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:#0e0e0e}
-    
-    /* --- SISTEMA DE PLANO DE FUNDO --- */
-    #messages-container {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: #121212;
-    }
-    #messages-bg {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      z-index: 1;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      pointer-events: none;
-    }
-    #messages {
-      position: relative;
-      z-index: 2;
-      height: 100%;
-      overflow-y: auto;
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
+    #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
+    #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
+    #login input:focus{box-shadow:0 0 0 2px rgba(226,75,74,0.33)}
+    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
+    #login button:hover{opacity:0.9}
+    #login .err{font-size:13px;color:#E24B4A;display:none}
+    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
+    .avatar-pick:hover{border-color:var(--theme-primary)}
+    .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .av-icon{font-size:24px;color:#555;pointer-events:none}
+    .login-row{display:flex;align-items:center;gap:14px;width:260px}
 
-    /* Topbar & Inputbar */
-    .topbar{display:flex;align-items:center;justify-content:between;padding:12px 16px;background:#161616;border-bottom:1px solid #222;gap:12px;z-index:10;}
-    .topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
-    .chat-title{font-size:16px;font-weight:600;color:#fff}
-    .pill{font-size:12px;color:#fff;background:#1D9E75!important;padding:4px 14px;border-radius:99px;font-weight:500;display:flex;align-items:center;gap:5px}
-    .icon-btn{background:none;border:none;color:#a0a0a0;cursor:pointer;padding:6px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;transition:background 0.2s,color 0.2s}
-    .icon-btn:hover{background:#222;color:#fff}
+    #chat-area{display:none;flex-direction:column;height:100%;background:#0e0e0e}
+    #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:#161616}
+    #topbar .title{font-size:15px;font-weight:500;color:#fff;display:flex;align-items:center;gap:6px}
+    #topbar .btn-action{background:none;border:none;color:#aaa;cursor:pointer;font-size:18px;display:inline-flex;align-items:center;padding:6px;transition:color 0.2s;border-radius:6px}
+    #topbar .btn-action:hover{color:#E24B4A;background:#222}
+    #topbar .right{display:flex;align-items:center;gap:12px}
+    #topbar .me{font-size:12px;color:#eee;display:flex;align-items:center}
+    #topbar .btn-logout{background:none;border:none;color:#aaa;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;border:0.5px solid #333;padding:4px 10px;border-radius:6px}
+    #topbar .btn-logout:hover{color:#E24B4A}
+    .pill{font-size:12px;color:#fff;background:#1D9E75;padding:4px 14px;border-radius:99px;font-weight:500;display:flex;align-items:center;gap:5px}
     
-    .input-area{padding:12px;background:#161616;border-top:1px solid #222;display:flex;flex-direction:column;gap:8px;z-index:10;}
-    .reply-preview-bar{display:none;align-items:center;justify-content:between;background:#222;padding:8px 12px;border-radius:var(--border-radius-md);font-size:13px;color:#ccc;border-left:3px solid var(--theme-primary)}
-    .input-row{display:flex;align-items:center;gap:8px}
-    .main-input{flex:1;background:#222;border:1px solid #333;border-radius:24px;padding:10px 16px;color:#fff;font-size:15px;outline:none;transition:border-color 0.2s}
-    .main-input:focus{border-color:var(--theme-primary)}
+    /* Área de mensagens com suporte a Background customizável */
+    #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0;background-position:center;background-size:cover;background-repeat:no-repeat;position:relative}
+    #messages::-webkit-scrollbar{width:4px}
+    #messages::-webkit-scrollbar-track{background:transparent}
+    #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
     
-    /* Balões */
-    .msg{display:flex;flex-direction:column;max-width:75%;margin-bottom:4px;position:relative}
+    .msg{display:flex;flex-direction:column;gap:2px;max-width:80%;position:relative}
     .msg.mine{align-self:flex-end;align-items:flex-end}
     .msg.theirs{align-self:flex-start;align-items:flex-start}
-    .senders{display:flex;align-items:center;gap:8px;margin-bottom:4px}
-    .avatar{width:28px;height:28px;border-radius:50%;overflow:hidden;cursor:pointer;display:flex;align-items:center;justify-content:center}
-    .avatar img{width:100%;height:100%;object-fit:cover}
-    .sender-names{display:flex;flex-direction:column}
-    .sender-nick{font-size:12px;font-weight:600}
-    .bubble-wrapper{position:relative;display:inline-block}
-    .bubble{padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.4;word-break:break-word;position:relative}
-    .mine .bubble{background-color:var(--theme-primary)!important;color:var(--theme-text)!important;border-bottom-right-radius:3px}
-    .theirs .bubble{background:#1e1e1e;color:#e0e0e0;border:1px solid #2a2a2a;border-bottom-left-radius:3px}
-    .sys{align-self:center;background:#222;color:#888;font-size:11px;padding:3px 10px;border-radius:99px;margin:6px 0;text-transform:uppercase;letter-spacing:0.5px}
+    .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
+    .mine .bubble-wrapper{flex-direction:row-reverse}
+    .bubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap;background:#1a1a1a;color:#fff;border:0.5px solid #252525}
+    .mine .bubble{border-bottom-right-radius:3px;background:var(--theme-primary);color:var(--theme-text);border:none}
+    .theirs .bubble{border-bottom-left-radius:3px}
+    .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
+    .bubble audio{display:block;max-width:240px;outline:none;margin:4px 0}
     
-    /* Reações e Menus */
-    .react-menu{position:absolute;top:-36px;right:0;background:#222;border:1px solid #333;border-radius:20px;padding:4px 8px;display:none;gap:6px;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,0.5)}
-    .bubble-wrapper:hover .react-menu{display:flex}
-    .react-opt{font-size:18px;cursor:pointer;transition:transform 0.1s}
-    .react-opt:hover{transform:scale(1.3)}
-    .reactions-badge{background:#222;border:1px solid #333;border-radius:10px;padding:2px 6px;font-size:12px;margin-top:-6px;margin-left:8px;z-index:3;align-self:flex-start}
-    .mine .reactions-badge{align-self:flex-end;margin-right:8px;margin-left:0}
+    /* Menus e Modais */
+    .color-popup{position:fixed;top:60px;right:14px;background:#161616;border:0.5px solid #333;border-radius:var(--border-radius-lg);padding:14px;display:none;flex-direction:column;gap:12px;z-index:100;box-shadow:0 10px 25px rgba(0,0,0,0.6);width:240px}
+    .color-popup.open{display:flex}
+    .color-popup h4{font-size:13px;color:#888;font-weight:500;margin-bottom:2px}
+    .color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .color-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.1s}
+    .color-dot:hover{transform:scale(1.1)}
+    .color-dot.active{border-color:#fff}
     
-    /* Modais */
-    .modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:100;opacity:0;pointer-events:none;transition:opacity 0.2s}
-    .modal-overlay.open{opacity:1;pointer-events:auto}
-    .modal-card{background:#161616;border:1px solid #2a2a2a;border-radius:var(--border-radius-lg);padding:20px;width:90%;max-width:400px;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
-    .modal-header{display:flex;align-items:center;justify-content:between}
-    .modal-header h3{color:#fff;font-size:18px}
-    
-    /* Ajustes específicos do Modal do Pincel (Cores + Fundo) */
-    .color-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:8px 0}
-    .color-dot{height:40px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform 0.1s}
-    .bg-setting-section{border-top:1px solid #2a2a2a;padding-top:14px;margin-top:6px;display:flex;flex-direction:column;gap:10px;}
-    .bg-pos-row{display:flex;gap:6px}
-    .bg-btn{flex:1;background:#222;border:1px solid #333;color:#ccc;padding:6px;border-radius:6px;font-size:12px;cursor:pointer;transition:all 0.2s;}
-    .bg-btn.active{background:var(--theme-primary);color:var(--theme-text);border-color:transparent;}
-    .upload-bg-label{background:#262626;border:1px dashed #444;color:#aaa;padding:10px;border-radius:6px;text-align:center;font-size:13px;cursor:pointer;display:block}
+    .btn-bg-trigger{width:100%;padding:8px;background:#222;border:0.5px solid #333;border-radius:6px;color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:500}
+    .btn-bg-trigger:hover{background:#2a2a2a;color:var(--theme-primary)}
 
-    /* Câmera e Lightbox */
-    #camera-box{position:absolute;bottom:70px;left:12px;right:12px;background:#161616;border:1px solid #2a2a2a;border-radius:var(--border-radius-lg);padding:10px;z-index:90;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.6)}
-    #camera-video{width:100%;max-height:240px;object-fit:cover;border-radius:var(--border-radius-md);background:#000}
-    .cam-controls{display:flex;justify-content:center;gap:20px;margin-top:10px}
-    #lightbox{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:200;display:none;align-items:center;justify-content:center;padding:1rem}
-    #lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
-    
-    /* Login Screen Layout */
-    .login-card{background:#161616;border:1px solid #2a2a2a;padding:24px;border-radius:var(--border-radius-lg);width:100%;max-width:340px;display:flex;flex-direction:column;gap:16px;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
-    .login-avatar-pick{width:80px;height:80px;border-radius:50%;background:#222;border:1px dashed #444;display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0 auto;overflow:hidden;position:relative}
-    .login-avatar-pick img{width:100%;height:100%;object-fit:cover}
-    .login-input{background:#222;border:1px solid #333;border-radius:var(--border-radius-md);padding:10px 14px;color:#fff;font-size:15px;outline:none;text-align:center}
-    .login-btn{background:var(--theme-primary);color:var(--theme-text);border:none;border-radius:var(--border-radius-md);padding:12px;font-size:15px;font-weight:600;cursor:pointer}
+    /* Painel do Plano de Fundo */
+    .bg-popup{position:fixed;top:60px;right:14px;background:#161616;border:0.5px solid #333;border-radius:var(--border-radius-lg);padding:14px;display:none;flex-direction:column;gap:12px;z-index:101;box-shadow:0 10px 25px rgba(0,0,0,0.6);width:260px}
+    .bg-popup.open{display:flex}
+    .bg-popup h4{font-size:13px;color:#888;font-weight:500}
+    .bg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-height:160px;overflow-y:auto}
+    .bg-thumb{width:100%;height:50px;border-radius:4px;cursor:pointer;object-fit:cover;border:1.5px solid transparent;background:#222}
+    .bg-thumb:hover{opacity:0.8}
+    .bg-thumb.active{border-color:var(--theme-primary)}
+    .bg-actions{display:flex;gap:6px}
+    .btn-bg-action{flex:1;padding:8px;font-size:12px;border-radius:6px;cursor:pointer;border:none;font-weight:500;display:flex;align-items:center;justify-content:center;gap:4px}
+    .btn-bg-gallery{background:var(--theme-primary);color:#fff}
+    .btn-bg-clear{background:#222;color:#aaa;border:0.5px solid #333}
 
-    /* Estilos Extras do Perfil */
-    .pm-react-box { display: flex; gap: 8px; padding: 10px; background: #222; border-radius: 30px; margin-top: 15px; border: 0.5px solid #333; justify-content: center; width: 100%; overflow-x: auto; }
-    .pm-react-opt { font-size: 22px; cursor: pointer; transition: transform 0.1s; }
-    .pm-react-opt:hover { transform: scale(1.25); }
-    .actions-wrapper { position: absolute; right: -55px; top: 50%; transform: translateY(-50%); display: none; gap: 4px; z-index: 10; }
-    .msg-action-btn { background: #222; border: 1px solid #333; color: #aaa; border-radius: 50%; width: 26px; height: 26px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; }
-    .msg-action-btn:hover { background: #333; color: #fff; }
-    .bubble-wrapper:hover .actions-wrapper { display: flex; }
-    .msg.mine .actions-wrapper { left: -55px; right: auto; }
+    /* Caixa de entrada */
+    #input-area{padding:12px 14px;background:#161616;border-top:0.5px solid #222;display:flex;align-items:center;gap:10px;position:relative}
+    #input-area input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:10px 16px;color:#fff;font-size:14px;outline:none}
+    #input-area input:focus{border-color:#444}
+    #btn-send{background:var(--theme-primary);color:var(--theme-text);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+    
+    .meta{font-size:10px;color:#555;margin-top:2px;display:flex;gap:4px}
+    .senders{font-size:12px;color:#aaa;font-weight:500;margin-bottom:2px}
   </style>
 </head>
 <body>
 
-  <div id="login">
-    <div class="login-card">
-      <h2 style="color:#fff;text-align:center;font-size:20px;font-weight:600">Entrar no Chatzão</h2>
-      <div id="avatar-pick" class="login-avatar-pick"><i class="ti ti-camera" style="font-size:24px;color:#666"></i></div>
-      <input type="file" id="avatar-file" accept="image/*" style="display:none">
-      <input type="text" id="name-input" class="login-input" placeholder="Seu apelido..." maxlength="15">
-      <button id="login-btn" class="login-btn">Entrar</button>
-    </div>
-  </div>
-
-  <div id="app" style="display:none">
-    <div class="topbar">
-      <div style="display:flex;flex-direction:column">
-        <span class="chat-title">Chatzão Geral</span>
-      </div>
-      <div class="topbar-right">
-        <span class="pill"><i class="ti ti-circle-filled" style="font-size:8px"></i> Conectado</span>
-        <button id="color-btn" class="icon-btn"><i class="ti ti-palette"></i></button>
-      </div>
-    </div>
-
-    <div id="messages-container">
-      <div id="messages-bg"></div>
-      <div id="messages"></div>
-    </div>
-
-    <div id="camera-box">
-      <video id="camera-video" autoplay playsinline></video>
-      <div class="cam-controls">
-        <button id="camera-close" class="icon-btn" style="background:#222;padding:10px;"><i class="ti ti-x" style="color:#ff4a4a"></i></button>
-        <button id="snap-btn" class="icon-btn" style="background:var(--theme-primary);color:var(--theme-text);padding:14px;font-size:22px;"><i class="ti ti-camera"></i></button>
-      </div>
-    </div>
-
-    <div class="input-area">
-      <div id="reply-preview-bar" class="reply-preview-bar"></div>
-      <div class="input-row">
-        <button id="sticker-btn" class="icon-btn"><i class="ti ti-mood-smile"></i></button>
-        <button id="camera-btn" class="icon-btn"><i class="ti ti-camera"></i></button>
-        <button id="gallery-btn" class="icon-btn"><i class="ti ti-photo"></i></button>
-        <input type="file" id="gallery-input" accept="image/*" style="display:none">
-        
-        <input type="text" id="inputbar" class="main-input" placeholder="Digite uma mensagem...">
-        
-        <button id="mic-btn" class="icon-btn"><i class="ti ti-microphone"></i></button>
-        <button id="send-btn" class="icon-btn" style="background:var(--theme-primary);color:var(--theme-text);padding:10px;"><i class="ti ti-send"></i></button>
-      </div>
-      <div id="audio-rec-indicator" style="display:none;align-items:center;gap:8px;padding-left:8px;font-size:13px;color:#ff4a4a;">
-        <i class="ti ti-player-record-filled" style="animation:pulse 1s infinite"></i> Gravando áudio: <span id="audio-rec-timer">0:00</span>
-      </div>
-    </div>
-  </div>
-
-  <div id="sticker-panel" style="position:absolute;bottom:75px;left:12px;background:#161616;border:1px solid #2a2a2a;border-radius:var(--border-radius-lg);padding:12px;width:280px;z-index:95;display:none;box-shadow:0 8px 24px rgba(0,0,0,0.5)">
-    <div style="display:flex;align-items:center;justify-content:between;margin-bottom:8px">
-      <input type="text" id="sticker-input" placeholder="Buscar sticker..." style="background:#222;border:1px solid #333;border-radius:4px;padding:4px 8px;color:#fff;font-size:12px;flex:1;margin-right:8px;outline:none">
-      <button id="sticker-close" class="icon-btn" style="padding:2px"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="sticker-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-height:160px;overflow-y:auto;padding-top:4px"></div>
-  </div>
-
-  <div id="lightbox"><img id="lightbox-img" src="" alt="Zoom"></div>
-
-  <div id="color-modal-overlay" class="modal-overlay">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h3>Tema & Customização</h3>
-        <button id="cm-cancel" class="icon-btn" style="padding:2px"><i class="ti ti-x"></i></button>
-      </div>
-      
-      <div style="font-size:13px;color:#aaa;">Selecione a cor principal do seu Chat:</div>
-      <div class="color-grid">
-        <div class="color-dot" data-hex="#E24B4A" data-text="#ffffff" style="background:#E24B4A"></div>
-        <div class="color-dot" data-hex="#1D9E75" data-text="#ffffff" style="background:#1D9E75"></div>
-        <div class="color-dot" data-hex="#2F70E9" data-text="#ffffff" style="background:#2F70E9"></div>
-        <div class="color-dot" data-hex="#E67E22" data-text="#ffffff" style="background:#E67E22"></div>
-        <div class="color-dot" data-hex="#9B59B6" data-text="#ffffff" style="background:#9B59B6"></div>
-      </div>
-
-      <div class="bg-setting-section">
-        <div style="font-size:13px;color:#aaa;margin-bottom:2px;">Plano de Fundo da Galeria:</div>
-        <label for="bg-upload-input" class="upload-bg-label" id="bg-upload-status">
-          <i class="ti ti-upload" style="margin-right:4px"></i>Escolher Foto da Galeria
-        </label>
-        <input type="file" id="bg-upload-input" accept="image/*" style="display:none">
-        
-        <div style="font-size:12px;color:#888;margin-top:4px">Posicionamento da Imagem:</div>
-        <div class="bg-pos-row">
-          <button class="bg-btn active" data-pos="cover">Preencher Tela</button>
-          <button class="bg-btn" data-pos="contain">Centralizado</button>
-          <button class="bg-btn" data-pos="repeat">Lado a Lado</button>
+  <div id="app">
+    <div id="login">
+      <h2>Entrar no Chatzão</h2>
+      <p>Configure seu apelido e perfil para começar.</p>
+      <div class="login-row">
+        <div class="avatar-pick" id="avatar-pick" onclick="triggerAvatarUpload()">
+          <i class="ti ti-camera av-icon" id="camera-ic"></i>
         </div>
-        <button id="bg-remove-btn" style="background:none;border:none;color:#ff4a4a;font-size:11px;cursor:pointer;text-align:left;margin-top:2px;display:none;"><i class="ti ti-trash"></i> Remover plano de fundo</button>
+        <input type="text" id="name-input" placeholder="Seu apelido..." maxlength="25">
+      </div>
+      <input type="file" id="avatar-file" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
+      <button onclick="entrar()">Conectar</button>
+      <div class="err" id="login-err">Insira um apelido válido!</div>
+    </div>
+
+    <div id="chat-area">
+      <div id="topbar">
+        <div class="title">
+          <span class="pill"><i class="ti ti-circle-filled" style="font-size:8px"></i> Chatzão</span>
+        </div>
+        <div class="right">
+          <span class="me" id="user-display"></span>
+          <button class="btn-action" onclick="toggleColorPopup(event)" title="Cores do Sistema">
+            <i class="ti ti-palette"></i>
+          </button>
+          <button class="btn-logout" onclick="logout()">Sair</button>
+        </div>
       </div>
 
-      <div style="display:flex;gap:10px;margin-top:8px">
-        <button id="cm-apply" class="login-btn" style="flex:1;padding:10px">Confirmar e Salvar</button>
+      <div class="color-popup" id="color-popup" onclick="event.stopPropagation()">
+        <h4>Cor Principal</h4>
+        <div class="color-grid" id="color-grid"></div>
+        <hr style="border:0; border-top:0.5px solid #333; margin:4px 0;">
+        <button class="btn-bg-trigger" onclick="openBgPopup(event)">
+          <i class="ti ti-photo"></i> Plano de Fundo
+        </button>
+      </div>
+
+      <div class="bg-popup" id="bg-popup" onclick="event.stopPropagation()">
+        <h4>Fotos Neutras de Fundo</h4>
+        <div class="bg-grid" id="bg-grid"></div>
+        <input type="file" id="bg-gallery-input" accept="image/*" style="display:none" onchange="handleBgGallery(this)">
+        <div class="bg-actions">
+          <button class="btn-bg-action btn-bg-gallery" onclick="triggerBgGallery()">
+            <i class="ti ti-folder"></i> Galeria
+          </button>
+          <button class="btn-bg-action btn-bg-clear" onclick="clearBg()">
+            Sem Fundo
+          </button>
+        </div>
+      </div>
+
+      <div id="messages"></div>
+
+      <div id="input-area">
+        <input type="text" id="msg-input" placeholder="Digite sua mensagem..." onkeydown="if(event.key==='Enter') enviarMsg()">
+        <button id="btn-send" onclick="enviarMsg()"><i class="ti ti-send"></i></button>
       </div>
     </div>
   </div>
 
-  <div id="profile-modal" class="modal-overlay">
-    <div class="modal-card" style="align-items:center;text-align:center;">
-      <div style="width:100%;display:flex;justify-content:flex-end">
-        <button id="profile-modal-close" class="icon-btn"><i class="ti ti-x"></i></button>
-      </div>
-      <div id="pm-avatar-target" style="width:100px;height:100px;margin-bottom:6px"></div>
-      <h3 id="pm-nick-target" style="color:#fff;font-size:20px"></h3>
-      <p id="pm-fullname-target" style="color:#888;font-size:14px"></p>
-      
-      <div style="margin-top:10px;font-size:14px;color:#ccc">
-        Reações no Perfil: <span id="pm-likes-count" style="font-weight:bold;color:var(--theme-primary)">0</span>
-      </div>
-      <div id="pm-like-btn-action"></div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { 
-      getFirestore, collection, addDoc, onSnapshot, query, orderBy, limit, 
-      doc, updateDoc, deleteDoc, arrayUnion, arrayRemove, runTransaction, getDoc, setDoc 
-    } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAs7...",
-      authDomain: "chatz-f2ef5.firebaseapp.com",
-      projectId: "chatz-f2ef5",
-      storageBucket: "chatz-f2ef5.appspot.com",
-      messagingSenderId: "36737512217",
-      appId: "1:36737512217:web:9fa42197607730e704870c",
-      measurementId: "G-J6ZE007W8F"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const col = collection(db, "chats");
-
-    let myName = '';
-    let myAvatar = '';
-    let replyToMsg = null;
-    let userListInChat = new Set();
-    let dbColorsCache = {};
-
-    const LISTA_REACOES = ['👍','❤️','😂','😮','😢','🙏','🔥','👏'];
-    let tomSelecionado = localStorage.getItem('chatzao_reacao_tom') || '';
-
-    let videoStream = null;
-    let mediaRecorder = null;
-    let audioChunks = [];
-    let isRecordingAudio = false;
-    let recInterval = null;
-    let recSeconds = 0;
-    let stickerOpen = false;
-    let colorOpen = false;
-    let stickerTimer = null;
-    let unsubscribeSnapshot = null;
-    let unsubscribeLikes = null;
-
-    let cmPickedHex = '#E24B4A';
-    let cmPickedText = '#ffffff';
+  <script>
+    let meuNome = "";
+    let meuAvatar = "";
     
-    // Variáveis temporárias para o plano de fundo antes de confirmar
-    let tempBgBase64 = localStorage.getItem('chatzao_bg_file') || '';
-    let tempBgPos = localStorage.getItem('chatzao_bg_pos') || 'cover';
-
-    function userColor(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) { hash = str.charCodeAt(i) + ((hash << 5) - hash); }
-      let c = '#';
-      for (let i = 0; i < 3; i++) {
-        let value = (hash >> (i * 8)) & 0xFF;
-        c += ('00' + value.toString(16)).substr(-2);
-      }
-      return c;
-    }
-    function ini(n) { return n ? n.substring(0, 2).toUpperCase() : '??'; }
-    function shortText(r) { return r.text ? (r.text.substring(0, 30) + '...') : '[Mídia]'; }
-
-    // --- FUNÇÃO PARA APLICAR AS PARÂMETROS DO TEMA E DO PLANO DE FUNDO ---
-    function aplicarTemaGlobal(hex, text) {
-      document.documentElement.style.setProperty('--theme-primary', hex);
-      document.documentElement.style.setProperty('--theme-text', text);
-      document.querySelectorAll('.msg.mine .bubble').forEach(b => {
-        b.style.setProperty('background-color', hex, 'important');
-        b.style.setProperty('color', text, 'important');
-      });
-    }
-
-    function aplicarFundoNaTela(base64Data, posicao) {
-      const bgEl = document.getElementById('messages-bg');
-      if(!base64Data) {
-        bgEl.style.backgroundImage = 'none';
-        return;
-      }
-      bgEl.style.backgroundImage = `url(${base64Data})`;
-      if(posicao === 'cover') {
-        bgEl.style.backgroundSize = 'cover';
-        bgEl.style.backgroundRepeat = 'no-repeat';
-        bgEl.style.backgroundPosition = 'center';
-      } else if(posicao === 'contain') {
-        bgEl.style.backgroundSize = 'contain';
-        bgEl.style.backgroundRepeat = 'no-repeat';
-        bgEl.style.backgroundPosition = 'center';
-      } else if(posicao === 'repeat') {
-        bgEl.style.backgroundSize = 'auto';
-        bgEl.style.backgroundRepeat = 'repeat';
-        bgEl.style.backgroundPosition = 'top left';
-      }
-    }
-
-    function carregarTemaSalvo() {
-      const hex = localStorage.getItem('chatzao_theme_hex') || '#E24B4A';
-      const text = localStorage.getItem('chatzao_theme_text') || '#ffffff';
-      cmPickedHex = hex; cmPickedText = text;
-      aplicarTemaGlobal(hex, text);
-
-      // Carrega a imagem de fundo salva
-      if(tempBgBase64) {
-        aplicarFundoNaTela(tempBgBase64, tempBgPos);
-        document.getElementById('bg-remove-btn').style.display = 'block';
-        document.getElementById('bg-upload-status').innerHTML = `<i class="ti ti-check" style="color:#1D9E75"></i> Imagem Carregada`;
-      }
-      
-      // Ajusta o botão ativo no modal conforme configuração salva
-      document.querySelectorAll('.bg-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('data-pos') === tempBgPos);
-      });
-    }
-
-    // --- ESCUTADORES DO BANCO DE DADOS EM TEMPO REAL ---
-    onSnapshot(collection(db, 'perfil_cores'), (snapshot) => {
-      snapshot.forEach(docSnap => {
-        dbColorsCache[docSnap.id] = docSnap.data().color;
-      });
-      document.querySelectorAll('.msg.theirs').forEach(m => {
-        const nickEl = m.querySelector('.sender-nick');
-        if (nickEl) {
-          const nick = nickEl.textContent;
-          if (dbColorsCache[nick]) {
-            nickEl.style.color = dbColorsCache[nick];
-            const bubble = m.querySelector('.bubble');
-            if (bubble && !bubble.classList.contains('deleted-style')) {
-              bubble.style.border = `1px solid ${dbColorsCache[nick]}`;
-            }
-          }
-        }
-      });
-    });
-
-    function iniciarEscutaMensagens() {
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      unsubscribeSnapshot = onSnapshot(query(col, orderBy('timestamp')), (snapshot) => {
-        const box = document.getElementById('messages');
-        box.innerHTML = '';
-        snapshot.forEach((docSnap) => {
-          const item = renderMsg(docSnap.data(), docSnap.id);
-          if(item) box.appendChild(item);
-        });
-        box.scrollTop = box.scrollHeight;
-      });
-    }
-
-    // --- RENDERIZADOR DE MENSAGENS ---
-    function renderMsg(data, id) {
-      if(data.type === 'system'){ 
-        const d = document.createElement('div'); d.className = 'sys'; d.textContent = data.text; return d; 
-      }
-      if(data.name && data.name !== myName) userListInChat.add(data.name);
-
-      const mine = data.name === myName;
-      const corAutor = dbColorsCache[data.name] || userColor(data.name);
-      const w = document.createElement('div'); 
-      w.className = 'msg ' + (mine ? 'mine' : 'theirs');
-      w.setAttribute('data-id', id);
-
-      if(!mine){
-        const s = document.createElement('div'); s.className = 'senders';
-        const avSpan = document.createElement('span'); avSpan.className = 'avatar';
-        avSpan.innerHTML = data.avatar ? `<img src="${data.avatar}" alt="av"/>` : `<span style="background:${corAutor}22;color:${corAutor};width:100%;height:100%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:bold">${ini(data.name)}</span>`;
-        avSpan.addEventListener('click', () => abrirModalPerfil(data.name, data.fullName, data.avatar));
-        s.appendChild(avSpan);
-
-        const namesContainer = document.createElement('div'); namesContainer.className = 'sender-names';
-        namesContainer.innerHTML = `<span class="sender-nick" style="color:${corAutor};font-weight:bold;font-size:13px">${data.name}</span>`;
-        s.appendChild(namesContainer); w.appendChild(s);
-      }
-
-      if(data.replyTo){
-        const corReply = dbColorsCache[data.replyTo.name] || userColor(data.replyTo.name || '');
-        const rp = document.createElement('div'); rp.className = 'reply-preview'; rp.style.background = mine ? 'rgba(255,255,255,0.05)' : '#1e1e1e'; rp.style.borderLeftColor = corReply;
-        rp.innerHTML = `<span style="font-size:11px;font-weight:500;color:${corReply};">${data.replyTo.name || ''}</span><br><span style="color:#999">${shortText(data.replyTo)}</span>`;
-        w.appendChild(rp);
-      }
-
-      const wrapper = document.createElement('div'); wrapper.className = 'bubble-wrapper';
-      const b = document.createElement('div'); b.className = 'bubble';
-      
-      if(data.isDeleted) {
-        b.className += ' deleted-style';
-        b.style.cssText = 'background:#1a1a1a;color:#666;border:0.5px solid #222;font-style:italic';
-        b.innerHTML = `<i class="ti ti-ban" style="font-size:12px;margin-right:3px"></i>Mensagem apagada`;
-        wrapper.appendChild(b); w.appendChild(wrapper); return w;
-      }
-
-      if (mine) {
-        b.style.setProperty('background-color', 'var(--theme-primary)', 'important');
-        b.style.setProperty('color', 'var(--theme-text)', 'important');
-      } else {
-        b.style.background = '#1e1e1e'; 
-        b.style.color = '#e0e0e0'; 
-        b.style.border = `1px solid ${corAutor}`;
-      }
-
-      if(data.image) { b.innerHTML += `<img src="${data.image}" class="chat-img" style="cursor:pointer; max-width:100%; border-radius:8px; display:block; margin-top:4px;"/>`; }
-      if(data.audio) { b.innerHTML += `<audio src="${data.audio}" controls style="display:block; margin-top:4px; max-width:100%;"></audio>`; }
-      if(data.text) { 
-        const txtSpan = document.createElement('span'); 
-        txtSpan.textContent = data.text; 
-        b.appendChild(txtSpan); 
-      }
-
-      const actionsWrapper = document.createElement('div');
-      actionsWrapper.className = 'actions-wrapper';
-      if(mine) {
-        const delBtn = document.createElement('button'); delBtn.className = 'msg-action-btn'; delBtn.innerHTML = '<i class="ti ti-trash"></i>';
-        delBtn.addEventListener('click', () => apagarMensagem(id));
-        actionsWrapper.appendChild(delBtn);
-      }
-      const repBtn = document.createElement('button'); repBtn.className = 'msg-action-btn'; repBtn.innerHTML = '<i class="ti ti-arrow-back-up"></i>';
-      repBtn.addEventListener('click', () => setReply(data, id));
-      actionsWrapper.appendChild(repBtn);
-      wrapper.appendChild(actionsWrapper);
-
-      wrapper.appendChild(b);
-      
-      const rm = document.createElement('div'); rm.className = 'react-menu';
-      LISTA_REACOES.slice(0, 6).forEach(emoji => {
-        const opt = document.createElement('span'); opt.className = 'react-opt'; opt.textContent = emoji;
-        opt.addEventListener('click', () => adicionarReacao(id, emoji));
-        rm.appendChild(opt);
-      });
-      wrapper.appendChild(rm);
-      w.appendChild(wrapper);
-
-      if(data.reactions && Object.keys(data.reactions).length > 0) {
-        const rb = document.createElement('div'); rb.className = 'reactions-badge';
-        let reactStr = '';
-        Object.entries(data.reactions).forEach(([user, emo]) => { reactStr += emo; });
-        rb.textContent = reactStr;
-        w.appendChild(rb);
-      }
-
-      const imgEl = b.querySelector('.chat-img');
-      if(imgEl) {
-        imgEl.addEventListener('click', () => {
-          document.getElementById('lightbox-img').src = data.image;
-          document.getElementById('lightbox').style.display = 'flex';
-        });
-      }
-      return w;
-    }
-
-    async function enviar(msgData) {
-      const payload = { name: myName, avatar: myAvatar, timestamp: new Date().getTime(), ...msgData };
-      if(replyToMsg) { payload.replyTo = replyToMsg; removeReply(); }
-      await addDoc(col, payload);
-    }
-
-    async function apagarMensagem(id) {
-      if(confirm("Deseja apagar esta mensagem?")) {
-        await updateDoc(doc(db, "chats", id), { isDeleted: true, text: "", image: "", audio: "" });
-      }
-    }
-
-    function setReply(data, id) {
-      replyToMsg = { id, name: data.name, text: data.text || (data.image ? '[Imagem]' : '[Áudio]') };
-      const bar = document.getElementById('reply-preview-bar');
-      bar.innerHTML = `<span>Respondendo a <b>${data.name}</b></span>`;
-      bar.style.display = 'flex';
-    }
-    function removeReply() { replyToMsg = null; document.getElementById('reply-preview-bar').style.display = 'none'; }
-
-    async function adicionarReacao(id, emojiBase) {
-      const finalEmoji = tomSelecionado ? (emojiBase + tomSelecionado) : emojiBase;
-      const docRef = doc(db, "chats", id);
-      await runTransaction(db, async (transaction) => {
-        const sfDoc = await transaction.get(docRef);
-        if (!sfDoc.exists()) return;
-        let reactions = sfDoc.data().reactions || {};
-        if (reactions[myName] === finalEmoji) { delete reactions[myName]; } else { reactions[myName] = finalEmoji; }
-        transaction.update(docRef, { reactions });
-      });
-    }
-
-    // --- CONTROLES DO MODAL DO PINCEL (CORES + SISTEMA DE PLANO DE FUNDO) ---
-    window.toggleColorPanel = function(force) {
-      colorOpen = force !== undefined ? force : !colorOpen;
-      document.getElementById('color-modal-overlay').classList.toggle('open', colorOpen);
-    };
-
-    document.querySelectorAll('.color-dot').forEach(dot => {
-      dot.addEventListener('click', (e) => {
-        cmPickedHex = e.target.getAttribute('data-hex');
-        cmPickedText = e.target.getAttribute('data-text') || '#ffffff';
-        document.querySelectorAll('.color-dot').forEach(d => d.style.transform = 'scale(1)');
-        e.target.style.transform = 'scale(1.25)';
-      });
-    });
-
-    // Evento de seleção de fundo da Galeria
-    document.getElementById('bg-upload-input').addEventListener('change', e => {
-      const file = e.target.files[0];
-      if(!file) return;
-      const reader = new FileReader();
-      reader.onload = ev => {
-        tempBgBase64 = ev.target.result; // Armazena em cache temporário
-        document.getElementById('bg-upload-status').innerHTML = `<i class="ti ti-check" style="color:#1D9E75"></i> Imagem Carregada`;
-        document.getElementById('bg-remove-btn').style.display = 'block';
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // Escolha do Posicionamento ("Como queremos posicionar")
-    document.querySelectorAll('.bg-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        tempBgPos = e.target.getAttribute('data-pos');
-      });
-    });
-
-    // Remover Fundo
-    document.getElementById('bg-remove-btn').addEventListener('click', () => {
-      tempBgBase64 = '';
-      document.getElementById('bg-upload-input').value = '';
-      document.getElementById('bg-upload-status').innerHTML = `<i class="ti ti-upload"></i> Escolher Foto da Galeria`;
-      document.getElementById('bg-remove-btn').style.display = 'none';
-    });
-
-    // Ação do Botão Confirmar e Salvar
-    document.getElementById('cm-apply').addEventListener('click', async () => {
-      localStorage.setItem('chatzao_theme_hex', cmPickedHex);
-      localStorage.setItem('chatzao_theme_text', cmPickedText);
-      aplicarTemaGlobal(cmPickedHex, cmPickedText);
-      
-      // Salva em definitivo as configurações da imagem de fundo
-      if(tempBgBase64) {
-        localStorage.setItem('chatzao_bg_file', tempBgBase64);
-        localStorage.setItem('chatzao_bg_pos', tempBgPos);
-      } else {
-        localStorage.removeItem('chatzao_bg_file');
-        localStorage.removeItem('chatzao_bg_pos');
-      }
-      aplicarFundoNaTela(tempBgBase64, tempBgPos);
-
-      if(myName) {
-        await setDoc(doc(db, 'perfil_cores', myName), { color: cmPickedHex });
-      }
-      toggleColorPanel(false);
-    });
-
-    document.getElementById('cm-cancel').addEventListener('click', () => toggleColorPanel(false));
-    document.getElementById('color-btn').addEventListener('click', () => toggleColorPanel());
-
-    // --- MODAL DE PERFIL ---
-    function abrirModalPerfil(userNick, userFull, userAvatarData) {
-      const modal = document.getElementById('profile-modal');
-      const targetAv = document.getElementById('pm-avatar-target');
-      const targetNick = document.getElementById('pm-nick-target');
-      const targetFull = document.getElementById('pm-fullname-target');
-      const likesLabel = document.getElementById('pm-likes-count');
-
-      targetNick.textContent = userNick;
-      targetNick.style.color = dbColorsCache[userNick] || userColor(userNick);
-      targetFull.textContent = userFull || 'Usuário do Chatzão';
-      
-      if (userAvatarData) {
-        targetAv.innerHTML = `<img src="${userAvatarData}" alt="avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;"/>`;
-      } else {
-        const color = dbColorsCache[userNick] || userColor(userNick);
-        targetAv.innerHTML = `<div style="width:100%;height:100%;background:${color}22;color:${color};display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:600;border-radius:50%;">${ini(userNick)}</div>`;
-      }
-
-      const boxReacao = document.getElementById('pm-like-btn-action');
-      boxReacao.className = 'pm-react-box';
-      boxReacao.innerHTML = ''; 
-
-      LISTA_REACOES.forEach(emoji => {
-        const opt = document.createElement('span');
-        opt.className = 'pm-react-opt';
-        opt.textContent = emoji;
-        opt.addEventListener('click', async () => {
-          const userDocRef = doc(db, 'perfil_likes', userNick);
-          const docSnap = await getDoc(userDocRef);
-          let mapaAtual = {}; if (docSnap.exists()) mapaAtual = docSnap.data();
-          mapaAtual[myName] = emoji; 
-          await setDoc(userDocRef, mapaAtual);
-        });
-        boxReacao.appendChild(opt);
-      });
-
-      if (unsubscribeLikes) unsubscribeLikes();
-      unsubscribeLikes = onSnapshot(doc(db, 'perfil_likes', userNick), (docSnap) => {
-        let total = 0; if (docSnap.exists()) total = Object.keys(docSnap.data()).length;
-        likesLabel.textContent = total;
-      });
-      modal.classList.add('open');
-    }
-    document.getElementById('profile-modal-close').addEventListener('click', () => document.getElementById('profile-modal').classList.remove('open'));
-
-    // --- CÂMERA E MULTIMÍDIA DE ALTA QUALIDADE ---
-    window.toggleCamera = async function(force) {
-      const camBox = document.getElementById('camera-box');
-      const isVisible = force !== undefined ? force : (camBox.style.display === 'none' || camBox.style.display === '');
-      if(isVisible) {
-        try {
-          videoStream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
-          document.getElementById('camera-video').srcObject = videoStream;
-          camBox.style.display = 'block';
-        } catch (err) { alert("Erro ao acessar a câmera nativa."); }
-      } else {
-        if(videoStream) { videoStream.getTracks().forEach(track => track.stop()); videoStream = null; }
-        camBox.style.display = 'none';
-      }
-    };
-
-    window.snapPhoto = function() {
-      if (!videoStream) return; 
-      const video = document.getElementById('camera-video'); 
-      const canvas = document.createElement('canvas');
-      canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
-      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height); 
-      enviar({ image: canvas.toDataURL('image/jpeg', 1.0) }); 
-      toggleCamera(false);
-    };
-
-    document.getElementById('camera-btn').addEventListener('click', () => toggleCamera());
-    document.getElementById('camera-close').addEventListener('click', () => toggleCamera(false));
-    document.getElementById('snap-btn').addEventListener('click', snapPhoto);
-
-    document.getElementById('gallery-btn').addEventListener('click', () => document.getElementById('gallery-input').click());
-    document.getElementById('gallery-input').addEventListener('change', e => {
-      const file = e.target.files[0]; if(!file) return;
-      const reader = new FileReader(); reader.onload = ev => {
-        const img = new Image(); img.onload = () => {
-          const canvas = document.createElement('canvas'); canvas.width = img.width; canvas.height = img.height;
-          canvas.getContext('2d').drawImage(img, 0, 0);
-          enviar({ image: canvas.toDataURL('image/jpeg', 1.0) }); 
-          e.target.value = '';
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-
-    // --- GRAVAÇÃO DE ÁUDIO NATIVO ---
-    window.toggleAudioRecord = async function() {
-      if(!isRecordingAudio) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-          mediaRecorder = new MediaRecorder(stream); audioChunks = [];
-          mediaRecorder.ondataavailable = e => { if(e.data.size > 0) audioChunks.push(e.data); };
-          mediaRecorder.onstop = () => {
-            const blob = new Blob(audioChunks, { type: 'audio/webm' });
-            const reader = new FileReader(); reader.onloadend = () => { enviar({ audio: reader.result }); };
-            reader.readAsDataURL(blob);
-            stream.getTracks().forEach(t => t.stop());
-          };
-          mediaRecorder.start(); isRecordingAudio = true; recSeconds = 0;
-          document.getElementById('audio-rec-indicator').style.display = 'flex';
-          recInterval = setInterval(() => {
-            recSeconds++; const m = Math.floor(recSeconds / 60); const s = recSeconds % 60;
-            document.getElementById('audio-rec-timer').textContent = `${m}:${s < 10 ? '0' : ''}${s}`;
-          }, 1000);
-        } catch (err) { alert("Microfone indisponível."); }
-      } else {
-        clearInterval(recInterval); if(mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
-        isRecordingAudio = false; document.getElementById('audio-rec-indicator').style.display = 'none';
-      }
-    };
-    document.getElementById('mic-btn').addEventListener('click', toggleAudioRecord);
-
-    // --- FLUXO DE ENTRAR ---
-    window.entrar = function(isManual = true) {
-      const input = document.getElementById('name-input'); const name = input.value.trim();
-      if(!name) return; myName = name; localStorage.setItem('chatzao_name', myName);
-      
-      const avInput = document.getElementById('avatar-file');
-      if(avInput.files && avInput.files[0]) {
-        const reader = new FileReader(); reader.onload = e => { myAvatar = e.target.result; localStorage.setItem('chatzao_avatar', myAvatar); concluirLogin(isManual); };
-        reader.readAsDataURL(avInput.files[0]);
-      } else { myAvatar = localStorage.getItem('chatzao_avatar') || ''; concluirLogin(isManual); }
-    };
-
-    async function concluirLogin(isManual) {
-      document.getElementById('login').style.display = 'none'; document.getElementById('app').style.display = 'flex';
-      if(isManual) { await enviar({ type: 'system', text: `${myName} entrou no chat` }); }
-      await setDoc(doc(db, 'perfil_cores', myName), { color: cmPickedHex });
-      iniciarEscutaMensagens();
-    }
-
-    document.getElementById('login-btn').addEventListener('click', () => entrar(true));
-    document.getElementById('avatar-pick').addEventListener('click', () => document.getElementById('avatar-file').click());
-    document.getElementById('avatar-file').addEventListener('change', e => {
-      if(e.target.files[0]) {
-        const reader = new FileReader(); reader.onload = ev => {
-          document.getElementById('avatar-pick').innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="av"/>`;
-        };
-        reader.readAsDataURL(e.target.files[0]);
-      }
-    });
-
-    document.getElementById('send-btn').addEventListener('click', () => {
-      const input = document.getElementById('inputbar'); const txt = input.value.trim(); if(!txt) return;
-      enviar({ text: txt }); input.value = '';
-    });
-    document.getElementById('inputbar').addEventListener('keydown', e => {
-      if(e.key === 'Enter') { const txt = e.target.value.trim(); if(!txt) return; enviar({ text: txt }); e.target.value = ''; }
-    });
-
-    // --- STICKERS PANEL LÓGICA ---
-    function toggleSticker(force){
-      stickerOpen = force !== undefined ? force : !stickerOpen;
-      document.getElementById('sticker-panel').style.display = stickerOpen ? 'block' : 'none';
-      if(stickerOpen){ buildStickerGrid(''); }
-    }
-    document.getElementById('sticker-btn').addEventListener('click', () => toggleSticker());
-    document.getElementById('sticker-close').addEventListener('click', () => toggleSticker(false));
-
-    function buildStickerGrid(queryFilter) {
-      const grid = document.getElementById('sticker-grid'); grid.innerHTML = '';
-      const stickersMock = ['🔥','❤️','😂','👀','✨','🎉','🚀','👏'];
-      stickersMock.forEach(stk => {
-        if(!queryFilter || stk.includes(queryFilter)) {
-          const span = document.createElement('span'); span.style.cssText = 'font-size:32px;cursor:pointer;text-align:center;'; span.textContent = stk;
-          span.addEventListener('click', () => { enviar({ text: stk }); toggleSticker(false); });
-          grid.appendChild(span);
-        }
-      });
-    }
-
-    document.getElementById('sticker-input').addEventListener('input', e => {
-      clearTimeout(stickerTimer); stickerTimer = setTimeout(() => { buildStickerGrid(e.target.value.trim()); }, 200);
-    });
-
-    document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display = 'none');
+    const cores = ['#E24B4A', '#2673DD', '#1D9E75', '#E2A11F', '#8E44AD', '#E67E22', '#1ABC9C', '#34495E', '#7F8C8D', '#2ECC71'];
+    // Fotos neutras selecionadas para o chat
+    const fundosPadrao = [
+      'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=60', // Ondas escuras suaves
+      'https://images.unsplash.com/photo-1579546929518-9e396f3cc809?w=400&auto=format&fit=crop&q=60', // Degradê cinza escuro
+      'https://images.unsplash.com/photo-1557683316-973673baf926?w=400&auto=format&fit=crop&q=60', // Linhas fluidas escuras
+      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&auto=format&fit=crop&q=60', // Areia/Praia minimalista suave
+      'https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?w=400&auto=format&fit=crop&q=60', // Folhas escuras discretas
+      'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&auto=format&fit=crop&q=60'  // Geométrico abstrato macio
+    ];
 
     window.addEventListener('DOMContentLoaded', () => {
-      carregarTemaSalvo();
-      const savedName = localStorage.getItem('chatzao_name');
-      if(savedName) document.getElementById('name-input').value = savedName;
-      const savedAvatar = localStorage.getItem('chatzao_avatar');
-      if(savedAvatar){ myAvatar = savedAvatar; document.getElementById('avatar-pick').innerHTML = `<img src="${savedAvatar}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="av"/>`; }
-      if(savedName?.trim()) setTimeout(() => entrar(false), 500);
+      renderCores();
+      renderFundos();
+      carregarConfigSalvas();
+    });
+
+    function triggerAvatarUpload() { document.getElementById('avatar-file').click(); }
+    
+    function handleAvatarFile(input) {
+      if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          meuAvatar = e.target.result;
+          document.getElementById('avatar-pick').innerHTML = `<img src="${meuAvatar}" />`;
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function entrar() {
+      const input = document.getElementById('name-input').value.trim();
+      if(!input) {
+        document.getElementById('login-err').style.display = 'block';
+        return;
+      }
+      meuNome = input;
+      localStorage.setItem('chatzao_nome', meuNome);
+      if(meuAvatar) localStorage.setItem('chatzao_avatar', meuAvatar);
+      
+      document.getElementById('login').style.display = 'none';
+      document.getElementById('chat-area').style.display = 'flex';
+      document.getElementById('user-display').textContent = meuNome;
+      
+      // Adiciona mensagem de boas-vindas do sistema
+      const box = document.getElementById('messages');
+      box.innerHTML = `<div style="align-self:center; font-size:11px; color:#555; background:#161616; padding:4px 12px; border-radius:99px; border:0.5px solid #222">Você entrou na conversa como ${meuNome}</div>`;
+    }
+
+    function logout() {
+      localStorage.removeItem('chatzao_nome');
+      document.getElementById('login').style.display = 'flex';
+      document.getElementById('chat-area').style.display = 'none';
+      document.getElementById('name-input').value = '';
+    }
+
+    function enviarMsg() {
+      const input = document.getElementById('msg-input');
+      const texto = input.value.trim();
+      if(!texto) return;
+
+      const box = document.getElementById('messages');
+      const agora = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      
+      const msgHtml = `
+        <div class="msg mine">
+          <div class="bubble-wrapper">
+            <div class="bubble">${texto}</div>
+          </div>
+          <div class="meta"><span>${agora}</span></div>
+        </div>
+      `;
+      
+      box.insertAdjacentHTML('beforeend', msgHtml);
+      input.value = '';
+      box.scrollTop = box.scrollHeight;
+    }
+
+    /* SISTEMA DE CORES (PALETA) */
+    function toggleColorPopup(e) {
+      e.stopPropagation();
+      document.getElementById('bg-popup').classList.remove('open');
+      document.getElementById('color-popup').classList.toggle('open');
+    }
+
+    function renderCores() {
+      const grid = document.getElementById('color-grid');
+      grid.innerHTML = '';
+      cores.forEach(cor => {
+        const dot = document.createElement('div');
+        dot.className = 'color-dot';
+        dot.style.background = cor;
+        dot.onclick = () => mudarCorTema(cor);
+        grid.appendChild(dot);
+      });
+    }
+
+    function mudarCorTema(cor) {
+      document.documentElement.style.setProperty('--theme-primary', cor);
+      localStorage.setItem('chatzao_cor', cor);
+    }
+
+    /* SISTEMA DE PLANO DE FUNDO DO CHAT */
+    function openBgPopup(e) {
+      e.stopPropagation();
+      document.getElementById('color-popup').classList.remove('open');
+      document.getElementById('bg-popup').classList.add('open');
+    }
+
+    function renderFundos() {
+      const grid = document.getElementById('bg-grid');
+      grid.innerHTML = '';
+      fundosPadrao.forEach(url => {
+        const img = document.createElement('img');
+        img.className = 'bg-thumb';
+        img.src = url;
+        img.onclick = () => aplicarFundo(url);
+        grid.appendChild(img);
+      });
+    }
+
+    function triggerBgGallery() { document.getElementById('bg-gallery-input').click(); }
+
+    function handleBgGallery(input) {
+      if(input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          aplicarFundo(e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function aplicarFundo(src) {
+      const box = document.getElementById('messages');
+      box.style.backgroundImage = `url('${src}')`;
+      localStorage.setItem('chatzao_fundo', src);
+    }
+
+    function clearBg() {
+      const box = document.getElementById('messages');
+      box.style.backgroundImage = 'none';
+      localStorage.removeItem('chatzao_fundo');
+    }
+
+    function carregarConfigSalvas() {
+      const corSalva = localStorage.getItem('chatzao_cor');
+      if(corSalva) document.documentElement.style.setProperty('--theme-primary', corSalva);
+
+      const fundoSalvo = localStorage.getItem('chatzao_fundo');
+      if(fundoSalvo) document.getElementById('messages').style.backgroundImage = `url('${fundoSalvo}')`;
+
+      const nomeSalvo = localStorage.getItem('chatzao_nome');
+      const avatarSalvo = localStorage.getItem('chatzao_avatar');
+      if(nomeSalvo) document.getElementById('name-input').value = nomeSalvo;
+      if(avatarSalvo) {
+        meuAvatar = avatarSalvo;
+        document.getElementById('avatar-pick').innerHTML = `<img src="${avatarSalvo}" />`;
+      }
+    }
+
+    // Fecha popups clicando fora
+    document.addEventListener('click', () => {
+      document.getElementById('color-popup').classList.remove('open');
+      document.getElementById('bg-popup').classList.remove('open');
     });
   </script>
 </body>
