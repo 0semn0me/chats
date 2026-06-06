@@ -81,8 +81,14 @@
     .reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:0.85;border-left:3px solid rgba(255,255,255,0.3);width:100%}
     .meta{font-size:11px;color:#555;padding:2px 4px;display:flex;align-items:center;gap:4px}
     .edited-tag{font-size:10px;color:#666;font-style:italic}
-    .senders{display:flex;align-items:center;gap:5px;margin-bottom:3px}
-    .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;overflow:hidden}
+    
+    .senders{display:flex;align-items:center;gap:6px;margin-bottom:3px}
+    .sender-names{display:flex;flex-direction:column;line-height:1.1}
+    .sender-nick{font-size:13px;font-weight:600}
+    .sender-fullname{font-size:10px;color:#666;font-weight:400;margin-top:1px}
+
+    .avatar{width:26px;height:26px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform 0.1s}
+    .avatar:hover{transform:scale(1.08)}
     .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
     .sys{align-self:center;font-size:11px;color:#555;background:#1a1a1a;padding:2px 12px;border-radius:99px}
     
@@ -105,14 +111,12 @@
     #sticker-grid::-webkit-scrollbar{width:4px}
     #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
 
-    /* Popup de tom de pele */
     #tom-popup{display:none;position:fixed;z-index:500;background:#2a2a2a;border:0.5px solid #444;border-radius:14px;padding:8px;box-shadow:0 6px 20px rgba(0,0,0,0.6);flex-direction:column;gap:4px;align-items:center}
     #tom-popup.open{display:flex}
     .tom-pop-btn{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     .tom-pop-btn.ativo{border-color:#fff}
     .tom-pop-btn:hover{background:#444}
 
-    /* Separador de mãos no sticker-grid */
     .sticker-sep{grid-column:1/-1;height:1px;background:#2a2a2a;margin:4px 0}
     .sticker-sec-label{grid-column:1/-1;font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;padding:2px 0}
     
@@ -141,7 +145,6 @@
     #audio-trash-btn{background:none;border:none;color:#888;cursor:pointer;font-size:14px;display:flex;align-items:center}
     #audio-trash-btn:hover{color:#E24B4A}
 
-    /* Alteração para cor permanente apenas no "desenho" dos botões */
     .btn-icon{background:none;border:none;color:var(--theme-primary) !important;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background 0.1s;flex-shrink:0}
     .btn-icon:hover, .btn-icon.active{background:#2a2a2a}
     .btn-icon.recording{background:#c0392b !important;color:#fff !important;animation:pulseAudio 1.5s infinite}
@@ -152,7 +155,6 @@
     #send-btn:hover{opacity:0.9}
     #send-btn:disabled{background:#333;color:#555;cursor:not-allowed}
 
-    /* Color Picker Modal */
     #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
     #color-modal-overlay.open{display:flex}
     #color-modal{background:#1a1a1a;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;box-shadow:0 -8px 30px rgba(0,0,0,0.5)}
@@ -172,21 +174,31 @@
     #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.8)}
     #lightbox-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
     
-    /* Sugestões de menção @ */
     #mention-suggestions{display:none;position:absolute;bottom:54px;left:14px;right:14px;background:#1e1e1e;border:0.5px solid #333;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.6);z-index:999;max-height:160px;overflow-y:auto}
     .mention-item{display:flex;align-items:center;gap:8px;padding:10px 14px;color:#fff;font-size:13px;cursor:pointer;border-bottom:0.5px solid #2a2a2a}
     .mention-item:last-child{border-bottom:none}
     .mention-item:hover{background:#2a2a2a}
     .mention-badge{background:rgba(226,75,74,0.15);color:#E24B4A;border:0.5px solid rgba(226,75,74,0.3);font-weight:600;padding:1px 5px;border-radius:4px}
     
-    /* Animação para chamar atenção de quem foi marcado */
+    /* MODAL DE PERFIL AMPLILADO COM LIKES */
+    #profile-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:10000;align-items:center;justify-content:center;backdrop-filter:blur(6px);padding:20px}
+    #profile-modal.open{display:flex}
+    .pm-card{background:#161616;border:0.5px solid #333;border-radius:20px;padding:24px;width:100%;max-width:320px;display:flex;flex-direction:column;align-items:center;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    .pm-close{position:absolute;top:12px;right:14px;background:none;border:none;color:#666;font-size:20px;cursor:pointer}
+    .pm-close:hover{color:#fff}
+    .pm-avatar-box{width:160px;height:160px;border-radius:50%;overflow:hidden;border:3px solid var(--theme-primary);margin-bottom:16px;box-shadow:0 4px 15px rgba(0,0,0,0.4)}
+    .pm-avatar-box img{width:100%;height:100%;object-fit:cover}
+    .pm-nick{font-size:18px;font-weight:600;color:#fff;margin-bottom:2px}
+    .pm-fullname{font-size:12px;color:#777;margin-bottom:20px;text-align:center}
+    .pm-like-btn{background:rgba(226,75,74,0.1);border:0.5px solid rgba(226,75,74,0.4);color:#E24B4A;padding:10px 24px;border-radius:30px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.15s}
+    .pm-like-btn:hover{background:var(--theme-primary);color:var(--theme-text);transform:scale(1.04)}
+
     @keyframes pulseMention {
       0% { box-shadow: 0 0 0 0 rgba(226,75,74,0.7); transform: scale(1); }
       50% { box-shadow: 0 0 0 10px rgba(226,75,74,0); transform: scale(1.02); }
       100% { box-shadow: 0 0 0 0 rgba(226,75,74,0); transform: scale(1); }
     }
     .msg-mentioned { animation: pulseMention 1s ease-in-out 2; border: 1px solid #E24B4A !important; }
-
     @keyframes pulseAudio { 0% {box-shadow: 0 0 0 0 rgba(226,75,74,0.4)} 70% {box-shadow: 0 0 0 8px rgba(226,75,74,0)} 100% {box-shadow: 0 0 0 0 rgba(226,75,74,0)} }
   </style>
 </head>
@@ -194,14 +206,15 @@
 
 <div id="app">
   <div id="login">
-    <h2><span style="font-size:30px;display:block;text-align:center;margin-bottom:4px">💬</span>Chatzão</h2>
-    <p>Nome ou Apelido</p>
+    <h2><span style="font-size:30px;display:block;text-align:center;margin-bottom:4px">💬</span>Chatzão v3</h2>
+    <p>Configure o seu novo perfil de acesso</p>
     <div class="login-row">
       <div class="avatar-pick" id="avatar-pick" title="Clique para escolher foto de perfil">
         <i class="ti ti-camera av-icon" aria-hidden="true"></i>
       </div>
       <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-        <input id="name-input" type="text" placeholder="Seu nome ou apelido..." maxlength="30" autocomplete="off"/>
+        <input id="nickname-input" type="text" placeholder="Apelido (Em destaque)..." maxlength="15" autocomplete="off"/>
+        <input id="fullname-input" type="text" placeholder="Nome Completo (Menor)..." maxlength="40" autocomplete="off"/>
         <button id="enter-btn" style="width:100%">Entrar no chat</button>
       </div>
     </div>
@@ -281,7 +294,6 @@
     </div>
 
     <div id="inputbar">
-      <!-- Painel de Sugestões de Menção -->
       <div id="mention-suggestions"></div>
 
       <div id="color-modal-overlay">
@@ -324,9 +336,22 @@
   <img id="lightbox-img" src="" alt="Visualização ampliada"/>
 </div>
 
+<!-- POPUP EXCLUSIVO DE LIKES E EXPANSÃO DA FOTO DE PERFIL -->
+<div id="profile-modal">
+  <div class="pm-card">
+    <button class="pm-close" id="pm-close-btn">&times;</button>
+    <div class="pm-avatar-box" id="pm-avatar-target"></div>
+    <div class="pm-nick" id="pm-nick-target"></div>
+    <div class="pm-fullname" id="pm-fullname-target"></div>
+    <button class="pm-like-btn" id="pm-like-btn-action">
+      <i class="ti ti-heart-filled"></i> Curtir Perfil (<span id="pm-likes-count">0</span>)
+    </button>
+  </div>
+</div>
+
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp, getDocs, writeBatch } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, serverTimestamp, getDocs, writeBatch, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   const firebaseConfig = {
     apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
@@ -339,32 +364,18 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const col = collection(db, 'mensagens');
+  const userLikesCol = collection(db, 'perfil_likes');
 
-  let myName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null, colorPanelOpen=false;
-  let isInitialLoad = true, pasteImageData = null, unsubscribeSnapshot = null;
+  // Mudança da chave do LocalStorage força a desconexão automática de todos nesta atualização.
+  let myName='', myFullName='', myAvatar='', replyTo=null, editTargetId=null, cameraOpen=false, stickerOpen=false, stickerTimer=null, colorPanelOpen=false;
+  let isInitialLoad = true, pasteImageData = null, unsubscribeSnapshot = null, unsubscribeLikes = null;
   let videoStream = null, currentFacingMode = 'user';
 
   let mediaRecorder = null, audioChunks = [], audioRecordedBlob = null, audioState = 'idle', globalAudioStream = null, timerInterval = null, totalSeconds = 0;
   
-  // Lista dinâmica capturada das mensagens para autocompletar no @
   let userListInChat = new Set();
-
-  // REAÇÕES DEFINIDAS PELO USUÁRIO (30 EMOJIS)
   const LISTA_REACOES = ["🤣","🥹","😁","🙃","🥲","😌","😋","😜","😝","🤪","🤓","😎","🧐","🥳","🤩","😤","🤬","🤔","😓","🥶","😶‍🌫️","🤯","🤫","🫠","🫢","🫣","🙄","😬","😵","😪"];
-
-  // RESTANTE DOS EMOJIS COMPACTADOS PARA O PAINEL GERAL
   const LISTA_EMOJIS_UNIFICADA = Array.from("😀😃😄🥹😆😁😅😂🤣😊☺️🥲😇🙂🙃😍😌😉🥰😘😗😋😚😙😛😝😜🤪🤨🧐🥸😎🤓🤩🥳😏😔😞😒😟😕🙁😖😣☹️😫😩🥺😤😭😢😠😡🤬🤯😳🥵😱😶‍🌫️🥶😨😰😥🤔🤗😓🫣🤭🫢🫠🤫🫡🤥😶🫥😑🫤😐🫨😬🙄😧😦😯😮😲🥱😪🤤😴😮‍💨😵😵‍💫🤢🥴🤐🤮🤧😷🤑🤕🤒");
-
-  const PALETA_CUSTOMIZADA = [
-    { name: 'Roxo Master', hex: '#E24B4A', text: '#ffffff' },
-    { name: 'Verde Claro', hex: '#a6e22e', text: '#000000' },
-    { name: 'Verde Musgo', hex: '#3bb88c', text: '#ffffff' },
-    { name: 'Ciano Azulado', hex: '#6ec6c6', text: '#000000' },
-    { name: 'Azul Claro', hex: '#4fa3dc', text: '#ffffff' },
-    { name: 'Laranja Quente', hex: '#e08a2e', text: '#ffffff' },
-    { name: 'Rosa Choque', hex: '#e05a7a', text: '#ffffff' },
-    { name: 'Branco Puro', hex: '#ffffff', text: '#000000' }
-  ];
 
   const USER_COLORS = ['#ff6b6a','#E05A7A','#3BB88C','#E08A2E','#4FA3DC','#C55FD6','#5DC26A','#E0674E','#6EC6C6','#D4A017'];
   const colorCache = {};
@@ -373,8 +384,7 @@
     if(!colorCache[name]) colorCache[name]=USER_COLORS[Object.keys(colorCache).length%USER_COLORS.length];
     return colorCache[name];
   }
-  function darken(hex){return hex+'bb';}
-  function ini(n){return n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+  function ini(n){return n ? n.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2) : '??';}
   function fmt(ts){if(!ts)return'';const d=ts.toDate?ts.toDate():new Date(ts);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
   function shortText(m){if(!m)return'';if(m.isDeleted)return '🗑 Mensagem apagada';if(m.image)return '🖼 Imagem';if(m.audio)return '🎵 Áudio';if(m.sticker)return m.sticker;return(m.text||'').slice(0,50);}
 
@@ -389,12 +399,99 @@
     aplicarTemaGlobal(salvoHex, salvoText);
   }
 
+  // ===== SOLICITAÇÃO E DISPARO DE NOTIFICAÇÃO LOCAL =====
+  function requisitarPermissaoNotificacao() {
+    if ('Notification' in window) {
+      Notification.requestPermission().then(permission => {
+        if (permission === 'granted' && 'serviceWorker' in navigator) {
+          navigator.serviceWorker.register('sw.js').catch(err => console.log("Erro Service Worker:", err));
+        }
+      });
+    }
+  }
+
+  function dispararNotificacaoLocal(titulo, mensagem, icone) {
+    if ('Notification' in window && Notification.permission === 'granted') {
+      // Se a aba estiver aberta e ativa, opcional não disparar para não incomodar
+      if (document.visibilityState === 'visible') return;
+
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.ready.then(registration => {
+          registration.showNotification(titulo, {
+            body: mensagem,
+            icon: icone || 'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/icons/messages.svg',
+            badge: icone,
+            vibrate: [200, 100, 200]
+          });
+        });
+      } else {
+        new Notification(titulo, { body: mensagem, icon: icone });
+      }
+    }
+  }
+
+  // ===== ABRIR PERFIL EXPANDIDO COM LIKES =====
+  function abrirModalPerfil(userNick, userFull, userAvatarData) {
+    const modal = document.getElementById('profile-modal');
+    const targetAv = document.getElementById('pm-avatar-target');
+    const targetNick = document.getElementById('pm-nick-target');
+    const targetFull = document.getElementById('pm-fullname-target');
+    const likesLabel = document.getElementById('pm-likes-count');
+    const likeBtn = document.getElementById('pm-like-btn-action');
+
+    targetNick.textContent = userNick;
+    targetNick.style.color = userColor(userNick);
+    targetFull.textContent = userFull || 'Sem nome cadastrado';
+    
+    if (userAvatarData) {
+      targetAv.innerHTML = `<img src="${userAvatarData}" alt="avatar"/>`;
+    } else {
+      const color = userColor(userNick);
+      targetAv.innerHTML = `<div style="width:100%;height:100%;background:${color}22;color:${color};display:flex;align-items:center;justify-content:center;font-size:48px;font-weight:600">${ini(userNick)}</div>`;
+    }
+
+    if (unsubscribeLikes) unsubscribeLikes();
+    
+    // Escuta em tempo real os likes desse perfil específico do Firebase
+    unsubscribeLikes = onSnapshot(doc(db, 'perfil_likes', userNick), (docSnap) => {
+      let total = 0;
+      if (docSnap.exists()) {
+        const dados = docSnap.data();
+        total = Object.keys(dados).length;
+      }
+      likesLabel.textContent = total;
+    });
+
+    // Remove listeners antigos re-clonando o botão
+    const newLikeBtn = likeBtn.cloneNode(true);
+    likeBtn.parentNode.replaceChild(newLikeBtn, likeBtn);
+
+    newLikeBtn.addEventListener('click', async () => {
+      const userDocRef = doc(db, 'perfil_likes', userNick);
+      const docSnap = await getDoc(userDocRef);
+      let mapaAtual = {};
+      if (docSnap.exists()) mapaAtual = docSnap.data();
+      
+      if (mapaAtual[myName]) {
+        delete mapaAtual[myName]; // Descurtir
+      } else {
+        mapaAtual[myName] = true; // Curtir
+      }
+      await setDoc(userDocRef, mapaAtual);
+    });
+
+    modal.classList.add('open');
+  }
+
+  document.getElementById('pm-close-btn').addEventListener('click', () => {
+    document.getElementById('profile-modal').classList.remove('open');
+    if (unsubscribeLikes) unsubscribeLikes();
+  });
+
   // ===== COLOR PICKER =====
-  let cmHue = 260, cmSaturation = 0.7, cmBrightness = 0.6;
+  let cmHue = 260, cmDragging = false, cmCursorX = 0.7, cmCursorY = 0.35;
   let cmPickedHex = localStorage.getItem('chatzao_theme_hex') || '#E24B4A';
   let cmPickedText = localStorage.getItem('chatzao_theme_text') || '#ffffff';
-  let cmDragging = false;
-  let cmCursorX = 0.7, cmCursorY = 0.35;
 
   function hsvToHex(h, s, v) {
     const f=(n,k=(n+h/60)%6)=>v-v*s*Math.max(Math.min(k,4-k,1),0);
@@ -407,54 +504,31 @@
   }
 
   function drawColorCanvas() {
-    const canvas = document.getElementById('color-canvas');
-    if(!canvas) return;
-    const ctx = canvas.getContext('2d');
-    const W = canvas.width, H = canvas.height;
-    const hueHex = hsvToHex(cmHue, 1, 1);
-    ctx.clearRect(0,0,W,H);
-    const gradH = ctx.createLinearGradient(0,0,W,0);
-    gradH.addColorStop(0,'rgba(255,255,255,1)');
-    gradH.addColorStop(1, hueHex);
+    const canvas = document.getElementById('color-canvas'); if(!canvas) return;
+    const ctx = canvas.getContext('2d'); const W = canvas.width, H = canvas.height;
+    const hueHex = hsvToHex(cmHue, 1, 1); ctx.clearRect(0,0,W,H);
+    const gradH = ctx.createLinearGradient(0,0,W,0); gradH.addColorStop(0,'rgba(255,255,255,1)'); gradH.addColorStop(1, hueHex);
     ctx.fillStyle = gradH; ctx.fillRect(0,0,W,H);
-    const gradV = ctx.createLinearGradient(0,0,0,H);
-    gradV.addColorStop(0,'rgba(0,0,0,0)');
-    gradV.addColorStop(1,'rgba(0,0,0,1)');
+    const gradV = ctx.createLinearGradient(0,0,0,H); gradV.addColorStop(0,'rgba(0,0,0,0)'); gradV.addColorStop(1,'rgba(0,0,0,1)');
     ctx.fillStyle = gradV; ctx.fillRect(0,0,W,H);
     const cx = cmCursorX * W, cy = cmCursorY * H;
-    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI*2);
-    ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
-    ctx.beginPath(); ctx.arc(cx, cy, 7, 0, Math.PI*2);
-    ctx.strokeStyle='rgba(0,0,0,0.4)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.arc(cx, cy, 9, 0, Math.PI*2); ctx.strokeStyle='#fff'; ctx.lineWidth=2.5; ctx.stroke();
   }
 
   function updateCmColor() {
-    const s = cmCursorX;
-    const v = 1 - cmCursorY;
-    cmPickedHex = hsvToHex(cmHue, s, v);
+    cmPickedHex = hsvToHex(cmHue, cmCursorX, 1 - cmCursorY);
     cmPickedText = hexToTextColor(cmPickedHex);
-    const prev = document.getElementById('cm-preview');
-    if(prev) prev.style.background = cmPickedHex;
-    
+    const prev = document.getElementById('cm-preview'); if(prev) prev.style.background = cmPickedHex;
     aplicarTemaGlobal(cmPickedHex, cmPickedText);
   }
 
-  function openColorModal() {
-    const overlay = document.getElementById('color-modal-overlay');
-    overlay.classList.add('open');
-    setTimeout(() => { drawColorCanvas(); updateCmColor(); }, 30);
-  }
-  function closeColorModal() {
-    document.getElementById('color-modal-overlay').classList.remove('open');
-  }
+  function openColorModal() { document.getElementById('color-modal-overlay').classList.add('open'); setTimeout(() => { drawColorCanvas(); updateCmColor(); }, 30); }
+  function closeColorModal() { document.getElementById('color-modal-overlay').classList.remove('open'); }
 
   function cmCanvasEvent(e) {
-    const canvas = document.getElementById('color-canvas');
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    cmCursorX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    cmCursorY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+    const canvas = document.getElementById('color-canvas'); const rect = canvas.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX; const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    cmCursorX = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width)); cmCursorY = Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
     drawColorCanvas(); updateCmColor();
   }
 
@@ -466,66 +540,35 @@
     canvas.addEventListener('touchstart', e => { e.preventDefault(); cmDragging=true; cmCanvasEvent(e); }, {passive:false});
     canvas.addEventListener('touchmove', e => { e.preventDefault(); if(cmDragging) cmCanvasEvent(e); }, {passive:false});
     document.addEventListener('touchend', () => cmDragging=false);
-
-    document.getElementById('hue-slider').addEventListener('input', e => {
-      cmHue = parseInt(e.target.value); drawColorCanvas(); updateCmColor();
-    });
-    document.getElementById('cm-cancel').addEventListener('click', () => {
-      carregarTemaSalvo();
-      closeColorModal();
-    });
-    document.getElementById('color-modal-overlay').addEventListener('click', e => { if(e.target===document.getElementById('color-modal-overlay')) closeColorModal(); });
+    document.getElementById('hue-slider').addEventListener('input', e => { cmHue = parseInt(e.target.value); drawColorCanvas(); updateCmColor(); });
+    document.getElementById('cm-cancel').addEventListener('click', () => { carregarTemaSalvo(); closeColorModal(); });
     document.getElementById('cm-apply').addEventListener('click', () => {
-      localStorage.setItem('chatzao_theme_hex', cmPickedHex);
-      localStorage.setItem('chatzao_theme_text', cmPickedText);
-      aplicarTemaGlobal(cmPickedHex, cmPickedText);
-      const box = document.getElementById('messages');
-      const atBot = box.scrollTop + box.clientHeight >= box.scrollHeight - 100;
-      startListening();
-      if(atBot) setTimeout(() => box.scrollTop = box.scrollHeight, 150);
-      closeColorModal();
+      localStorage.setItem('chatzao_theme_hex', cmPickedHex); localStorage.setItem('chatzao_theme_text', cmPickedText);
+      aplicarTemaGlobal(cmPickedHex, cmPickedText); closeColorModal();
     });
   });
 
   async function reagir(msgId, emoji, reacoesAtuais) {
     const novasReacoes = { ...(reacoesAtuais || {}) };
-    if (novasReacoes[myName] === emoji) delete novasReacoes[myName];
-    else novasReacoes[myName] = emoji;
+    if (novasReacoes[myName] === emoji) delete novasReacoes[myName]; else novasReacoes[myName] = emoji;
     await updateDoc(doc(db, 'mensagens', msgId), { reactions: novasReacoes });
   }
 
   async function apagarMensagem(msgId) {
     if(confirm("Deseja mesmo apagar essa mensagem?")) {
-      await updateDoc(doc(db, 'mensagens', msgId), {
-        isDeleted: true, text: "Mensagem apagada", image: null, sticker: null, audio: null, reactions: {}
-      });
+      await updateDoc(doc(db, 'mensagens', msgId), { isDeleted: true, text: "Mensagem apagada", image: null, sticker: null, audio: null, reactions: {} });
     }
   }
 
   async function limparHistoricoGeral() {
     const senhaMestre = "220399"; 
-    const inputSenha = prompt("Atenção! Esta ação apagará permanentemente TODAS as mensagens para todos os usuários.\n\nDigite a senha mestre para continuar:");
-    
-    if (inputSenha !== senhaMestre) {
-      if(inputSenha !== null) alert("Senha incorreta! Operação cancelada.");
-      return;
-    }
-
-    if(!confirm("Tem certeza absoluta de que quer limpar o chat inteiro agora?")) return;
-
+    const inputSenha = prompt("Atenção! Esta ação apagará permanentemente TODAS as mensagens.\n\nDigite a senha mestre:");
+    if (inputSenha !== senhaMestre) return;
     try {
-      const snapshot = await getDocs(col);
-      const batch = writeBatch(db);
-      
-      snapshot.forEach((documento) => {
-        batch.delete(doc(db, 'mensagens', documento.id));
-      });
-
-      await batch.commit();
-      alert("Histórico geral deletado com sucesso!");
-    } catch (e) {
-      alert("Erro ao tentar limpar o banco de dados.");
-    }
+      const snapshot = await getDocs(col); const batch = writeBatch(db);
+      snapshot.forEach((documento) => { batch.delete(doc(db, 'mensagens', documento.id)); });
+      await batch.commit(); alert("Histórico limpo!");
+    } catch (e) { alert("Erro ao limpar banco."); }
   }
 
   function iniciarEdicao(msgId, textoAtual) {
@@ -541,7 +584,6 @@
   function renderMsg(data, id){
     if(data.type==='system'){ const d=document.createElement('div'); d.className='sys'; d.textContent=data.text; return d; }
     
-    // Alimenta dinamicamente nossa lista de usuários para marcação
     if(data.name && data.name !== myName) userListInChat.add(data.name);
 
     const mine=data.name===myName; const color=userColor(data.name);
@@ -549,7 +591,20 @@
 
     if(!mine){
       const s=document.createElement('div'); s.className='senders';
-      s.innerHTML=(data.avatar ? `<span class="avatar"><img src="${data.avatar}" alt="av"/></span>` : `<span class="avatar" style="background:${color}22;color:${color}">${ini(data.name)}</span>`)+`<span style="font-size:12px;font-weight:500;color:${color}">${data.name}</span>`;
+      
+      const avSpan = document.createElement('span');
+      avSpan.className = 'avatar';
+      avSpan.innerHTML = data.avatar ? `<img src="${data.avatar}" alt="av"/>` : `<span style="background:${color}22;color:${color};width:100%;height:100%;display:inline-flex;align-items:center;justify-content:center">${ini(data.name)}</span>`;
+      
+      // Clique na foto de perfil abre o modal dinâmico de likes
+      avSpan.addEventListener('click', () => abrirModalPerfil(data.name, data.fullName, data.avatar));
+      s.appendChild(avSpan);
+
+      const namesContainer = document.createElement('div');
+      namesContainer.className = 'sender-names';
+      namesContainer.innerHTML = `<span class="sender-nick" style="color:${color}">${data.name}</span><span class="sender-fullname">${data.fullName || ''}</span>`;
+      
+      s.appendChild(namesContainer);
       w.appendChild(s);
     }
 
@@ -569,15 +624,10 @@
     }
 
     if (mine) {
-      const currentBg = localStorage.getItem('chatzao_theme_hex') || '#E24B4A';
-      const currentTxt = localStorage.getItem('chatzao_theme_text') || '#ffffff';
-      b.style.background = currentBg;
-      b.style.color = currentTxt;
-      b.style.border = 'none';
+      b.style.background = localStorage.getItem('chatzao_theme_hex') || '#E24B4A';
+      b.style.color = localStorage.getItem('chatzao_theme_text') || '#ffffff';
     } else {
-      b.style.background = '#1e1e1e';
-      b.style.color = '#e0e0e0';
-      b.style.border = '0.5px solid #2a2a2a';
+      b.style.background = '#1e1e1e'; b.style.color = '#e0e0e0'; b.style.border = '0.5px solid #2a2a2a';
     }
 
     if(data.sticker){ const sp=document.createElement('span'); sp.style.fontSize='36px'; sp.textContent=data.sticker; b.appendChild(sp); }
@@ -588,21 +638,12 @@
     }else if(data.audio){
       const aud=document.createElement('audio'); aud.src=data.audio; aud.controls=true; aud.controlsList="nodownload"; b.appendChild(aud);
     }else{ 
-      // Formata o texto para destacar visualmente as marcações com @Nome
-      const t=document.createElement('span'); 
-      let textoProcessado = data.text || '';
-      
-      // Se houver menção à mim na mensagem e ela acabou de chegar
-      if(textoProcessado.includes(`@${myName}`)) {
-        w.classList.add('msg-mentioned');
-        // Remove a classe após a animação de pulso terminar para não re-executar ao rolar a tela
-        setTimeout(() => w.classList.remove('msg-mentioned'), 2500);
+      const t=document.createElement('span'); let txt = data.text || '';
+      if(txt.includes(`@${myName}`)) {
+        w.classList.add('msg-mentioned'); setTimeout(() => w.classList.remove('msg-mentioned'), 2500);
       }
-
-      // Destaca strings iniciadas por @ com um visual especial de tag
-      textoProcessado = textoProcessado.replace(/(@[^\s]+)/g, `<strong style="color:var(--theme-primary); background:rgba(226,75,74,0.15); padding:1px 4px; border-radius:4px;">$1</strong>`);
-      t.innerHTML = textoProcessado;
-      b.appendChild(t); 
+      txt = txt.replace(/(@[^\s]+)/g, `<strong style="color:var(--theme-primary); background:rgba(226,75,74,0.15); padding:1px 4px; border-radius:4px;">$1</strong>`);
+      t.innerHTML = txt; b.appendChild(t); 
     }
 
     const rm = document.createElement('div'); rm.className = 'react-menu';
@@ -651,7 +692,14 @@
     if(unsubscribeSnapshot) unsubscribeSnapshot();
     unsubscribeSnapshot = onSnapshot(q,snap=>{
       const atBot=box.scrollTop+box.clientHeight>=box.scrollHeight-100; box.innerHTML='';
-      snap.forEach(doc=>{ const el=renderMsg(doc.data(),doc.id); if(el) box.appendChild(el); });
+      snap.forEach(doc=>{
+        const mData = doc.data(); const el=renderMsg(mData,doc.id); if(el) box.appendChild(el);
+        
+        // Se uma nova mensagem de outro usuário chegou após a carga inicial, dispara Notificação local
+        if(!isInitialLoad && mData.name !== myName && mData.type !== 'system') {
+          dispararNotificacaoLocal(`Chatzão - @${mData.name}`, shortText(mData), mData.avatar);
+        }
+      });
       isInitialLoad = false; if(atBot||snap.size<=1) box.scrollTop=box.scrollHeight;
     });
   }
@@ -665,42 +713,41 @@
         await updateDoc(doc(db, 'mensagens', editTargetId), { text: payload.text, isEdited: true });
         cancelEdit(); return;
       }
-      await addDoc(col,{type:'msg',name:myName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,audio:null,replyTo:replyTo||null,...payload});
+      await addDoc(col,{type:'msg',name:myName,fullName:myFullName,avatar:myAvatar||null,ts:serverTimestamp(),text:null,sticker:null,image:null,audio:null,replyTo:replyTo||null,...payload});
       cancelReply();
     }finally{btn.disabled=false;}
   }
 
   async function entrar(isExplicitLogin = false){
-    const nome=document.getElementById('name-input').value.trim(); if(!nome)return;
-    myName=nome; localStorage.setItem('chatzao_name', nome);
+    const nick=document.getElementById('nickname-input').value.trim();
+    const full=document.getElementById('fullname-input').value.trim();
+    if(!nick || !full) { alert("Por favor, preencha o Apelido e o Nome Completo."); return; }
+    
+    myName=nick; myFullName=full;
+    localStorage.setItem('chatzao_v3_login', JSON.stringify({ nick, full }));
     if(myAvatar) localStorage.setItem('chatzao_avatar', myAvatar); else localStorage.removeItem('chatzao_avatar');
+    
+    requisitarPermissaoNotificacao();
+
     try {
       document.getElementById('login').style.display='none'; document.getElementById('chat-area').style.display='flex';
       document.getElementById('me-label').innerHTML = myAvatar
-        ? `<img src="${myAvatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid #E24B4A;"/> <span style="font-size:13px;font-weight:500;color:#fff">${myName}</span>`
-        : `<span style="width:28px;height:28px;border-radius:50%;background:#E24B4A;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">${myName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)}</span> <span style="font-size:13px;font-weight:500;color:#fff">${myName}</span>`;
+        ? `<img src="${myAvatar}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;border:2px solid var(--theme-primary);"/> <div style="display:flex;flex-direction:column;line-height:1"><span style="font-size:12px;font-weight:600;color:#fff">${myName}</span><span style="font-size:9px;color:#777">${myFullName}</span></div>`
+        : `<span style="width:28px;height:28px;border-radius:50%;background:var(--theme-primary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0">${ini(myName)}</span> <div style="display:flex;flex-direction:column;line-height:1"><span style="font-size:12px;font-weight:600;color:#fff">${myName}</span><span style="font-size:9px;color:#777">${myFullName}</span></div>`;
       
       if (isExplicitLogin) {
         await addDoc(col,{type:'system',text:myName+' entrou no chat',ts:serverTimestamp()});
       }
-      
       startListening(); setTimeout(() => document.getElementById('msg-input').focus(), 300);
     }catch(e){ document.getElementById('login-err').style.display='block'; }
   }
 
   function sair(){
     if(unsubscribeSnapshot) unsubscribeSnapshot(); stopCamera(); limparEMortificarGravacao();
-    
-    // Limpa os dados salvos no navegador
-    localStorage.removeItem('chatzao_name'); localStorage.removeItem('chatzao_avatar');
-    
-    // Limpa os campos de texto e imagem da tela de login para que não apareçam novamente
-    document.getElementById('name-input').value = '';
+    localStorage.removeItem('chatzao_v3_login'); localStorage.removeItem('chatzao_avatar');
+    document.getElementById('nickname-input').value = ''; document.getElementById('fullname-input').value = '';
     document.getElementById('avatar-pick').innerHTML = `<i class="ti ti-camera av-icon" aria-hidden="true"></i>`;
-    myAvatar = ''; // Limpa a variável interna da foto de perfil
-    
-    // Altera as telas
-    document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.flexDirection='column'; document.getElementById('login').style.display='flex';
+    myAvatar = ''; document.getElementById('chat-area').style.display='none'; document.getElementById('login').style.display='flex';
   }
 
   const audioBtn = document.getElementById('audio-rec-btn');
@@ -711,8 +758,7 @@
     stopTimer();
     timerInterval = setInterval(() => {
       totalSeconds++;
-      let mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-      let secs = String(totalSeconds % 60).padStart(2, '0');
+      let mins = String(Math.floor(totalSeconds / 60)).padStart(2, '0'); let secs = String(totalSeconds % 60).padStart(2, '0');
       timerLabel.textContent = `${mins}:${secs}`;
     }, 1000);
   }
@@ -723,12 +769,10 @@
       audioChunks = []; totalSeconds = 0; timerLabel.textContent = "00:00";
       try {
         globalAudioStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        
         let options = { mimeType: 'audio/mp3' };
         if (!MediaRecorder.isTypeSupported('audio/mp3')) {
           options = MediaRecorder.isTypeSupported('audio/aac') ? { mimeType: 'audio/aac' } : { mimeType: '' };
         }
-
         mediaRecorder = new MediaRecorder(globalAudioStream, options);
         mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
         mediaRecorder.onstop = () => {
@@ -737,43 +781,30 @@
             const reader = new FileReader();
             reader.onloadend = () => {
               if (reader.result && reader.result.startsWith('data:audio')) {
-                audioRecordedBlob = reader.result;
-                document.getElementById('audio-preview-bar').style.display = 'flex';
-                audioState = 'ready';
-              } else {
-                limparEMortificarGravacao();
-              }
+                audioRecordedBlob = reader.result; document.getElementById('audio-preview-bar').style.display = 'flex'; audioState = 'ready';
+              } else { limparEMortificarGravacao(); }
               actualizarInterfaceAudio();
             };
             reader.readAsDataURL(blob);
-          } else {
-            fecharHardwareMicrofone();
-          }
+          } else { fecharHardwareMicrofone(); }
         };
         mediaRecorder.start(200); audioState = 'recording'; startTimer();
-      } catch (err) { alert("Microfone indisponível ou permissão negada."); audioState = 'idle'; }
-    } else if (audioState === 'recording') {
-      if (mediaRecorder?.state === 'recording') { mediaRecorder.pause(); audioState = 'paused'; stopTimer(); }
-    } else if (audioState === 'paused') {
-      if (mediaRecorder?.state === 'paused') { mediaRecorder.resume(); audioState = 'recording'; startTimer(); }
-    } else if (audioState === 'ready') { alert("Áudio pronto! Envie ou descarte."); }
+      } catch (err) { alert("Microfone inacessível."); audioState = 'idle'; }
+    } else if (audioState === 'recording') { if (mediaRecorder?.state === 'recording') { mediaRecorder.pause(); audioState = 'paused'; stopTimer(); } }
+    else if (audioState === 'paused') { if (mediaRecorder?.state === 'paused') { mediaRecorder.resume(); audioState = 'recording'; startTimer(); } }
     actualizarInterfaceAudio();
   }
 
   function fecharHardwareMicrofone() { if (globalAudioStream) { globalAudioStream.getTracks().forEach(t => t.stop()); globalAudioStream = null; } }
-  
   function limparEMortificarGravacao() {
     audioState = 'idle'; stopTimer(); totalSeconds = 0;
-    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) {
-      try { mediaRecorder.stop(); } catch(e){}
-    }
+    if (mediaRecorder && (mediaRecorder.state === 'recording' || mediaRecorder.state === 'paused')) { try { mediaRecorder.stop(); } catch(e){} }
     fecharHardwareMicrofone(); audioRecordedBlob = null; audioChunks = [];
     document.getElementById('audio-preview-bar').style.display = 'none'; actualizarInterfaceAudio();
   }
 
   function actualizarInterfaceAudio() {
-    audioBtn.className = 'btn-icon';
-    floatPanel.style.display = (audioState === 'recording' || audioState === 'paused') ? 'flex' : 'none';
+    audioBtn.className = 'btn-icon'; floatPanel.style.display = (audioState === 'recording' || audioState === 'paused') ? 'flex' : 'none';
     if (audioState === 'recording') { audioBtn.classList.add('recording'); audioBtn.innerHTML = '<i class="ti ti-player-pause"></i>'; }
     else if (audioState === 'paused') { audioBtn.classList.add('paused'); audioBtn.innerHTML = '<i class="ti ti-player-play"></i>'; }
     else if (audioState === 'ready') audioBtn.innerHTML = '<i class="ti ti-check" style="color:#1D9E75"></i>';
@@ -785,46 +816,31 @@
   document.getElementById('audio-preview-cancel').addEventListener('click', limparEMortificarGravacao);
 
   async function startCamera() {
-    if(!confirm("Permitir acesso à câmera?")) { toggleCamera(false); return; }
     const video = document.getElementById('camera-video'); stopCamera();
     try {
       videoStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: currentFacingMode, width: { ideal: 1920 }, height: { ideal: 1080 } }, audio: false });
       video.srcObject = videoStream;
     } catch {
-      try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); video.srcObject = videoStream; }
-      catch { alert("Erro ao abrir a câmera."); toggleCamera(false); }
+      try { videoStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false }); video.srcObject = videoStream; } catch { toggleCamera(false); }
     }
   }
-
   function stopCamera() { if (videoStream) { videoStream.getTracks().forEach(t => t.stop()); videoStream = null; } document.getElementById('camera-video').srcObject = null; }
-  
   function toggleCamera(force) {
     cameraOpen = force !== undefined ? force : !cameraOpen;
     if(cameraOpen) {
-      stickerOpen = false; toggleColorPanel(false);
-      document.getElementById('sticker-panel').style.display = 'none';
-      document.getElementById('camera-panel').style.display = 'block';
-      startCamera();
-    } else {
-      document.getElementById('camera-panel').style.display = 'none'; stopCamera();
-    }
+      stickerOpen = false; toggleColorPanel(false); document.getElementById('sticker-panel').style.display = 'none'; document.getElementById('camera-panel').style.display = 'block'; startCamera();
+    } else { document.getElementById('camera-panel').style.display = 'none'; stopCamera(); }
   }
 
   function snapPhoto() {
-    if (!videoStream) return; const video = document.getElementById('camera-video');
-    const canvas = document.createElement('canvas'); canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
-    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-    enviar({ image: canvas.toDataURL('image/jpeg', 0.95) }); toggleCamera(false);
+    if (!videoStream) return; const video = document.getElementById('camera-video'); const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth || 1280; canvas.height = video.videoHeight || 720;
+    canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height); enviar({ image: canvas.toDataURL('image/jpeg', 0.95) }); toggleCamera(false);
   }
 
   function toggleColorPanel(force) {
     colorPanelOpen = force !== undefined ? force : !colorPanelOpen;
-    if(colorPanelOpen) {
-      toggleCamera(false); toggleSticker(false);
-      openColorModal();
-    } else {
-      closeColorModal();
-    }
+    if(colorPanelOpen) { toggleCamera(false); toggleSticker(false); openColorModal(); } else { closeColorModal(); }
   }
 
   document.getElementById('brush-btn').addEventListener('click', () => toggleColorPanel());
@@ -832,8 +848,7 @@
   document.getElementById('camera-close').addEventListener('click', () => toggleCamera(false));
   document.getElementById('camera-snap').addEventListener('click', snapPhoto);
   document.getElementById('camera-flip').addEventListener('click', () => { currentFacingMode = (currentFacingMode === 'user') ? 'environment' : 'user'; if(cameraOpen) startCamera(); });
-  document.getElementById('gallery-trigger-btn').addEventListener('click', () => { if(confirm("Abrir arquivos da galeria?")) document.getElementById('gallery-input').click(); });
-  
+  document.getElementById('gallery-trigger-btn').addEventListener('click', () => { document.getElementById('gallery-input').click(); });
   document.getElementById('gallery-input').addEventListener('change', e => {
     const file = e.target.files[0]; if(!file) return;
     const reader = new FileReader(); reader.onload = ev => { enviar({ image: ev.target.result }); toggleCamera(false); e.target.value = ''; };
@@ -845,16 +860,9 @@
       mediaRecorder.onstop = () => {
         if(audioChunks.length > 0) {
           const blob = new Blob(audioChunks, { type: mediaRecorder.mimeType || 'audio/mp4' });
-          const reader = new FileReader(); reader.onloadend = () => { 
-            if(reader.result && reader.result.startsWith('data:audio')) {
-              enviar({ audio: reader.result }); 
-            }
-            limparEMortificarGravacao(); 
-          };
+          const reader = new FileReader(); reader.onloadend = () => { if(reader.result?.startsWith('data:audio')) enviar({ audio: reader.result }); limparEMortificarGravacao(); };
           reader.readAsDataURL(blob);
-        } else {
-          limparEMortificarGravacao();
-        }
+        } else { limparEMortificarGravacao(); }
       };
       mediaRecorder.stop(); return;
     }
@@ -868,12 +876,12 @@
   const msgInput = document.getElementById('msg-input');
   msgInput.addEventListener('input', function() { this.style.height = '38px'; this.style.height = Math.min(this.scrollHeight, 100) + 'px'; });
   document.getElementById('enter-btn').addEventListener('click', () => entrar(true));
-  document.getElementById('name-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(true); });
+  document.getElementById('nickname-input').addEventListener('keydown', e => { if(e.key==='Enter') document.getElementById('fullname-input').focus(); });
+  document.getElementById('fullname-input').addEventListener('keydown', e => { if(e.key==='Enter') entrar(true); });
   document.getElementById('reply-cancel').addEventListener('click', cancelReply);
   document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
   document.getElementById('logout-btn').addEventListener('click', sair);
   document.getElementById('send-btn').addEventListener('click', dispararEnvioCompleto);
-  
   document.getElementById('lock-clear-btn').addEventListener('click', limparHistoricoGeral);
 
   document.getElementById('avatar-pick').addEventListener('click', () => document.getElementById('avatar-file').click());
@@ -903,144 +911,88 @@
     }
   });
   document.getElementById('paste-cancel').addEventListener('click', () => { pasteImageData = null; document.getElementById('paste-preview').style.display = 'none'; });
-
   msgInput.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); dispararEnvioCompleto(); } });
 
-  // ===== SISTEMA DE AUTOCOMPLETAR MENÇÕES COM @ =====
+  // ===== SUGESTÕES DE MENÇÕES COM @ =====
   const mentionPanel = document.getElementById('mention-suggestions');
-  
   msgInput.addEventListener('input', () => {
-    const text = msgInput.value;
-    const cursorPosition = msgInput.selectionStart;
-    const lastAtPos = text.lastIndexOf('@', cursorPosition - 1);
-
+    const text = msgInput.value; const cursorPosition = msgInput.selectionStart; const lastAtPos = text.lastIndexOf('@', cursorPosition - 1);
     if (lastAtPos !== -1 && (lastAtPos === 0 || text.charAt(lastAtPos - 1) === ' ')) {
       const queryMention = text.substring(lastAtPos + 1, cursorPosition).toLowerCase();
-      
-      // Filtra os usuários com base no que foi digitado após o @
-      const filteredUsers = Array.from(userListInChat).filter(user => 
-        user.toLowerCase().startsWith(queryMention)
-      );
-
+      const filteredUsers = Array.from(userListInChat).filter(user => user.toLowerCase().startsWith(queryMention));
       if (filteredUsers.length > 0) {
         mentionPanel.innerHTML = '';
         filteredUsers.forEach(user => {
-          const item = document.createElement('div');
-          item.className = 'mention-item';
-          item.innerHTML = `<span class="mention-badge">@</span> <span>${user}</span>`;
+          const item = document.createElement('div'); item.className = 'mention-item'; item.innerHTML = `<span class="mention-badge">@</span> <span>${user}</span>`;
           item.addEventListener('click', () => {
-            // Insere o nome do amigo selecionado diretamente no texto
-            const before = text.substring(0, lastAtPos);
-            const after = text.substring(cursorPosition);
-            msgInput.value = `${before}@${user} ${after}`;
-            mentionPanel.style.display = 'none';
-            msgInput.focus();
+            const before = text.substring(0, lastAtPos); const after = text.substring(cursorPosition);
+            msgInput.value = `${before}@${user} ${after}`; mentionPanel.style.display = 'none'; msgInput.focus();
           });
           mentionPanel.appendChild(item);
         });
         mentionPanel.style.display = 'block';
-      } else {
-        mentionPanel.style.display = 'none';
-      }
-    } else {
-      mentionPanel.style.display = 'none';
-    }
+      } else { mentionPanel.style.display = 'none'; }
+    } else { mentionPanel.style.display = 'none'; }
   });
+  document.addEventListener('click', (e) => { if (!mentionPanel.contains(e.target) && e.target !== msgInput) mentionPanel.style.display = 'none'; });
 
-  // Fecha o menu de menção se clicar fora dele
-  document.addEventListener('click', (e) => {
-    if (!mentionPanel.contains(e.target) && e.target !== msgInput) {
-      mentionPanel.style.display = 'none';
-    }
-  });
-
-  // ===== PAINEL EMOJI + MÃOS =====
-  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","{1F573}","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
+  // ===== PAINEL EMOJI + GESTOS =====
+  const MAOS_BASE = ["👍","🤝","👏","✊","👊","👎","🫷","🤜","🤛","✌️","🤞","🤘","🤟","🫰","🤏","🤌","👌","👈","🫴","👇","👆","👉","🤚","✋","☝️","👋","🖖","🖐️","🫱","🫲","🤙","🖕","💪","🙏","🫵"];
   const TONS_UNICODE = ["", "\u{1F3FB}", "\u{1F3FC}", "\u{1F3FD}", "\u{1F3FE}", "\u{1F3FF}"];
   const TONS_LABEL   = ["🖐️","🏻","🏼","🏽","🏾","🏿"];
   let tomAtual = 0;
 
   function buildStickerGrid(filter) {
-    const grid = document.getElementById('sticker-grid');
-    grid.innerHTML = '';
-
+    const grid = document.getElementById('sticker-grid'); grid.innerHTML = '';
     const lbl1 = document.createElement('div'); lbl1.className='sticker-sec-label'; lbl1.textContent='EXPRESSÕES'; grid.appendChild(lbl1);
     const rostos = filter ? LISTA_EMOJIS_UNIFICADA.filter(s=>s.includes(filter)) : LISTA_EMOJIS_UNIFICADA;
     rostos.forEach(s => {
-      const sp=document.createElement('span'); sp.textContent=s;
-      sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);});
-      grid.appendChild(sp);
+      const sp=document.createElement('span'); sp.textContent=s; sp.addEventListener('click',()=>{enviar({sticker:s});toggleSticker(false);}); grid.appendChild(sp);
     });
-
     if(!filter) {
       const sep = document.createElement('div'); sep.className='sticker-sep'; grid.appendChild(sep);
       const lbl2 = document.createElement('div'); lbl2.className='sticker-sec-label'; lbl2.textContent='MÃOS E GESTOS'; grid.appendChild(lbl2);
-
       MAOS_BASE.forEach(base => {
-        const tom = TONS_UNICODE[tomAtual];
-        const full = base + tom;
-        const sp = document.createElement('span'); sp.textContent=full;
-        sp.addEventListener('click', (e) => { e.stopPropagation(); openTomPopup(base, sp); });
-        grid.appendChild(sp);
+        const full = base + TONS_UNICODE[tomAtual]; const sp = document.createElement('span'); sp.textContent=full;
+        sp.addEventListener('click', (e) => { e.stopPropagation(); openTomPopup(base, sp); }); grid.appendChild(sp);
       });
     }
   }
 
   function openTomPopup(base, anchorEl) {
-    let popup = document.getElementById('tom-popup');
-    if(!popup){
-      popup = document.createElement('div'); popup.id='tom-popup';
-      document.body.appendChild(popup);
-    }
+    let popup = document.getElementById('tom-popup'); if(!popup){ popup = document.createElement('div'); popup.id='tom-popup'; document.body.appendChild(popup); }
     popup.innerHTML = '';
     TONS_LABEL.forEach((label, i) => {
-      const btn = document.createElement('button');
-      btn.className='tom-pop-btn'+(i===tomAtual?' ativo':'');
-      btn.textContent = label;
+      const btn = document.createElement('button'); btn.className='tom-pop-btn'+(i===tomAtual?' ativo':''); btn.textContent = label;
       btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        tomAtual = i;
-        const tom = TONS_UNICODE[i];
-        enviar({ sticker: base + tom });
-        popup.classList.remove('open');
-        toggleSticker(false);
+        e.stopPropagation(); tomAtual = i; enviar({ sticker: base + TONS_UNICODE[i] }); popup.classList.remove('open'); toggleSticker(false);
       });
       popup.appendChild(btn);
     });
-    const rect = anchorEl.getBoundingClientRect();
-    popup.classList.add('open');
-    popup.style.left = Math.min(rect.left, window.innerWidth - 60) + 'px';
-    popup.style.top = (rect.top - popup.offsetHeight - 8) + 'px';
-    if(parseInt(popup.style.top) < 10) popup.style.top = (rect.bottom + 8) + 'px';
+    const rect = anchorEl.getBoundingClientRect(); popup.classList.add('open'); popup.style.left = Math.min(rect.left, window.innerWidth - 60) + 'px'; popup.style.top = (rect.top - popup.offsetHeight - 8) + 'px';
   }
-
-  document.addEventListener('click', () => {
-    const p = document.getElementById('tom-popup');
-    if(p) p.classList.remove('open');
-  });
+  document.addEventListener('click', () => { const p = document.getElementById('tom-popup'); if(p) p.classList.remove('open'); });
 
   function toggleSticker(force){
-    stickerOpen=force!==undefined?force:!stickerOpen;
-    if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
-    document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none';
-    if(stickerOpen){ buildStickerGrid(''); }
+    stickerOpen=force!==undefined?force:!stickerOpen; if(stickerOpen){ toggleCamera(false); toggleColorPanel(false); }
+    document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none'; if(stickerOpen) buildStickerGrid('');
   }
-
   document.getElementById('sticker-btn').addEventListener('click', () => toggleSticker());
   document.getElementById('sticker-close').addEventListener('click', () => toggleSticker(false));
-  document.getElementById('sticker-input').addEventListener('input', e => {
-    clearTimeout(stickerTimer);
-    stickerTimer=setTimeout(() => { buildStickerGrid(e.target.value.trim()); },200);
-  });
-
+  document.getElementById('sticker-input').addEventListener('input', e => { clearTimeout(stickerTimer); stickerTimer=setTimeout(() => { buildStickerGrid(e.target.value.trim()); },200); });
   document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display = 'none');
 
   window.addEventListener('DOMContentLoaded', () => {
     carregarTemaSalvo();
-    const savedName = localStorage.getItem('chatzao_name'); const savedAvatar = localStorage.getItem('chatzao_avatar');
-    if(savedName) document.getElementById('name-input').value = savedName;
+    const loginSalvo = localStorage.getItem('chatzao_v3_login'); const savedAvatar = localStorage.getItem('chatzao_avatar');
     if(savedAvatar){ myAvatar = savedAvatar; document.getElementById('avatar-pick').innerHTML = `<img src="${savedAvatar}" alt="av"/>`; }
-    if(savedName?.trim()) setTimeout(() => entrar(false), 500); 
+    
+    if(loginSalvo) {
+      const pars = JSON.parse(loginSalvo);
+      document.getElementById('nickname-input').value = pars.nick;
+      document.getElementById('fullname-input').value = pars.full;
+      setTimeout(() => entrar(false), 500); 
+    }
   });
 </script>
 </body>
