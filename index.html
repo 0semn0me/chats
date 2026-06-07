@@ -565,7 +565,14 @@ window.addEventListener('DOMContentLoaded',()=>{
   const saved=localStorage.getItem('chatzao_login');
   const savedAv=localStorage.getItem('chatzao_avatar');
   if(savedAv){myAvatar=savedAv; document.getElementById('av-pick').innerHTML=`<img src="${savedAv}" alt="av"/>`;}
-  if(saved){const p=JSON.parse(saved); document.getElementById('nick-input').value=p.nick; document.getElementById('full-input').value=p.full; setTimeout(()=>entrar(false),400);}
+  if(saved){
+    try{
+      const p=JSON.parse(saved);
+      document.getElementById('nick-input').value=p.nick;
+      document.getElementById('full-input').value=p.full;
+      setTimeout(()=>entrar(false),500);
+    }catch(e){localStorage.removeItem('chatzao_login');}
+  }
 });
 
 // ── COLOR PICKER DRAWER ──
@@ -660,17 +667,17 @@ function initBrightSlider(){
 // ── PRESENCE (online users for @mention) ──
 async function setPresence(){
   if(!myNick)return;
-  await db.collection('presence').doc(myNick).set({nick:myNick,full:myFull,ts:firebase.firestore.FieldValue.firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+  await db.collection('presence').doc(myNick).set({nick:myNick,full:myFull,ts:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
 }
 async function clearPresence(){
   if(!myNick)return;
-  try{await db.collection('presence'.delete().doc(myNick));}catch(e){}
+  try{await db.collection('presence').doc(myNick).delete();}catch(e){}
 }
 function startPresence(){
   setPresence();
   presenceInterval=setInterval(setPresence,25000);
   // Listen to presence for @mention list
-  onSnapshot(db.collection('presence'),snap=>{
+  db.collection('presence').onSnapshot(snap=>{
     onlineUsers=new Set();
     snap.forEach(d=>{
       const data=d.data();
@@ -686,7 +693,7 @@ function stopPresence(){
 // ── LISTEN USER COLORS ──
 function listenColors(){
   if(unsubColors)unsubColors();
-  unsubColors=onSnapshot(db.collection('user_colors'),snap=>{
+  unsubColors=db.collection('user_colors').onSnapshot(snap=>{
     snap.forEach(d=>{const data=d.data();if(data.nick)userColors[data.nick]={hex:data.hex,textHex:data.textHex};});
     // Re-render visible names (lightweight - just update color vars)
     document.querySelectorAll('.sender-nick[data-nick]').forEach(el=>{
@@ -1000,12 +1007,10 @@ async function entrar(isNew=false){
 
 function sair(){
   if(unsubMsg)unsubMsg();if(unsubColors)unsubColors();stopCam();killAudio();stopPresence();
-  localStorage.removeItem('chatzao_login');localStorage.removeItem('chatzao_avatar');
-  document.getElementById('nick-input').value='';document.getElementById('full-input').value='';
-  document.getElementById('av-pick').innerHTML='<i class="ti ti-camera av-icon"></i>';
-  myAvatar='';
+  // Keep login saved so user can re-enter quickly, but clear avatar from display
   document.getElementById('chat-area').classList.remove('active');
   document.getElementById('login').classList.add('active');
+  myNick='';myFull='';
 }
 
 // ── SEND ──
@@ -1069,7 +1074,7 @@ function openProfileModal(nick,full,avatar){
     reactRow.appendChild(btn);
   });
   if(unsubLikes)unsubLikes();
-  unsubLikes=onSnapshot(db.collection('perfil_likes').doc(nick),snap2=>{
+  unsubLikes=db.collection('perfil_likes').doc(nick).onSnapshot(snap2=>{
     let likes=0;const reactions={};
     if(snap2.exists){const d2=snap2.data();Object.keys(d2).forEach(k=>{if(k.endsWith('_react')){const e=d2[k];reactions[e]=(reactions[e]||0)+1;}else likes++;});}
     likesEl.textContent=likes;
@@ -1086,7 +1091,7 @@ document.getElementById('pm-close').addEventListener('click',()=>{document.getEl
 document.getElementById('av-pick').addEventListener('click',()=>document.getElementById('av-file').click());
 document.getElementById('av-file').addEventListener('change',e=>{
   const f=e.target.files[0];if(!f)return;
-  const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');const mx=600;let w=img.width,h=img.height;if(w>mx){h=h*mx/w;w=mx;}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);myAvatar=cv.toDataURL('image/jpeg',.92);document.getElementById('av-pick').innerHTML=`<img src="${myAvatar}" alt="av"/>`;};img.src=ev.target.result;};r.readAsDataURL(f);
+  const r=new FileReader();r.onload=ev=>{const img=new Image();img.onload=()=>{const cv=document.createElement('canvas');const mx=600;let w=img.width,h=img.height;if(w>mx){h=h*mx/w;w=mx;}cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);myAvatar=cv.toDataURL('image/jpeg',.92);localStorage.setItem('chatzao_avatar',myAvatar);document.getElementById('av-pick').innerHTML=`<img src="${myAvatar}" alt="av"/>`;};img.src=ev.target.result;};r.readAsDataURL(f);
 });
 
 // ── PASTE ──
