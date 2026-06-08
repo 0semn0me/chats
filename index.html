@@ -1,14 +1,100 @@
-/* ── ELEMENTOS DO DRAWER AVANÇADO ── */
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+<title>Chatzão</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{\n  --font:system-ui,-apple-system,sans-serif;\n  --r:8px;--rl:14px;\n  --p:#534AB7;--pt:#fff;\n  --bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;\n  --b1:#222;--b2:#333;--b3:#444;\n  --t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;\n}
+html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden}
+body{display:flex;flex-direction:column;font-family:var(--font)}
+#app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
+
+/* ── LOGIN ── */
+#login-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:340px;background:var(--s1);border:0.5px solid var(--b1);border-radius:var(--rl);padding:24px;display:flex;flex-direction:column;gap:16px;box-shadow:0 10px 30px rgba(0,0,0,0.5)}
+.login-logo{font-size:32px;font-weight:800;color:var(--p);text-align:center;letter-spacing:-1px}
+.input-group{display:flex;flex-direction:column;gap:6px}
+.input-group label{font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px}
+.input-field{background:var(--s2);border:0.5px solid var(--b2);color:var(--t1);padding:12px;border-radius:var(--r);font-family:inherit;font-size:14px;outline:none;transition:border-color 0.2s}
+.input-field:focus{border-color:var(--p)}
+.login-btn{background:var(--p);color:var(--pt);border:none;padding:12px;border-radius:var(--r);font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;display:flex;align-items:center;justify-content:center;gap:8px}
+.login-btn:hover{opacity:0.9}
+
+/* ── BACKGROUND OVERLAY ── */
+#bg-overlay{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.15;z-index:1;pointer-events:none}
+
+/* ── HEADER ── */
+#header{height:60px;background:var(--s1);border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 16px;z-index:10;position:relative}
+.h-left,.h-right{display:flex;align-items:center;gap:12px}
+.h-left{flex:1}
+.h-right{justify-content:end;flex:1}
+.menu-btn,.icon-btn{background:none;border:none;color:var(--t2);font-size:22px;cursor:pointer;width:38px;height:38px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.menu-btn:hover,.icon-btn:hover{background:var(--s2);color:var(--t1)}
+.room-info{display:flex;flex-direction:column}
+.room-title{font-size:15px;font-weight:700;color:var(--t1)}
+.room-status{font-size:11px;color:var(--p);font-weight:500;display:flex;align-items:center;gap:4px}
+.room-status::before{content:'';width:6px;height:6px;background:var(--p);border-radius:50%;display:inline-block}
+
+/* ── DRAWER (CORRIGIDO E INTEGRADO) ── */
+#drawer-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+#drawer-overlay.open {
+  display: block;
+}
+#drawer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 290px;
+  max-width: 85vw;
+  background: var(--s1) !important;
+  border-right: 0.5px solid var(--b1);
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-y: auto;
+}
+#drawer.open {
+  transform: translateX(0);
+}
+.drawer-head {
+  padding: 18px 16px;
+  border-bottom: 0.5px solid var(--b1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--s2);
+}
+.drawer-head-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--p);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
 .drawer-section {
-  padding: 16px 16px 6px;
+  padding: 16px 16px 8px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   color: var(--t4);
 }
-
-/* Painel de Cores Chroma */
 .chroma-container {
   padding: 0 16px;
   display: flex;
@@ -17,16 +103,17 @@
 }
 #dc-canvas {
   width: 100%;
-  height: 110px;
+  height: 100px;
   background: #fff;
   cursor: crosshair;
   border-radius: 8px;
   border: 0.5px solid var(--b2);
+  display: block;
 }
 #dc-hue {
   -webkit-appearance: none;
   width: 100%;
-  height: 12px;
+  height: 10px;
   border-radius: 6px;
   background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
   outline: none;
@@ -34,17 +121,15 @@
 }
 #dc-hue::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
   background: #fff;
-  border: 2px solid #000;
+  border: 1.5px solid #000;
   cursor: pointer;
 }
-
-/* Lista de Planos de Fundo e Upload */
 .bg-grid-list {
-  padding: 0 16px;
+  padding: 0 16px 20px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -82,3 +167,702 @@
 .bg-item-btn.upload-btn:hover {
   background: rgba(83, 74, 183, 0.12);
 }
+
+/* ── MESSAGES CHAT ── */
+#chat-container{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;z-index:2;position:relative;padding-bottom:20px}
+.msg-row{display:flex;flex-direction:column;width:100%;max-width:85%}
+.msg-row.me{align-self:flex-end;align-items:flex-end}
+.msg-row.other{align-self:flex-start;align-items:flex-start}
+.msg-meta{font-size:11px;font-weight:600;color:var(--t3);margin-bottom:4px;display:flex;align-items:center;gap:6px;padding:0 4px}
+.msg-box{background:var(--s1);border:0.5px solid var(--b1);color:var(--t1);padding:10px 14px;border-radius:var(--rl);font-size:14.5px;line-height:1.4;position:relative;word-break:break-word;box-shadow:0 2px 8px rgba(0,0,0,0.2)}
+.msg-row.me .msg-box{background:var(--p);border:none;color:var(--pt)}
+.msg-row.me .msg-box::after{content:'';position:absolute;right:-5px;top:12px;border-width:6px 0 6px 6px;border-style:solid;border-color:transparent transparent transparent var(--p)}
+.msg-row.other .msg-box::after{content:'';position:absolute;left:-5px;top:12px;border-width:6px 6px 6px 0;border-style:solid;border-color:transparent var(--s1) transparent transparent}
+.msg-time{font-size:10px;color:var(--t3);text-align:right;margin-top:4px;display:block;font-weight:500}
+.msg-row.me .msg-time{color:rgba(255,255,255,0.6)}
+
+/* REPLY AND EDIT DESIGN */
+.reply-badge{background:rgba(0,0,0,0.15);border-left:3px solid var(--p);padding:6px 8px;border-radius:4px;margin-bottom:6px;font-size:12px;color:var(--t2);cursor:pointer}
+.msg-row.me .reply-badge{border-left-color:var(--pt);color:rgba(255,255,255,0.9);background:rgba(255,255,255,0.12)}
+.reply-badge-target{font-weight:700;font-size:11px;display:block;margin-bottom:2px;color:var(--p)}
+.msg-row.me .reply-badge-target{color:var(--pt)}
+.edited-flag{font-size:10px;font-style:italic;color:var(--t3);margin-left:5px}
+.msg-row.me .edited-flag{color:rgba(255,255,255,0.5)}
+
+/* MEDIA DESIGN */
+.msg-media{max-width:100%;border-radius:8px;margin-top:6px;cursor:pointer;display:block;border:0.5px solid var(--b1)}
+.audio-player{display:flex;align-items:center;gap:10px;background:var(--s2);padding:8px 12px;border-radius:var(--r);margin-top:6px;min-width:200px;border:0.5px solid var(--b2)}
+.msg-row.me .audio-player{background:rgba(255,255,255,0.15);border:none}
+.audio-btn{background:none;border:none;color:var(--p);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.msg-row.me .audio-btn{color:var(--pt)}
+.audio-slider{flex:1;height:4px;-webkit-appearance:none;background:var(--b3);border-radius:2px;outline:none}
+.msg-row.me .audio-slider{background:rgba(255,255,255,0.3)}
+.audio-slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--p)}
+.msg-row.me .audio-slider::-webkit-slider-thumb{background:var(--pt)}
+.audio-time{font-size:11px;color:var(--t3);font-family:monospace}
+.msg-row.me .audio-time{color:rgba(255,255,255,0.7)}
+
+/* ACTIONS POPUP */
+#msg-actions-sheet{position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:5000;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.actions-card{width:100%;max-width:280px;background:var(--s1);border:0.5px solid var(--b1);border-radius:var(--rl);overflow:hidden;box-shadow:0 20px 40px rgba(0,0,0,0.6)}
+.action-item{width:100%;background:none;border:none;padding:14px 16px;color:var(--t1);font-size:14.5px;font-weight:500;text-align:left;display:flex;align-items:center;gap:12px;cursor:pointer;transition:background 0.15s}
+.action-item:hover{background:var(--s2)}
+.action-item.danger{color:#ff4a4a}
+.action-item.danger:hover{background:rgba(255,74,74,0.1)}
+
+/* ── BARRA DE FERRAMENTAS E INPUTS ── */
+#bar-panels{background:var(--s1);border-top:0.5px solid var(--b1);z-index:5;position:relative}
+.panel-alert{display:none;align-items:center;justify-content:between;padding:8px 16px;background:var(--s2);border-bottom:0.5px solid var(--b1);font-size:12px;color:var(--t2)}
+.panel-alert .left{display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.panel-alert .close-btn{background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px}
+
+/* PREVIEW PASTE */
+#paste-preview{display:none;padding:10px 16px;background:var(--s2);border-bottom:0.5px solid var(--b1);align-items:center;gap:12px}
+#paste-img-el{height:50px;width:50px;object-fit:cover;border-radius:6px;border:0.5px solid var(--b3)}
+
+#input-bar{padding:12px 16px;display:flex;align-items:end;gap:10px;background:var(--s1)}
+.input-wrapper{flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:22px;padding:4px 14px;display:flex;align-items:end;gap:8px;min-height:40px;position:relative}
+.input-wrapper:focus-within{border-color:var(--b3)}
+#full-input{flex:1;background:none;border:none;color:var(--t1);font-family:inherit;font-size:14.5px;outline:none;padding:6px 0;resize:none;max-height:120px;height:24px;line-height:20px}
+.bar-icon{background:none;border:none;color:var(--t2);font-size:20px;cursor:pointer;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.15s}
+.bar-icon:hover{background:var(--s3);color:var(--t1)}
+#send-btn{background:var(--p);color:var(--pt);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;transition:transform 0.1s}
+#send-btn:active{transform:scale(0.95)}
+
+/* MIC RECORDING PULSE */
+.rec-active{color:#ff4a4a !important;animation:pulseMic 1.5s infinite}
+@keyframes pulseMic{0%{transform:scale(1)}50%{transform:scale(1.15);color:#ff7777}100%{transform:scale(1)}}
+
+/* LIGHTBOX */
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:99999;display:none;align-items:center;justify-content:center;padding:20px}
+#lbx-img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
+#lbx-close{position:absolute;top:20px;right:20px;background:rgba(255,255,255,0.1);border:none;color:#fff;font-size:24px;width:44px;height:44px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Chatzão</div>
+    <div class="input-group">
+      <label>Seu Apelido</label>
+      <input type="text" id="nick-input" class="input-field" placeholder="Ex: Rick, Jão..." maxlength="15" autocomplete="off">
+    </div>
+    <button id="enter-btn" class="login-btn"><i class="ti ti-login"></i> Entrar no Chat</button>
+  </div>
+</div>
+
+<div id="app">
+  <div id="bg-overlay"></div>
+  
+  <div id="header">
+    <div class="h-left">
+      <button id="open-menu-btn" class="menu-btn"><i class="ti ti-menu-2"></i></button>
+      <div class="room-info">
+        <span class="room-title">Festa Particular</span>
+        <span class="room-status">Online</span>
+      </div>
+    </div>
+    <div class="h-right">
+      <button id="lock-btn" class="icon-btn" style="opacity:0.3"><i class="ti ti-lock"></i></button>
+      <button id="sair-btn" class="icon-btn"><i class="ti ti-logout"></i></button>
+    </div>
+  </div>
+
+  <div id="chat-container"></div>
+
+  <div id="bar-panels">
+    <div id="reply-panel" class="panel-alert">
+      <div class="left">
+        <i class="ti ti-arrow-back-up" style="font-size:16px;color:var(--p)"></i>
+        <span id="reply-text" style="overflow:hidden;text-overflow:ellipsis">Respondendo mensagem...</span>
+      </div>
+      <button id="reply-cancel" class="close-btn"><i class="ti ti-x"></i></button>
+    </div>
+    
+    <div id="edit-panel" class="panel-alert">
+      <div class="left">
+        <i class="ti ti-edit" style="font-size:16px;color:var(--p)"></i>
+        <span id="edit-text" style="overflow:hidden;text-overflow:ellipsis">Editando mensagem...</span>
+      </div>
+      <button id="edit-cancel" class="close-btn"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div id="paste-preview">
+      <img id="paste-img-el" alt="Colada">
+      <span style="font-size:12px;color:var(--t2);flex:1">Imagem pronta para envio</span>
+      <button id="paste-cancel" class="bar-icon" style="width:26px;height:26px;font-size:14px"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div id="input-bar">
+      <div class="input-wrapper">
+        <button id="img-btn" class="bar-icon"><i class="ti ti-photo"></i></button>
+        <input type="file" id="img-input" accept="image/*" style="display:none">
+        <textarea id="full-input" placeholder="Mensagem..." rows="1"></textarea>
+        <button id="mic-btn" class="bar-icon"><i class="ti ti-microphone"></i></button>
+      </div>
+      <button id="send-btn"><i class="ti ti-send"></i></button>
+    </div>
+  </div>
+</div>
+
+<div id="drawer">
+  <div class="drawer-head">
+    <div class="drawer-head-icon"><i class="ti ti-settings" style="color:#fff"></i></div>
+    <div class="sender-names">
+      <span class="sender-nick" style="color:var(--t1)">Opções do Sistema</span>
+    </div>
+  </div>
+  
+  <div class="drawer-section">Tema Customizado (Chroma)</div>
+  <div class="chroma-container">
+    <canvas id="dc-canvas"></canvas>
+    <input type="range" id="dc-hue" min="0" max="360" value="245">
+  </div>
+  
+  <div class="drawer-section">Plano de Fundo</div>
+  <div class="bg-grid-list">
+    <input type="file" id="bg-upload-input" accept="image/*" style="display: none;">
+    <button class="bg-item-btn upload-btn" id="bg-upload-trigger">
+      <i class="ti ti-cloud-upload" style="color: var(--p)"></i>
+      Upar foto de escolha...
+    </button>
+    
+    <div id="drawer-bg-list" style="display: flex; flex-direction: column; gap: 8px; width: 100%;"></div>
+  </div>
+</div>
+<div id="drawer-overlay"></div>
+
+<div id="msg-actions-sheet">
+  <div class="actions-card">
+    <button id="act-reply" class="action-item"><i class="ti ti-arrow-back-up"></i> Responder</button>
+    <button id="act-copy" class="action-item"><i class="ti ti-copy"></i> Copiar Texto</button>
+    <button id="act-edit" class="action-item"><i class="ti ti-edit"></i> Editar Mensagem</button>
+    <button id="act-del" class="action-item danger"><i class="ti ti-trash"></i> Apagar para Todos</button>
+    <button id="act-cancel" class="action-item" style="border-top:0.5px solid var(--b1);color:var(--t3)"><i class="ti ti-x"></i> Cancelar</button>
+  </div>
+</div>
+
+<div id="lightbox">
+  <button id="lbx-close"><i class="ti ti-x"></i></button>
+  <img id="lbx-img" alt="Lightbox">
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { 
+  getFirestore, collection, addDoc, query, orderBy, onSnapshot, 
+  doc, deleteDoc, updateDoc, getDocs, writeBatch 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAs7M-I2V5X-XvG2Y8M1W3O_8b4z7Y",
+  authDomain: "chatz-cb30b.firebaseapp.com",
+  projectId: "chatz-cb30b",
+  storageBucket: "chatz-cb30b.appspot.com",
+  messagingSenderId: "36712398412",
+  appId: "1:36712398412:web:a62b8b4a7c12f4"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const COL = collection(db, "mensagens");
+
+let meuNick = localStorage.getItem('chat_nick') || '';
+let selectedMsgId = null;
+let selectedMsgData = null;
+let replyId = null;
+let editId = null;
+let pasteImg = null;
+
+// Audio Controls
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+
+const chatContainer = document.getElementById('chat-container');
+const txtInput = document.getElementById('full-input');
+
+function init(){
+  if(meuNick){
+    document.getElementById('login-screen').style.display = 'none';
+    ouvirMensagens();
+  }
+}
+
+function entrar(clickFlag){
+  const val = document.getElementById('nick-input').value.trim();
+  if(!val) return;
+  meuNick = val;
+  localStorage.setItem('chat_nick', meuNick);
+  document.getElementById('login-screen').style.display = 'none';
+  ouvirMensagens();
+}
+
+function sair(){
+  localStorage.removeItem('chat_nick');
+  location.reload();
+}
+
+// DRAWER TOGGLES
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('drawer-overlay');
+document.getElementById('open-menu-btn').addEventListener('click', ()=>{
+  drawer.classList.add('open');
+  overlay.classList.add('open');
+});
+overlay.addEventListener('click', ()=>{
+  drawer.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// TEXTAREA AUTO GROW
+txtInput.addEventListener('input', ()=>{
+  txtInput.style.height = '24px';
+  txtInput.style.height = Math.min(txtInput.scrollHeight, 120) + 'px';
+});
+
+// FIRESTORE SYNC
+function ouvirMensagens(){
+  const q = query(COL, orderBy("tempo", "asc"));
+  onSnapshot(q, (snapshot)=>{
+    chatContainer.innerHTML = '';
+    snapshot.forEach((d)=>{
+      const m = d.data();
+      renderizarMensagem(d.id, m);
+    });
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    vincularEventosAudio();
+  });
+}
+
+function renderizarMensagem(id, m){
+  const isMe = m.nick === meuNick;
+  const row = document.createElement('div');
+  row.className = `msg-row ${isMe ? 'me' : 'other'}`;
+  row.dataset.id = id;
+  row.dataset.json = JSON.stringify(m);
+
+  let replyHTML = '';
+  if(m.replyTo){
+    replyHTML = `
+      <div class="reply-badge" data-target="${m.replyTo.id}">
+        <span class="reply-badge-target">@${m.replyTo.nick}</span>
+        ${m.replyTo.texto || 'Mídia/Áudio'}
+      </div>
+    `;
+  }
+
+  let contentHTML = '';
+  if(m.tipo === 'imagem'){
+    contentHTML = `<img src="${m.url}" class="msg-media" alt="Enviada">`;
+  } else if(m.tipo === 'audio'){
+    contentHTML = `
+      <div class="audio-player">
+        <button class="audio-btn dynamic-play-btn"><i class="ti ti-play"></i></button>
+        <input type="range" class="audio-slider" min="0" max="100" value="0">
+        <span class="audio-time">0:00</span>
+        <audio src="${m.url}" class="native-audio-el" preload="metadata"></audio>
+      </div>
+    `;
+  } else {
+    contentHTML = `<span>${formatarTexto(m.texto)}</span>`;
+  }
+
+  const hora = m.tempo ? new Date(m.tempo).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--:--';
+
+  row.innerHTML = `
+    <div class="msg-meta">
+      <span>${m.nick}</span>
+      ${m.editado ? '<span class="edited-flag">(editada)</span>' : ''}
+    </div>
+    <div class="msg-box">
+      ${replyHTML}
+      ${contentHTML}
+      <span class="msg-time">${hora}</span>
+    </div>
+  `;
+
+  // Long Press Event handles
+  const box = row.querySelector('.msg-box');
+  let tOut;
+  box.addEventListener('touchstart', ()=>{ tOut = setTimeout(()=>abrirAcoes(id, m), 600); });
+  box.addEventListener('touchend', ()=>{ clearTimeout(tOut); });
+  box.addEventListener('mousedown', ()=>{ tOut = setTimeout(()=>abrirAcoes(id, m), 600); });
+  box.addEventListener('mouseup', ()=>{ clearTimeout(tOut); });
+  box.addEventListener('contextmenu', (e)=>{ e.preventDefault(); abrirAcoes(id, m); });
+
+  if(m.tipo === 'imagem'){
+    row.querySelector('.msg-media').addEventListener('click', ()=>{
+      document.getElementById('lbx-img').src = m.url;
+      document.getElementById('lightbox').style.display = 'flex';
+    });
+  }
+
+  const badge = row.querySelector('.reply-badge');
+  if(badge){
+    badge.addEventListener('click', ()=>{
+      const targetEl = chatContainer.querySelector(`[data-id="${badge.dataset.target}"]`);
+      if(targetEl){
+        targetEl.scrollIntoView({behavior: 'smooth', block: 'center'});
+        targetEl.querySelector('.msg-box').style.animation = 'pulseMic 0.8s 2';
+        setTimeout(()=>{ targetEl.querySelector('.msg-box').style.animation = ''; }, 1600);
+      }
+    });
+  }
+
+  chatContainer.appendChild(row);
+}
+
+function formatarTexto(t){
+  if(!t) return '';
+  return t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+          .replace(/\n/g, '<br>');
+}
+
+// SEND LOGIC
+async function enviarMensagem(){
+  const texto = txtInput.value.trim();
+  if(!texto && !pasteImg) return;
+
+  let pacote = {
+    nick: meuNick,
+    tempo: Date.now(),
+    tipo: 'texto'
+  };
+
+  if(replyId){
+    pacote.replyTo = {
+      id: replyId,
+      nick: selectedMsgData.nick,
+      texto: selectedMsgData.texto || ''
+    };
+    cancelReply();
+  }
+
+  if(editId){
+    await updateDoc(doc(db, "mensagens", editId), {
+      texto: texto,
+      editado: true
+    });
+    cancelEdit();
+    txtInput.value = '';
+    txtInput.style.height = '24px';
+    return;
+  }
+
+  if(pasteImg){
+    pacote.tipo = 'imagem';
+    pacote.url = pasteImg;
+    pasteImg = null;
+    document.getElementById('paste-preview').style.display = 'none';
+  } else {
+    pacote.texto = texto;
+  }
+
+  txtInput.value = '';
+  txtInput.style.height = '24px';
+  await addDoc(COL, pacote);
+}
+
+document.getElementById('send-btn').addEventListener('click', enviarMensagem);
+
+// AUDIO PLAYER BINDING
+function vincularEventosAudio(){
+  document.querySelectorAll('.audio-player').forEach(player => {
+    const audio = player.querySelector('.native-audio-el');
+    const playBtn = player.querySelector('.dynamic-play-btn');
+    const slider = player.querySelector('.audio-slider');
+    const timeDisplay = player.querySelector('.audio-time');
+
+    if(player.dataset.bound) return;
+    player.dataset.bound = "true";
+
+    playBtn.addEventListener('click', ()=>{
+      if(audio.paused){
+        fecharTodosAudios();
+        audio.play();
+        playBtn.innerHTML = '<i class="ti ti-pause"></i>';
+      } else {
+        audio.pause();
+        playBtn.innerHTML = '<i class="ti ti-play"></i>';
+      }
+    });
+
+    audio.addEventListener('timeupdate', ()=>{
+      if(!audio.duration) return;
+      const pct = (audio.currentTime / audio.duration) * 100;
+      slider.value = pct;
+      
+      const m = Math.floor(audio.currentTime / 60);
+      const s = Math.floor(audio.currentTime % 60);
+      timeDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+    });
+
+    audio.addEventListener('loadedmetadata', ()=>{
+      const m = Math.floor(audio.duration / 60);
+      const s = Math.floor(audio.duration % 60);
+      timeDisplay.innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+    });
+
+    audio.addEventListener('ended', ()=>{
+      playBtn.innerHTML = '<i class="ti ti-play"></i>';
+      slider.value = 0;
+    });
+
+    slider.addEventListener('input', (e)=>{
+      if(!audio.duration) return;
+      audio.currentTime = (e.target.value / 100) * audio.duration;
+    });
+  });
+}
+
+function fecharTodosAudios(){
+  document.querySelectorAll('.audio-player').forEach(p => {
+    const a = p.querySelector('.native-audio-el');
+    const b = p.querySelector('.dynamic-play-btn');
+    if(a && !a.paused){ a.pause(); b.innerHTML = '<i class="ti ti-play"></i>'; }
+  });
+}
+
+// REC SYSTEM
+const micBtn = document.getElementById('mic-btn');
+micBtn.addEventListener('click', async()=>{
+  if(!isRecording){
+    if(!navigator.mediaDevices) return alert('Sem acesso a mídias.');
+    try{
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(audioChunks, { type: 'audio/mp3' });
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = async () => {
+          let pacote = { nick: meuNick, tempo: Date.now(), tipo: 'audio', url: reader.result };
+          if(replyId){
+            pacote.replyTo = { id: replyId, nick: selectedMsgData.nick, texto: selectedMsgData.texto || '' };
+            cancelReply();
+          }
+          await addDoc(COL, pacote);
+        };
+        stream.getTracks().forEach(t => t.stop());
+      };
+      mediaRecorder.start();
+      isRecording = true;
+      micBtn.classList.add('rec-active');
+    }catch(err){ alert('Erro ao gravar áudio.'); }
+  } else {
+    mediaRecorder.stop();
+    isRecording = false;
+    micBtn.classList.remove('rec-active');
+  }
+});
+
+// ACTIONS HANDLING
+const sheet = document.getElementById('msg-actions-sheet');
+function abrirAcoes(id, m){
+  selectedMsgId = id;
+  selectedMsgData = m;
+  sheet.style.display = 'flex';
+  const isMe = m.nick === meuNick;
+  document.getElementById('act-del').style.display = isMe ? 'flex' : 'none';
+  document.getElementById('act-edit').style.display = (isMe && m.tipo === 'texto') ? 'flex' : 'none';
+}
+
+document.getElementById('act-cancel').addEventListener('click', ()=>sheet.style.display='none');
+sheet.addEventListener('click', (e)=>{ if(e.target===sheet) sheet.style.display='none'; });
+
+document.getElementById('act-reply').addEventListener('click', ()=>{
+  replyId = selectedMsgId;
+  document.getElementById('edit-panel').style.display = 'none';
+  editId = null;
+  document.getElementById('reply-text').innerText = `@${selectedMsgData.nick}: ${selectedMsgData.texto || 'Mídia/Áudio'}`;
+  document.getElementById('reply-panel').style.display = 'flex';
+  sheet.style.display = 'none';
+  txtInput.focus();
+});
+
+document.getElementById('act-copy').addEventListener('click', ()=>{
+  if(selectedMsgData.texto) navigator.clipboard.writeText(selectedMsgData.texto);
+  sheet.style.display = 'none';
+});
+
+document.getElementById('act-edit').addEventListener('click', ()=>{
+  editId = selectedMsgId;
+  document.getElementById('reply-panel').style.display = 'none';
+  replyId = null;
+  txtInput.value = selectedMsgData.texto || '';
+  document.getElementById('edit-text').innerText = `Editando: ${selectedMsgData.texto}`;
+  document.getElementById('edit-panel').style.display = 'flex';
+  sheet.style.display = 'none';
+  txtInput.focus();
+});
+
+document.getElementById('act-del').addEventListener('click', async()=>{
+  if(confirm("Deletar permanentemente?")){
+    await deleteDoc(doc(db, "mensagens", selectedMsgId));
+  }
+  sheet.style.display = 'none';
+});
+
+function cancelReply(){ replyId = null; document.getElementById('reply-panel').style.display = 'none'; }
+function cancelEdit(){ editId = null; document.getElementById('edit-panel').style.display = 'none'; txtInput.value = ''; }
+
+// PHOTO ATTACHMENT
+const imgInput = document.getElementById('img-input');
+document.getElementById('img-btn').addEventListener('click', ()=>imgInput.click());
+imgInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async(evt)=>{
+    pasteImg = evt.target.result;
+    document.getElementById('paste-img-el').src = pasteImg;
+    document.getElementById('paste-preview').style.display = 'flex';
+  };
+  reader.readAsDataURL(file);
+  imgInput.value = '';
+});
+
+// IMAGE PASTE INTEGRITY
+txtInput.addEventListener('paste', (e)=>{
+  const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for(let i=0; i<items.length; i++){
+    if(items[i].type.indexOf('image') !== -1){
+      const blob = items[i].getAsFile();
+      const reader = new FileReader();
+      reader.onload = (evt)=>{
+        pasteImg = evt.target.result;
+        document.getElementById('paste-img-el').src = pasteImg;
+        document.getElementById('paste-preview').style.display = 'flex';
+      };
+      reader.readAsDataURL(blob);
+    }
+  }
+});
+
+document.getElementById('paste-cancel').addEventListener('click', ()=>{
+  pasteImg = null;
+  document.getElementById('paste-preview').style.display = 'none';
+});
+
+// ── BUTTONS BAR ──
+document.getElementById('enter-btn').addEventListener('click', ()=>entrar(true));
+document.getElementById('enter-btn').addEventListener('touchend', e=>{ e.preventDefault(); entrar(true); });
+document.getElementById('nick-input').addEventListener('keydown', e=>{ if(e.key==='Enter') document.getElementById('full-input').focus(); });
+document.getElementById('full-input').addEventListener('keydown', e=>{ if(e.key==='Enter') { e.preventDefault(); enviarMensagem(); } });
+document.getElementById('reply-cancel').addEventListener('click', cancelReply);
+document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
+document.getElementById('sair-btn').addEventListener('click', sair);
+document.getElementById('lightbox').addEventListener('click', ()=>document.getElementById('lightbox').style.display='none');
+document.getElementById('lbx-close').addEventListener('click', ()=>document.getElementById('lightbox').style.display='none');
+
+document.getElementById('lock-btn').addEventListener('click', async()=>{
+  const senha = prompt('Senha master:'); if(senha!=='220399') return;
+  if(!confirm('Apagar TODAS as mensagens?')) return;
+  const snap = await getDocs(COL); const batch = writeBatch(db); snap.forEach(d=>batch.delete(doc(db,'mensagens',d.id))); await batch.commit(); alert('Histórico limpo!');
+});
+
+// ── 1. NOVO SISTEMA DE CORES CHROMA EM CANVAS ──
+const canvasChroma = document.getElementById('dc-canvas');
+const ctxChroma = canvasChroma ? canvasChroma.getContext('2d') : null;
+const hueSliderChroma = document.getElementById('dc-hue');
+
+function renderChromaPanel(hue) {
+  if (!canvasChroma || !ctxChroma) return;
+  ctxChroma.clearRect(0, 0, canvasChroma.width, canvasChroma.height);
+  for (let y = 0; y < canvasChroma.height; y++) {
+    const l = 100 - (y / canvasChroma.height) * 100;
+    const grad = ctxChroma.createLinearGradient(0, y, canvasChroma.width, y);
+    grad.addColorStop(0, `hsl(${hue}, 0%, ${l}%)`);
+    grad.addColorStop(1, `hsl(${hue}, 100%, ${l}%)`);
+    ctxChroma.fillStyle = grad;
+    ctxChroma.fillRect(0, y, canvasChroma.width, 1);
+  }
+}
+
+if (hueSliderChroma) {
+  hueSliderChroma.addEventListener('input', (e) => renderChromaPanel(e.target.value));
+  renderChromaPanel(hueSliderChroma.value);
+}
+
+if (canvasChroma) {
+  canvasChroma.addEventListener('click', (e) => {
+    const rect = canvasChroma.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const s = Math.round((x / canvasChroma.width) * 100);
+    const l = Math.round(100 - (y / canvasChroma.height) * 100);
+    const corSelecionada = `hsl(${hueSliderChroma.value}, ${s}%, ${l}%)`;
+    document.documentElement.style.setProperty('--p', corSelecionada);
+    localStorage.setItem('chatzao_theme_color', corSelecionada);
+  });
+}
+
+// ── 2. RENDERIZADOR DOS PRESETS DO BG.JS ──
+function injetarPlanosDeFundoNativos() {
+  const containerLista = document.getElementById('drawer-bg-list');
+  if (!containerLista) return;
+  containerLista.innerHTML = "";
+  
+  if (window.CHATZAO_BG && window.CHATZAO_BG.length > 0) {
+    window.CHATZAO_BG.forEach((bg) => {
+      const btn = document.createElement('button');
+      btn.className = "bg-item-btn";
+      btn.innerHTML = `<i class="ti ti-photo"></i> ${bg.label}`;
+      btn.addEventListener('click', () => {
+        executarMudancaBackground(bg.src);
+        document.querySelectorAll('.bg-item-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+      containerLista.appendChild(btn);
+    });
+  }
+}
+
+function ejecutarMudancaBackground(src) {
+  const overlayDoFundo = document.getElementById('bg-overlay');
+  if (overlayDoFundo) {
+    overlayDoFundo.style.backgroundImage = `url('${src}')`;
+    overlayDoFundo.style.opacity = "0.15";
+    localStorage.setItem('chatzao_custom_bg', src);
+  }
+}
+
+// ── 3. UPLOAD DE FOTO INDIVIDUAL (MÁQUINA/MÓVEL) ──
+const uploadInputFundo = document.getElementById('bg-upload-input');
+const uploadTriggerFundo = document.getElementById('bg-upload-trigger');
+
+if (uploadTriggerFundo && uploadInputFundo) {
+  uploadTriggerFundo.addEventListener('click', () => uploadInputFundo.click());
+  uploadInputFundo.addEventListener('change', (e) => {
+    const arquivo = e.target.files[0];
+    if (arquivo) {
+      const leitor = new FileReader();
+      leitor.onload = (event) => {
+        ejecutarMudancaBackground(event.target.result);
+        document.querySelectorAll('.bg-item-btn').forEach(b => b.classList.remove('active'));
+        uploadTriggerFundo.classList.add('active');
+      };
+      leitor.readAsDataURL(arquivo);
+    }
+  });
+}
+
+// ── 4. PERSISTÊNCIA AO CARREGAR O APP ──
+function carregarPreferenciasGuardadas() {
+  const corSalva = localStorage.getItem('chatzao_theme_color');
+  if (corSalva) document.documentElement.style.setProperty('--p', corSalva);
+  const fundoSalvo = localStorage.getItem('chatzao_custom_bg');
+  if (fundoSalvo) ejecutarMudancaBackground(fundoSalvo);
+}
+
+// Inicializações Automáticas
+injetarPlanosDeFundoNativos();
+carregarPreferenciasGuardadas();
+init();
+</script>
+</body>
+</html>
