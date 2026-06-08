@@ -7,7 +7,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{\n  --font:system-ui,-apple-system,sans-serif;\n  --r:8px;--rl:14px;\n  --p:#534AB7;--pt:#fff;\n  --bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;\n  --b1:#222;--b2:#333;--b3:#444;\n  --t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;\n}
+:root{
+  --font:system-ui,-apple-system,sans-serif;
+  --r:8px;--rl:14px;
+  --p:#534AB7;--pt:#fff;
+  --bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;
+  --b1:#222;--b2:#333;--b3:#444;
+  --t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;
+}
 html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden}
 body{display:flex;flex-direction:column;font-family:var(--font)}
 #app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
@@ -27,7 +34,7 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 #bg-overlay{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0.15;z-index:1;pointer-events:none}
 
 /* ── HEADER ── */
-#header{height:60px;background:var(--s1);border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 16px;z-index:10;position:relative}
+#header{height:60px;background:var(--s1);border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:10;position:relative}
 .h-left,.h-right{display:flex;align-items:center;gap:12px}
 .h-left{flex:1}
 .h-right{justify-content:end;flex:1}
@@ -38,135 +45,27 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 .room-status{font-size:11px;color:var(--p);font-weight:500;display:flex;align-items:center;gap:4px}
 .room-status::before{content:'';width:6px;height:6px;background:var(--p);border-radius:50%;display:inline-block}
 
-/* ── DRAWER (CORRIGIDO E INTEGRADO) ── */
-#drawer-overlay {
-  display: none;
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  z-index: 1000;
-  backdrop-filter: blur(3px);
-}
-#drawer-overlay.open {
-  display: block;
-}
-#drawer {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 290px;
-  max-width: 85vw;
-  background: var(--s1) !important;
-  border-right: 0.5px solid var(--b1);
-  z-index: 1001;
-  display: flex;
-  flex-direction: column;
-  transform: translateX(-100%);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow-y: auto;
-}
-#drawer.open {
-  transform: translateX(0);
-}
-.drawer-head {
-  padding: 18px 16px;
-  border-bottom: 0.5px solid var(--b1);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: var(--s2);
-}
-.drawer-head-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: var(--p);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.drawer-section {
-  padding: 16px 16px 8px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--t4);
-}
-.chroma-container {
-  padding: 0 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-#dc-canvas {
-  width: 100%;
-  height: 100px;
-  background: #fff;
-  cursor: crosshair;
-  border-radius: 8px;
-  border: 0.5px solid var(--b2);
-  display: block;
-}
-#dc-hue {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 10px;
-  border-radius: 6px;
-  background: linear-gradient(to right, #ff0000 0%, #ffff00 17%, #00ff00 33%, #00ffff 50%, #0000ff 67%, #ff00ff 83%, #ff0000 100%);
-  outline: none;
-  cursor: pointer;
-}
-#dc-hue::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: #fff;
-  border: 1.5px solid #000;
-  cursor: pointer;
-}
-.bg-grid-list {
-  padding: 0 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.bg-item-btn {
-  width: 100%;
-  background: var(--s2);
-  border: 0.5px solid var(--b2);
-  color: var(--t2);
-  padding: 10px 14px;
-  border-radius: var(--r);
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.15s, border-color 0.15s;
-}
-.bg-item-btn:hover, .bg-item-btn.active {
-  background: var(--s3);
-  border-color: var(--p);
-  color: var(--t1);
-}
-.bg-item-btn i {
-  font-size: 16px;
-  color: var(--t3);
-}
-.bg-item-btn.upload-btn {
-  border: 1px dashed var(--p);
-  background: rgba(83, 74, 183, 0.05);
-  color: var(--p);
-}
-.bg-item-btn.upload-btn:hover {
-  background: rgba(83, 74, 183, 0.12);
-}
+/* ── DRAWER (ESTILO ORIGINAL RESTAURADO) ── */
+#drawer-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1000}
+#drawer{position:absolute;left:0;top:0;bottom:0;width:280px;background:var(--s1);border-right:0.5px solid var(--b1);z-index:1001;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform 0.3s ease;overflow-y:auto}
+#drawer.open{transform:translateX(0)}
+.drawer-head{padding:16px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.drawer-title{font-size:16px;font-weight:700;color:var(--t1)}
+.drawer-section{padding:16px 16px 8px;font-size:11px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:0.5px}
+
+/* Controles Chroma Integrados de Forma Limpa */
+.chroma-container{padding:0 16px 12px;display:flex;flex-direction:column;gap:8px}
+#dc-canvas{width:100%;height:80px;background:#fff;cursor:crosshair;border-radius:var(--r);border:0.5px solid var(--b2);display:block}
+#dc-hue{-webkit-appearance:none;width:100%;height:8px;border-radius:4px;background:linear-gradient(to right,#ff0000 0%,#ffff00 17%,#00ff00 33%,#00ffff 50%,#0000ff 67%,#ff00ff 83%,#ff0000 100%);outline:none;cursor:pointer}
+#dc-hue::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;border:1px solid #000;cursor:pointer}
+
+/* Grid de Backgrounds e Botão Upload */
+.bg-grid-list{padding:0 16px 20px;display:flex;flex-direction:column;gap:8px}
+.bg-item-btn{width:100%;background:var(--s2);border:0.5px solid var(--b2);color:var(--t2);padding:10px 12px;border-radius:var(--r);font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;cursor:pointer;text-align:left;transition:background 0.15s,border-color 0.15s}
+.bg-item-btn:hover,.bg-item-btn.active{background:var(--s3);border-color:var(--p);color:var(--t1)}
+.bg-item-btn i{font-size:16px;color:var(--t3)}
+.bg-item-btn.upload-btn{border:1px dashed var(--p);background:rgba(83,74,183,0.05);color:var(--p);justify-content:center;font-weight:600}
+.bg-item-btn.upload-btn:hover{background:rgba(83,74,183,0.12)}
 
 /* ── MESSAGES CHAT ── */
 #chat-container{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:14px;z-index:2;position:relative;padding-bottom:20px}
@@ -259,7 +158,7 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
     <div class="h-left">
       <button id="open-menu-btn" class="menu-btn"><i class="ti ti-menu-2"></i></button>
       <div class="room-info">
-        <span class="room-title">Festa Particular</span>
+        <span class="room-title">Chatzão</span>
         <span class="room-status">Online</span>
       </div>
     </div>
@@ -308,24 +207,21 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 
 <div id="drawer">
   <div class="drawer-head">
-    <div class="drawer-head-icon"><i class="ti ti-settings" style="color:#fff"></i></div>
-    <div class="sender-names">
-      <span class="sender-nick" style="color:var(--t1)">Opções do Sistema</span>
-    </div>
+    <span class="drawer-title">Opções</span>
+    <button id="close-menu-btn" class="menu-btn"><i class="ti ti-arrow-left"></i></button>
   </div>
   
-  <div class="drawer-section">Tema Customizado (Chroma)</div>
+  <div class="drawer-section">Customização</div>
   <div class="chroma-container">
     <canvas id="dc-canvas"></canvas>
     <input type="range" id="dc-hue" min="0" max="360" value="245">
   </div>
   
-  <div class="drawer-section">Plano de Fundo</div>
+  <div class="drawer-section">Planos de Fundo</div>
   <div class="bg-grid-list">
     <input type="file" id="bg-upload-input" accept="image/*" style="display: none;">
     <button class="bg-item-btn upload-btn" id="bg-upload-trigger">
-      <i class="ti ti-cloud-upload" style="color: var(--p)"></i>
-      Upar foto de escolha...
+      <i class="ti ti-cloud-upload"></i> Upload Personalizado
     </button>
     
     <div id="drawer-bg-list" style="display: flex; flex-direction: column; gap: 8px; width: 100%;"></div>
@@ -404,16 +300,20 @@ function sair(){
   location.reload();
 }
 
-// DRAWER TOGGLES
+// DRAWER TOGGLES ORIGINAIS DO SEU CODIGO
 const drawer = document.getElementById('drawer');
 const overlay = document.getElementById('drawer-overlay');
 document.getElementById('open-menu-btn').addEventListener('click', ()=>{
   drawer.classList.add('open');
-  overlay.classList.add('open');
+  overlay.style.display = 'block';
+});
+document.getElementById('close-menu-btn').addEventListener('click', ()=>{
+  drawer.classList.remove('open');
+  overlay.style.display = 'none';
 });
 overlay.addEventListener('click', ()=>{
   drawer.classList.remove('open');
-  overlay.classList.remove('open');
+  overlay.style.display = 'none';
 });
 
 // TEXTAREA AUTO GROW
@@ -483,7 +383,6 @@ function renderizarMensagem(id, m){
     </div>
   `;
 
-  // Long Press Event handles
   const box = row.querySelector('.msg-box');
   let tOut;
   box.addEventListener('touchstart', ()=>{ tOut = setTimeout(()=>abrirAcoes(id, m), 600); });
@@ -765,7 +664,7 @@ document.getElementById('lock-btn').addEventListener('click', async()=>{
   const snap = await getDocs(COL); const batch = writeBatch(db); snap.forEach(d=>batch.delete(doc(db,'mensagens',d.id))); await batch.commit(); alert('Histórico limpo!');
 });
 
-// ── 1. NOVO SISTEMA DE CORES CHROMA EM CANVAS ──
+// ── NOVO MOTOR CUSTOM: CHROMA E PRESETS DO BG.JS ──
 const canvasChroma = document.getElementById('dc-canvas');
 const ctxChroma = canvasChroma ? canvasChroma.getContext('2d') : null;
 const hueSliderChroma = document.getElementById('dc-hue');
@@ -801,7 +700,6 @@ if (canvasChroma) {
   });
 }
 
-// ── 2. RENDERIZADOR DOS PRESETS DO BG.JS ──
 function injetarPlanosDeFundoNativos() {
   const containerLista = document.getElementById('drawer-bg-list');
   if (!containerLista) return;
@@ -822,7 +720,7 @@ function injetarPlanosDeFundoNativos() {
   }
 }
 
-function ejecutarMudancaBackground(src) {
+function executarMudancaBackground(src) {
   const overlayDoFundo = document.getElementById('bg-overlay');
   if (overlayDoFundo) {
     overlayDoFundo.style.backgroundImage = `url('${src}')`;
@@ -831,7 +729,6 @@ function ejecutarMudancaBackground(src) {
   }
 }
 
-// ── 3. UPLOAD DE FOTO INDIVIDUAL (MÁQUINA/MÓVEL) ──
 const uploadInputFundo = document.getElementById('bg-upload-input');
 const uploadTriggerFundo = document.getElementById('bg-upload-trigger');
 
@@ -842,7 +739,7 @@ if (uploadTriggerFundo && uploadInputFundo) {
     if (arquivo) {
       const leitor = new FileReader();
       leitor.onload = (event) => {
-        ejecutarMudancaBackground(event.target.result);
+        executarMudancaBackground(event.target.result);
         document.querySelectorAll('.bg-item-btn').forEach(b => b.classList.remove('active'));
         uploadTriggerFundo.classList.add('active');
       };
@@ -851,18 +748,21 @@ if (uploadTriggerFundo && uploadInputFundo) {
   });
 }
 
-// ── 4. PERSISTÊNCIA AO CARREGAR O APP ──
 function carregarPreferenciasGuardadas() {
   const corSalva = localStorage.getItem('chatzao_theme_color');
   if (corSalva) document.documentElement.style.setProperty('--p', corSalva);
   const fundoSalvo = localStorage.getItem('chatzao_custom_bg');
-  if (fundoSalvo) ejecutarMudancaBackground(fundoSalvo);
+  if (fundoSalvo) executarMudancaBackground(fundoSalvo);
 }
 
-// Inicializações Automáticas
+// Inicializadores automáticos
 injetarPlanosDeFundoNativos();
 carregarPreferenciasGuardadas();
-init();
+</script>
+
+<script src="bg.js"></script>
+<script>
+  init();
 </script>
 </body>
 </html>
