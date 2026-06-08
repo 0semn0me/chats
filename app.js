@@ -1,46 +1,63 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+// ... (mantenha o início do seu app.js até chegar na função abaixo)
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAs7M-I2V5X-XvG2Y8M1W3O_8b4z7Y",
-  authDomain: "chatz-cb30b.firebaseapp.com",
-  projectId: "chatz-cb30b",
-  storageBucket: "chatz-cb30b.appspot.com",
-  messagingSenderId: "36712398412",
-  appId: "1:36712398412:web:a62b8b4a7c12f4"
-};
+function inicializarEventosGerais() {
+  // --- Upload de Avatar (Login) ---
+  const avatarInput = document.getElementById('avatar-file-input');
+  const avatarTrigger = document.getElementById('avatar-upload-trigger');
+  const avatarStatus = document.getElementById('avatar-status');
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const COL_MSG = collection(db, "mensagens");
-
-// Função de Inicialização (Designer: Garante que os elementos existam antes de interagir)
-function iniciarChat() {
-  const enterBtn = document.getElementById('enter-btn');
-  
-  if (enterBtn) {
-    enterBtn.addEventListener('click', () => {
-      const nome = document.getElementById('nome-real-input').value.trim();
-      const nick = document.getElementById('nick-input').value.trim();
-      
-      if (!nome || !nick) return alert("Por favor, preencha os campos obrigatórios.");
-      
-      localStorage.setItem('chat_nick', nick);
-      location.reload(); // Designer: Recarrega para aplicar o contexto do usuário limpo
+  if(avatarTrigger) {
+    avatarTrigger.addEventListener('click', () => avatarInput.click());
+    avatarInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          avatarBase64 = event.target.result;
+          avatarStatus.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
     });
   }
 
-  // Verificação de autenticação persistente
-  const apelidoGuardado = localStorage.getItem('chat_nick');
-  if (apelidoGuardado) {
-    document.getElementById('login-screen').style.display = 'none';
-  }
+  // --- Botão de Login ---
+  document.getElementById('enter-btn').addEventListener('click', entrarNoSistema);
 
-  // Carregamento de módulos visuais extras (se existirem no bg.js)
-  if (typeof injetarPlanosDeFundoNativos === 'function') {
-    injetarPlanosDeFundoNativos();
+  // --- Funcionalidades da Barra (Interface que está "morta") ---
+  
+  // Menu Lateral (Drawer)
+  const openMenuBtn = document.getElementById('open-menu-btn');
+  const closeMenuBtn = document.getElementById('close-menu-btn');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+
+  if (openMenuBtn) openMenuBtn.addEventListener('click', () => { drawer.classList.add('active'); overlay.classList.add('active'); });
+  if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => { drawer.classList.remove('active'); overlay.classList.remove('active'); });
+
+  // Emojis
+  const emojiToggle = document.getElementById('emoji-toggle-btn');
+  const emojiKeyboard = document.getElementById('emoji-keyboard');
+  if (emojiToggle) emojiToggle.addEventListener('click', () => {
+    emojiKeyboard.classList.toggle('emoji-box-hidden');
+  });
+
+  // Áudio e Imagem (Chamadas nativas)
+  document.getElementById('mic-btn').addEventListener('click', () => {
+    alert("Função de áudio reativada: Solicite permissão do microfone.");
+  });
+  
+  document.getElementById('img-btn').addEventListener('click', () => {
+    document.getElementById('img-input').click();
+  });
+
+  // Verificação inicial
+  if(meuApelido) {
+    document.getElementById('login-screen').style.display = 'none';
+    registrarPresenca();
+    ouvirMensagens();
   }
 }
 
-// Execução segura
-document.addEventListener('DOMContentLoaded', iniciarChat);
+// Inicializa tudo
+document.addEventListener('DOMContentLoaded', inicializarEventosGerais);
