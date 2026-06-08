@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{\n  --font:system-ui,-apple-system,sans-serif;
+:root{
+  --font:system-ui,-apple-system,sans-serif;
   --r:8px;--rl:14px;
   --p:#534AB7;--pt:#fff;
   --bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;
@@ -35,10 +36,12 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 .msg.me{align-self:flex-end;align-items:flex-end}
 .msg.other{align-self:flex-start;align-items:flex-start}
 
-/* ESTILIZAÇÃO COMPLETA DOS NOMES SEPARADOS NO CHAT */
-.msg-meta{font-size:11px;color:var(--t3);margin-bottom:3px;display:flex;flex-direction:column;line-height:1.25}
-.msg-meta .meta-fullname{font-size:10px;color:var(--t4);font-weight:400;margin-bottom:1px}
-.msg-meta .meta-nickname{font-size:14px;font-weight:800}
+/* FOTO 1: Customização do Meta do Emissor */
+.msg-meta{font-size:11px;margin-bottom:4px;display:flex;flex-direction:column;line-height:1.2}
+.msg.me .msg-meta{align-items:flex-end}
+.msg.other .msg-meta{align-items:flex-start}
+.meta-fullname{font-size:11px;color:#555;font-weight:400}
+.meta-nickname{font-size:14px;font-weight:700}
 
 .bubble{padding:10px 14px;border-radius:var(--rl);background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:15px;line-height:1.4;word-break:break-word;position:relative}
 .msg.me .bubble{background:var(--p);border:none;color:var(--pt)}
@@ -48,7 +51,7 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 .msg.me .reply-preview{border-left-color:var(--pt)}
 #info-bar{background:var(--s2);border-top:1px solid var(--b1);padding:8px 15px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--t2);z-index:11}
 
-/* ── INPUT ── */
+/* ── FOTO 2: INPUT AREA (RESTAURADA E LIMPA) ── */
 #input-container{background:var(--s1);border-top:1px solid var(--b1);padding:10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:10}
 #input-row{display:flex;align-items:center;gap:8px}
 #msg-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:10px 12px;font-size:15px;outline:none;resize:none;height:40px;max-height:120px;font-family:var(--font);line-height:1.3}
@@ -65,7 +68,6 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 #emoji-grid span{cursor:pointer;text-align:center;transition:transform 0.1s}
 #emoji-grid span:active{transform:scale(1.2)}
 
-/* Submenu flutuante para tons de pele */
 .skin-tone-popup {
   position: fixed;
   background: var(--s3);
@@ -79,7 +81,6 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 }
 .skin-tone-choice { cursor: pointer; font-size: 22px; }
 
-/* Animação Arco-Íris para mensagens deletadas */
 @keyframes rainbowAlert {
   0%, 20% { background-color: rgba(0, 0, 255, 0.4); color: #fff; }
   21%, 40% { background-color: rgba(255, 0, 0, 0.4); color: #fff; }
@@ -87,38 +88,41 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
   61%, 80% { background-color: rgba(255, 255, 255, 0.4); color: #000; }
   81%, 100% { background-color: rgba(0, 128, 0, 0.4); color: #fff; }
 }
-.deleted-rainbow-anim {
-  animation: rainbowAlert 8s linear forwards;
-}
+.deleted-rainbow-anim { animation: rainbowAlert 8s linear forwards; }
 
+/* ── FOTO 3: CONFIGURAÇÕES DO DRAWER AJUSTADAS ── */
 #drawer{position:fixed;top:0;bottom:0;right:-280px;width:280px;background:var(--s1);border-left:1px solid var(--b1);z-index:200;display:flex;flex-direction:column;transition:right 0.3s ease}
 #drawer.open{right:0}
 #drawer-header{height:50px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 15px}
-#drawer-content{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px}
+#drawer-content{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:20px}
+
+/* Grid de fotos arrumado para duas miniaturas por linha */
+#bg-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
 .bg-option{border:2px solid transparent;border-radius:var(--r);overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--s2)}
 .bg-option.active{border-color:var(--p)}
 .bg-option img{width:100%;height:100%;object-fit:cover}
 
-/* ── LIGHTBOX ── */
+/* Lightbox e painéis */
 #lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
 #lbx-img,#lbx-video{max-width:100%;max-height:100%;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
 #lbx-close{position:absolute;top:20px;right:20px;color:#fff;font-size:30px;cursor:pointer;z-index:1001}
 
-/* ── CAMERA ── */
 #camera-panel{position:fixed;inset:0;background:#000;z-index:500;display:none;flex-direction:column}
 #cam-video{flex:1;background:#111;object-fit:cover}
 #cam-controls{height:100px;background:var(--s1);display:flex;align-items:center;justify-content:space-around;padding:0 20px}
 .cam-btn-round{width:60px;height:60px;border-radius:50%;background:var(--s3);border:2px solid var(--b2);color:var(--t1);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 #cam-capture{background:var(--p);border:none}
 
-/* ── AUDIO RECORD PANEL ── */
 #record-panel{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;gap:10px;z-index:20}
 #record-timer{font-size:13px;color:#ff4a4a;font-weight:600}
 #record-progress-bg{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
 #record-progress{height:100%;width:0%;background:#ff4a4a;transition:width 0.1s linear}
 #record-stop-btn{background:transparent;border:none;color:var(--t1);cursor:pointer;font-size:16px;display:flex;align-items:center}
 
-/* ── PASTE PREVIEW ── */
 #paste-preview{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;justify-content:space-between;z-index:21}
 #paste-img-thumb{width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid var(--b3)}
 </style>
@@ -207,7 +211,7 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
     <button class="input-btn" id="drawer-close"><i class="ti ti-x"></i></button>
   </div>
   <div id="drawer-content">
-    <div style="display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--b1);padding-bottom:15px">
+    <div style="display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--b1);padding-bottom:15px">
       <span style="color:var(--t2);font-size:13px;font-weight:600">Seu Perfil:</span>
       <div style="display:flex;align-items:center;gap:10px;background:var(--s2);padding:10px;border-radius:var(--r)">
         <div id="profile-avatar" style="width:36px;height:36px;border-radius:50%"></div>
@@ -216,11 +220,15 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
           <span id="profile-full" style="color:var(--t3);font-size:12px"></span>
         </div>
       </div>
-      <button id="sair-btn" style="background:#ff4a4a;color:#fff;border:none;border-radius:var(--r);padding:8px;font-size:13px;font-weight:600;cursor:pointer">Sair do Chat</button>
+      <div style="display:flex;gap:10px;align-items:center;background:var(--s2);padding:10px;border-radius:var(--r);border:1px solid var(--b2);margin-top:5px">
+        <span style="color:var(--t2);font-size:13px;flex:1">Mudar Cor do Chat:</span>
+        <input type="color" id="drawer-color-picker" style="border:none;background:transparent;width:40px;height:30px;cursor:pointer">
+      </div>
+      <button id="sair-btn" style="background:#ff4a4a;color:#fff;border:none;border-radius:var(--r);padding:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:5px">Sair do Chat</button>
     </div>
     <div style="display:flex;flex-direction:column;gap:10px;padding-top:5px">
       <span style="color:var(--t2);font-size:13px;font-weight:600">Planos de Fundo:</span>
-      <div id="bg-list" style="display:flex;flex-direction:column;gap:10px"></div>
+      <div id="bg-list"></div>
     </div>
   </div>
 </div>
@@ -279,19 +287,32 @@ const emojisMaos = ["👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","�
 const emojisPessoas = ["🙍","🙍‍♂️","🙍‍♀️","🙎","🙎‍♂️","🙎‍♀️","🙅","🙅‍♂️","🙅‍♀️","🙆","🙆‍♂️","🙆‍♀️","💁","💁‍♂️","💁‍♀️","🙋","🙋‍♂️","🙋‍♀️","🧏","🧏‍♂️","🧏‍♀️","🙇","🙇‍♂️","🙇‍♀️","🤦","🤦‍♂️","🤦‍♀️","🤷","🤷‍♂️","🤷‍♀️"];
 const modificadoresTom = ["", "🏻", "🏼", "🏽", "🏾", "🏿"];
 
-// ── 1. PREVENÇÃO DO ENTER PARA NÃO ENVIAR A MENSAGEM ──
+// Prevenção do enter nativo no input-row
 document.getElementById('msg-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
     e.stopPropagation();
   }
 });
 
-// ── 2. SELETOR DE COR DINÂMICO PARA OS ÍCONES NATIVOS DO CHAT ──
-document.getElementById('user-color').addEventListener('input', (e) => {
-  const novaCor = e.target.value;
+// Vincula a troca de cores sincronizada entre as telas
+function atualizarCoresInterface(cor) {
   document.querySelectorAll('.input-btn i, #header-left i').forEach(icone => {
-    icone.style.color = novaCor;
+    icone.style.color = cor;
   });
+  document.documentElement.style.setProperty('--p', cor);
+}
+
+document.getElementById('user-color').addEventListener('input', (e) => {
+  atualizarCoresInterface(e.target.value);
+  document.getElementById('drawer-color-picker').value = e.target.value;
+});
+
+document.getElementById('drawer-color-picker').addEventListener('input', (e) => {
+  userColor = e.target.value;
+  localStorage.setItem('cz_color', userColor);
+  atualizarCoresInterface(userColor);
+  document.getElementById('user-color').value = userColor;
+  document.getElementById('profile-avatar').style.background = userColor;
 });
 
 if(nick){
@@ -315,7 +336,6 @@ function entrar(clickEvent=false){
   localStorage.setItem('cz_color', userColor);
   document.getElementById('login').style.display='none';
   
-  // Salva no Firestore contendo os dois campos independentes
   addDoc(COL, { isSystem: true, text: `${nick} entrou no chat`, timestamp: Date.now() });
   initChat();
 }
@@ -325,10 +345,9 @@ function initChat(){
   document.getElementById('profile-avatar').style.background = userColor;
   document.getElementById('profile-nick').textContent = '@' + nick;
   document.getElementById('profile-full').textContent = fullname || 'Sem nome completo';
+  document.getElementById('drawer-color-picker').value = userColor;
   
-  document.querySelectorAll('.input-btn i, #header-left i').forEach(icone => {
-    icone.style.color = userColor;
-  });
+  atualizarCoresInterface(userColor);
   
   setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() });
   setInterval(()=>{ setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() }); }, 20000);
@@ -418,7 +437,7 @@ document.getElementById('emoji-search').addEventListener('input', (e) => {
   renderEmojiGrid(e.target.value);
 });
 
-// ── 3. RENDERIZADOR DAS MENSAGENS COM APELIDO E NOME EXTRA SEPARADOS NO TOPO ──
+// ── FOTO 1: MONTAGEM DO CABEÇALHO DA MENSAGEM EXATAMENTE COMO SOLICITADO ──
 function renderMsg(d, id){
   if(d.isSystem){
     const div = document.createElement('div');
@@ -454,7 +473,6 @@ function renderMsg(d, id){
   const cU = d.userColor || 'var(--p)';
   const exibicaoNomeCompleto = d.fullname ? `<span class="meta-fullname">${d.fullname}</span>` : '';
   
-  // Nome Completo renderizado estritamente acima do Apelido destacado
   m.innerHTML = `
     <div class="msg-meta">
       ${exibicaoNomeCompleto}
@@ -611,6 +629,7 @@ document.getElementById('lock-btn').addEventListener('click', async () => {
 });
 </script>
 <script>
+// Inicializador nativo do Drawer de backgrounds consertado
 document.getElementById('menu-btn').addEventListener('click', () => {
   if(window.initBackgrounds) window.initBackgrounds();
 });
