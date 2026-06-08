@@ -12,52 +12,38 @@
   <div id="login-screen">
     <div class="login-card">
       <div class="login-logo">Chatzão</div>
-      
       <div class="input-group">
         <label class="label-field">Nome de Exibição</label>
-        <input type="text" id="nome-real-input" class="input-field" placeholder="Ex: João Silva" autocomplete="off">
+        <input type="text" id="nome-real-input" class="input-field" placeholder="Ex: João Silva">
       </div>
-
       <div class="input-group">
         <label class="label-field">Identificador (@nick)</label>
-        <input type="text" id="nick-input" class="input-field" placeholder="Ex: joaosilva" maxlength="15" autocomplete="off">
+        <input type="text" id="nick-input" class="input-field" placeholder="Ex: joaosilva">
       </div>
-
-      <div class="input-group">
-        <label class="label-field">Sua Fotinho</label>
-        <button type="button" id="avatar-upload-trigger" class="input-field" style="text-align:left; cursor:pointer;">
-          <i class="ti ti-camera"></i> Selecionar Imagem
-        </button>
-        <input type="file" id="avatar-file-input" accept="image/*" style="display:none">
-        <span id="avatar-status" style="font-size:10px; color:var(--p); margin-top:-15px; display:none; margin-bottom:10px;">Foto selecionada!</span>
-      </div>
-
-      <button id="enter-btn" class="login-btn"><i class="ti ti-login"></i> Entrar no Clube</button>
+      <button id="enter-btn" class="login-btn">Entrar no Clube</button>
     </div>
   </div>
 
   <div id="app">
-    <div id="bg-overlay"></div>
+    <div id="drawer-overlay"></div>
+    <div id="drawer">
+        <div id="drawer-bg-list"></div>
+    </div>
+    
     <div id="header">
-      <div class="h-left">
-        <button id="open-menu-btn" class="menu-btn"><i class="ti ti-menu-2 icon-dynamic"></i></button>
-        <div class="room-info">
-          <span class="room-title">Chatzão</span>
-        </div>
-      </div>
-      <div class="h-right">
-        <div id="status-online-trigger" class="status-dot"></div>
-        <button id="sair-btn" class="icon-btn"><i class="ti ti-logout icon-dynamic"></i></button>
-      </div>
+      <button id="open-menu-btn" class="bar-icon"><i class="ti ti-menu-2"></i></button>
+      <span class="room-title">Chatzão</span>
+      <button id="sair-btn" class="bar-icon"><i class="ti ti-logout"></i></button>
     </div>
     
     <div id="chat-container"></div>
     
     <div id="bar-panels">
       <div id="input-bar">
-        <button id="emoji-toggle-btn" class="bar-icon"><i class="ti ti-mood-smile icon-dynamic"></i></button>
-        <button id="img-btn" class="bar-icon"><i class="ti ti-photo icon-dynamic"></i></button>
         <textarea id="full-input" placeholder="Mensagem..." rows="1"></textarea>
+        <button id="emoji-toggle-btn" class="bar-icon"><i class="ti ti-mood-smile"></i></button>
+        <button id="img-btn" class="bar-icon"><i class="ti ti-photo"></i></button>
+        <button id="mic-btn" class="bar-icon"><i class="ti ti-microphone"></i></button>
         <button id="send-btn"><i class="ti ti-send"></i></button>
       </div>
     </div>
