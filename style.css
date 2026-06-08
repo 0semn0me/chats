@@ -1,73 +1,13 @@
-:root {
-  --p: #534AB7;       /* Cor principal (Chroma) */
-  --s1: #0a0a0a;       /* Fundo principal (quase preto) */
-  --b1: #1a1a1a;       /* Fundo dos cartões */
-  --pt: #ffffff;       /* Texto principal */
-  --t2: #a0a0a0;       /* Texto secundário */
-}
-
-body {
-  margin: 0;
-  background-color: var(--s1);
-  font-family: 'Inter', -apple-system, sans-serif;
-  color: var(--pt);
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Login - Polimento */
-#login-screen {
-  position: fixed; inset: 0;
-  background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%);
-  display: flex; align-items: center; justify-content: center; z-index: 999;
-}
-
-.login-card {
-  width: 85%; max-width: 320px;
-  padding: 32px;
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-}
-
+:root { --p: #534AB7; --s1: #0a0a0a; --b1: #1a1a1a; --pt: #ffffff; --t2: #a0a0a0; }
+body { margin: 0; background-color: var(--s1); font-family: 'Inter', sans-serif; color: var(--pt); height: 100vh; overflow: hidden; }
+#login-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%); display: flex; align-items: center; justify-content: center; z-index: 999; }
+.login-card { width: 85%; max-width: 320px; padding: 32px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
 .login-logo { font-size: 24px; font-weight: 800; margin-bottom: 24px; text-align: center; color: var(--p); }
-
-.label-field { font-size: 12px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.5px; }
-
-.input-field {
-  width: 100%; padding: 14px; margin: 8px 0 20px 0;
-  border-radius: 12px; border: 1px solid #333;
-  background: #000; color: #fff; box-sizing: border-box;
-  transition: border 0.3s;
-}
-
-.input-field:focus { border-color: var(--p); outline: none; }
-
-.login-btn {
-  width: 100%; padding: 14px; background: var(--p);
-  border: none; color: #fff; border-radius: 12px;
-  font-weight: 600; cursor: pointer; transition: opacity 0.2s;
-}
-
-.login-btn:active { opacity: 0.8; transform: scale(0.98); }
-
-/* Header - Minimalismo */
+.label-field { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: block; }
+.input-field { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; transition: all 0.3s ease; }
+.login-btn { width: 100%; padding: 14px; background: var(--p); border: none; color: #fff; border-radius: 12px; font-weight: 600; cursor: pointer; }
 #header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--b1); }
-
-.room-title { font-size: 18px; font-weight: 700; }
-
-.icon-dynamic { font-size: 20px; color: var(--pt); }
-
-/* Barra de Input - Fluidez */
-#bar-panels { padding: 12px; background: var(--s1); }
-
-#input-bar {
-  display: flex; gap: 8px; align-items: center;
-  background: var(--b1); padding: 8px; border-radius: 24px;
-}
-
-#full-input {
-  flex: 1; padding: 10px; border: none;
-  background: transparent; color: #fff; resize: none;
-}
+#input-bar { display: flex; gap: 10px; align-items: center; background: var(--b1); padding: 8px 16px; border-radius: 30px; margin: 10px; }
+#full-input { flex: 1; padding: 8px; border: none; background: transparent; color: #fff; resize: none; font-size: 14px; }
+#send-btn { background: var(--p); border: none; padding: 10px; border-radius: 50%; color: #fff; cursor: pointer; }
+.bar-icon { background: none; border: none; color: var(--p); cursor: pointer; font-size: 20px; }
