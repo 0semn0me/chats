@@ -1,13 +1,115 @@
-:root { --p: #534AB7; --s1: #0a0a0a; --b1: #1a1a1a; --pt: #ffffff; --t2: #a0a0a0; }
-body { margin: 0; background-color: var(--s1); font-family: 'Inter', sans-serif; color: var(--pt); height: 100vh; overflow: hidden; }
-#login-screen { position: fixed; inset: 0; background: radial-gradient(circle at center, #1a1a1a 0%, #0a0a0a 100%); display: flex; align-items: center; justify-content: center; z-index: 999; }
-.login-card { width: 85%; max-width: 320px; padding: 32px; background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; }
-.login-logo { font-size: 24px; font-weight: 800; margin-bottom: 24px; text-align: center; color: var(--p); }
-.label-field { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; display: block; }
-.input-field { width: 100%; padding: 14px; margin-bottom: 20px; border-radius: 12px; border: 1px solid #333; background: #000; color: #fff; box-sizing: border-box; transition: all 0.3s ease; }
-.login-btn { width: 100%; padding: 14px; background: var(--p); border: none; color: #fff; border-radius: 12px; font-weight: 600; cursor: pointer; }
-#header { padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--b1); }
-#input-bar { display: flex; gap: 10px; align-items: center; background: var(--b1); padding: 8px 16px; border-radius: 30px; margin: 10px; }
-#full-input { flex: 1; padding: 8px; border: none; background: transparent; color: #fff; resize: none; font-size: 14px; }
-#send-btn { background: var(--p); border: none; padding: 10px; border-radius: 50%; color: #fff; cursor: pointer; }
-.bar-icon { background: none; border: none; color: var(--p); cursor: pointer; font-size: 20px; }
+:root {
+  --p: #FFD700;       /* Cor Premium Ouro (p/ ícones ativos) */
+  --s1: #000000;       /* Preto Absoluto para Fundo */
+  --b1: #101010;       /* Cinza Profundo para Cartões e Input Bar */
+  --pt: #ffffff;       /* Texto Principal Alvo */
+  --t2: #999999;       /* Texto Secundário (Labels) */
+  --b-soft: 1px solid rgba(255, 255, 255, 0.08); /* Borda Sutil */
+}
+
+/* Base Reset & Polimento Premium */
+body {
+  margin: 0;
+  background-color: var(--s1);
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: var(--pt);
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased; /* Texto mais nítido */
+}
+
+button { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+button:active { transform: scale(0.96); opacity: 0.8; }
+
+/* Login (Print 1 - Centralizado e Limpo) */
+#login-screen {
+  position: fixed; inset: 0;
+  background: radial-gradient(circle at center, #1a1a1a 0%, #000 100%);
+  display: flex; align-items: center; justify-content: center; z-index: 999;
+}
+
+.login-card {
+  width: 90%; max-width: 320px;
+  padding: 40px;
+  background: rgba(20, 20, 20, 0.5);
+  backdrop-filter: blur(20px);
+  border: var-b-soft;
+  border-radius: 28px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+
+.login-logo { font-size: 26px; font-weight: 900; margin-bottom: 30px; text-align: center; color: #534AB7; /* Mantendo o roxo original p/ logo */ }
+
+.label-field { font-size: 11px; color: var(--t2); text-transform: uppercase; letter-spacing: 1.5px; text-align: center; margin-bottom: 10px; display: block; }
+
+.input-field {
+  width: 100%; padding: 16px; margin-bottom: 25px;
+  border-radius: 14px; border: var-b-soft;
+  background: #050505; color: #fff; box-sizing: border-box;
+  text-align: center; /* Centraliza o placeholder */
+  font-size: 14px;
+}
+
+.input-field:focus { border-color: #534AB7; outline: none; }
+
+.login-btn {
+  width: 100%; padding: 16px; background: #534AB7;
+  border: none; color: #fff; border-radius: 14px;
+  font-weight: 700; cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+
+/* Header (Print 2 - Minimalismo Premium) */
+#header { padding: 18px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: var-b-soft; background: var(--b1); }
+
+.room-title { font-size: 19px; font-weight: 800; }
+
+.icon-dynamic { font-size: 22px; color: var(--pt); }
+
+.status-dot { width: 10px; height: 10px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px rgba(34, 197, 94, 0.5); }
+
+/* Chat Container (Minimalista) */
+#chat-container { flex: 1; overflow-y: auto; padding: 20px; }
+
+/* Barra de Mensagem (Print 3 - Design em "Pílula") */
+#bar-panels { padding: 15px; background: var(--s1); }
+
+#input-bar {
+  display: flex; gap: 12px; align-items: center;
+  background: var(--b1); padding: 10px 20px; border-radius: 35px;
+  border: var-b-soft;
+}
+
+#full-input {
+  flex: 1; padding: 10px 0; border: none;
+  background: transparent; color: #fff; resize: none; font-size: 15px;
+  outline: none;
+}
+
+.bar-icon { background: none; border: none; color: var(--t2); cursor: pointer; font-size: 22px; padding: 5px; }
+.bar-icon:hover { color: var(--p); /* Iluminação Chroma no hover */ }
+
+#send-btn {
+  background: #534AB7; border: none; padding: 12px;
+  border-radius: 50%; color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  margin-right: -10px; /* Ajuste p/ colar na pílula */
+}
+
+/* Drawer (Print 4 - Animação Cubic-Bezier) */
+#drawer {
+  position: fixed; top: 0; left: -300px; width: 280px; height: 100%;
+  background: var(--b1); border-right: var-b-soft;
+  z-index: 1000; transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex; flex-direction: column; padding: 20px;
+}
+
+#drawer.active { left: 0; }
+
+#drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+  z-index: 999; opacity: 0; visibility: hidden;
+  transition: all 0.4s ease;
+}
+
+#drawer-overlay.active { opacity: 1; visibility: visible; }
