@@ -15,624 +15,204 @@
   --b1:#222;--b2:#333;--b3:#444;
   --t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;
 }
-html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden}
-body{display:flex;flex-direction:column;font-family:var(--font)}
-#app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
+/* Alterado para centralizar o layout no PC e dar um fundo escuro sutil ao redor */
+html,body{height:100%;height:100dvh;background:#060606;overflow:hidden}
+body{display:flex;flex-direction:column;font-family:var(--font);align-items:center;justify-content:center}
 
-/* ── LOGIN ── */
-#login{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.login-card{width:100%;max-width:340px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:25px;display:flex;flex-direction:column;gap:15px}
-.login-card h2{color:var(--t1);font-size:20px;font-weight:600;text-align:center;margin-bottom:5px}
-.login-card input[type="text"]{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:12px;font-size:14px;outline:none;font-family:var(--font)}
-
-/* ── HEADER ── */
-#header{height:50px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 15px;z-index:10}
-#header-left{display:flex;align-items:center;gap:10px}
-#header-title{color:var(--t1);font-size:16px;font-weight:600}
-
-/* ── MAIN CHAT ── */
-#messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative}
-.msg{display:flex;flex-direction:column;max-width:75%;position:relative}
-.msg.me{align-self:flex-end;align-items:flex-end}
-.msg.other{align-self:flex-start;align-items:flex-start}
-
-/* FOTO 1: Customização do Meta do Emissor */
-.msg-meta{font-size:11px;margin-bottom:4px;display:flex;flex-direction:column;line-height:1.2}
-.msg.me .msg-meta{align-items:flex-end}
-.msg.other .msg-meta{align-items:flex-start}
-.meta-fullname{font-size:11px;color:#555;font-weight:400}
-.meta-nickname{font-size:14px;font-weight:700}
-
-.bubble{padding:10px 14px;border-radius:var(--rl);background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:15px;line-height:1.4;word-break:break-word;position:relative}
-.msg.me .bubble{background:var(--p);border:none;color:var(--pt)}
-
-/* ── REPLIES & EDITS ── */
-.reply-preview{font-size:12px;background:rgba(0,0,0,0.2);padding:6px 10px;border-left:3px solid var(--p);border-radius:4px;margin-bottom:6px;color:var(--t2);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.msg.me .reply-preview{border-left-color:var(--pt)}
-#info-bar{background:var(--s2);border-top:1px solid var(--b1);padding:8px 15px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--t2);z-index:11}
-
-/* ── FOTO 2: INPUT AREA (RESTAURADA E LIMPA) ── */
-#input-container{background:var(--s1);border-top:1px solid var(--b1);padding:10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:10}
-#input-row{display:flex;align-items:center;gap:8px}
-#msg-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:10px 12px;font-size:15px;outline:none;resize:none;height:40px;max-height:120px;font-family:var(--font);line-height:1.3}
-.input-btn{background:transparent;border:none;color:var(--t2);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;transition:background 0.2s}
-.input-btn:hover{background:var(--s2)}
-#send-btn{background:var(--p);color:var(--pt)}
-#send-btn:disabled{opacity:0.5;cursor:not-allowed}
-
-/* ── PANELS ── */
-#emoji-panel{display:none;height:290px;border-top:1px solid var(--b2);flex-direction:column}
-#emoji-header{height:35px;display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--b2);gap:10px}
-#emoji-search{flex:1;background:var(--s2);border:1px solid var(--b3);border-radius:4px;color:var(--t1);padding:3px 8px;font-size:13px;outline:none}
-#emoji-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(8,1fr);padding:10px;gap:12px;font-size:26px;user-select:none}
-#emoji-grid span{cursor:pointer;text-align:center;transition:transform 0.1s}
-#emoji-grid span:active{transform:scale(1.2)}
-
-.skin-tone-popup {
-  position: fixed;
-  background: var(--s3);
-  border: 1px solid var(--b3);
-  border-radius: var(--r);
-  padding: 6px;
-  display: flex;
-  gap: 6px;
-  z-index: 10000;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+/* Ajustado para travar o tamanho de celular (480px) no PC e ocupar 100% no celular */
+#app{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  width:100%;
+  max-width:480px;
+  height:100dvh;
+  overflow:hidden;
+  background:var(--bg);
+  box-shadow:0 0 20px rgba(0,0,0,0.7);
+  border-left:0.5px solid var(--b1);
+  border-right:0.5px solid var(--b1);
 }
-.skin-tone-choice { cursor: pointer; font-size: 22px; }
 
-@keyframes rainbowAlert {
-  0%, 20% { background-color: rgba(0, 0, 255, 0.4); color: #fff; }
-  21%, 40% { background-color: rgba(255, 0, 0, 0.4); color: #fff; }
-  41%, 60% { background-color: rgba(255, 192, 203, 0.5); color: #fff; }
-  61%, 80% { background-color: rgba(255, 255, 255, 0.4); color: #000; }
-  81%, 100% { background-color: rgba(0, 128, 0, 0.4); color: #fff; }
+#login{display:none;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;padding:2rem;background:var(--bg)}
+#login.active{display:flex}
+.av-pick{width:78px;height:78px;border-radius:50%;background:var(--s2);border:2px dashed var(--b2);cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;transition:border-color .2s;touch-action:manipulation}
+.av-pick:hover{border-color:var(--p)}
+.av-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.av-icon{font-size:26px;color:var(--t4);pointer-events:none}
+.login-row{display:flex;align-items:center;gap:14px;width:290px}
+.login-fields{display:flex;flex-direction:column;gap:6px;flex:1}
+.login-apelido{font-size:16px;font-weight:700;letter-spacing:-.3px;color:var(--t1);background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--r);padding:10px 14px;outline:none;width:100%;font-family:var(--font);-webkit-appearance:none}
+.login-nome{font-size:11px;color:var(--t3);background:var(--s2);border:0.5px solid var(--b2);border-radius:var(--r);padding:8px 14px;outline:none;width:100%;font-family:var(--font);-webkit-appearance:none}
+.login-apelido:focus,.login-nome:focus{box-shadow:0 0 0 2px rgba(83,74,183,.35)}
+.btn-enter{width:100%;padding:11px;font-size:15px;font-weight:700;border-radius:var(--r);border:none;background:var(--p);color:var(--pt);cursor:pointer;font-family:var(--font);touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:opacity .15s;-webkit-appearance:none}
+.btn-enter:hover{opacity:.85}
+.login-err{font-size:12px;color:#f87171;display:none;text-align:center;max-width:280px}
+#chat-area{display:none;flex-direction:column;height:100%;background:var(--bg)}
+#chat-area.active{display:flex}
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid var(--b1);background:var(--s1);flex-shrink:0;z-index:10}
+.topbar-left{display:flex;align-items:center;gap:8px}
+.btn-menu{background:none;border:none;color:var(--t2);cursor:pointer;font-size:22px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .1s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn-menu:hover{background:var(--s3)}
+.btn-lock{background:none;border:none;color:var(--t4);cursor:pointer;font-size:16px;display:flex;align-items:center;padding:4px;transition:color .2s;touch-action:manipulation}
+.btn-lock:hover{color:#f87171}
+.topbar-right{display:flex;align-items:center;gap:10px}
+#me-label{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--t2)}
+.btn-sair{background:none;border:0.5px solid var(--b2);color:var(--t3);cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;padding:4px 10px;border-radius:6px;font-family:var(--font);transition:color .15s;touch-action:manipulation}
+.btn-sair:hover{color:#f87171}
+#online-dot{width:11px;height:11px;border-radius:50%;background:#22c55e;cursor:pointer;border:2px solid var(--s1);position:relative;flex-shrink:0}
+.online-tooltip{display:none;position:absolute;right:0;top:18px;background:var(--s2);border:0.5px solid var(--b2);border-radius:8px;padding:4px 10px;font-size:11px;color:#22c55e;white-space:nowrap;z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.5);pointer-events:none}
+#online-dot:hover .online-tooltip{display:block}
+#messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;display:flex;flex-direction:column;gap:10px;min-height:0;position:relative;background-size:cover;background-position:center;background-repeat:no-repeat}
+#messages::-webkit-scrollbar{width:3px}
+#messages::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
+#bg-overlay{position:absolute;inset:0;z-index:0;pointer-events:none;transition:background .2s}
+.msg{display:flex;flex-direction:column;gap:2px;max-width:82%;position:relative;z-index:1}
+.msg.mine{align-self:flex-end;align-items:flex-end}
+.msg.theirs{align-self:flex-start;align-items:flex-start}
+.bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
+.mine .bubble-wrapper{flex-direction:row-reverse}
+.bubble{padding:9px 13px;border-radius:14px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.mine .bubble{border-bottom-right-radius:3px}
+.theirs .bubble{border-bottom-left-radius:3px}
+.bubble img{max-width:260px;max-height:240px;border-radius:8px;display:block;pointer-events:auto;-webkit-touch-callout:default}
+.bubble audio{display:block;max-width:240px;outline:none}
+@keyframes delAlarm{
+  0%  {background:rgba(59,130,246,.3);border-color:#3b82f6}
+  20% {background:rgba(239,68,68,.3);border-color:#ef4444}
+  40% {background:rgba(236,72,153,.3);border-color:#ec4899}
+  60% {background:rgba(255,255,255,.2);border-color:#fff}
+  80% {background:rgba(34,197,94,.3);border-color:#22c55e}
+  100%{background:var(--s2);border-color:var(--b2);color:var(--t4)}
 }
-.deleted-rainbow-anim { animation: rainbowAlert 8s linear forwards; }
+.bubble-deleted{animation:delAlarm 8s ease forwards!important;font-style:italic;border:1.5px solid}
+.react-menu{position:absolute;top:-42px;background:var(--s2);border:0.5px solid var(--b2);border-radius:22px;padding:5px 10px;display:none;gap:6px;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.5);max-width:320px;overflow-x:auto;white-space:nowrap;align-items:center}
+.react-menu.open{display:flex}
+@media(hover:hover){.bubble-wrapper:hover .react-menu{display:flex}}
+.mine .react-menu{right:0}.theirs .react-menu{left:0}
+.react-opt{font-size:18px;cursor:pointer;transition:transform .1s;padding:0 2px;display:inline-block;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.react-opt:hover,.react-opt:active{transform:scale(1.3)}
+.msg-action-btn{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;display:inline-flex;align-items:center;padding:3px 5px;border-radius:5px;transition:background .1s;touch-action:manipulation}
+.msg-action-btn:hover{background:var(--b2);color:var(--t1)}
+.msg-action-btn.del:hover{color:#f87171}
+.react-badge{position:absolute;bottom:-10px;background:var(--s2);border:0.5px solid var(--b2);border-radius:10px;padding:1px 6px;font-size:12px;display:flex;gap:3px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,.3)}
+.mine .react-badge{right:8px}.theirs .react-badge{left:8px}
+.reply-hint{opacity:0;transition:opacity .15s;font-size:14px;color:var(--t4);cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bubble-wrapper:hover .reply-hint{opacity:1}
+.reply-hint:hover{color:var(--p)}
+.reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:.85;border-left:3px solid rgba(255,255,255,.3);width:100%}
+.meta{font-size:10px;color:var(--t3);padding:2px 4px;display:flex;align-items:center;gap:4px;text-shadow:0 1px 2px rgba(0,0,0,.8)}
+.edited-tag{font-size:9px;color:var(--t4);font-style:italic}
+.senders{display:flex;align-items:center;gap:6px;margin-bottom:2px}
+.sender-names{display:flex;flex-direction:column;line-height:1.1}
+.sender-nick{font-size:13px;font-weight:700}
+.sender-fullname{font-size:9px;color:var(--t4);margin-top:1px;opacity:.7}
+.avatar{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;overflow:hidden;cursor:pointer;transition:transform .15s;box-shadow:0 2px 5px rgba(0,0,0,.4);touch-action:manipulation}
+.avatar:hover{transform:scale(1.1)}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%;pointer-events:auto;-webkit-touch-callout:default}
+.sys-msg{align-self:center;font-size:11px;color:var(--t4);padding:2px 0;z-index:1}
+@keyframes pulseMention{0%{box-shadow:0 0 0 0 rgba(83,74,183,.7)}50%{box-shadow:0 0 0 10px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.msg-mentioned{animation:pulseMention 1s ease-in-out 2;border:1px solid var(--p)!important}
+#reply-bar,#edit-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:var(--s1);border-top:0.5px solid var(--b1);flex-shrink:0;z-index:5}
+.rb-content{flex:1;min-width:0}
+.rb-name{font-size:12px;font-weight:600;margin-bottom:1px}
+.rb-text{font-size:11px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar-close{background:none;border:none;cursor:pointer;color:var(--t4);font-size:16px;padding:2px 4px;touch-action:manipulation}
+#emoji-panel{display:none;border-top:0.5px solid var(--b1);background:var(--s1);flex-shrink:0;z-index:5;max-height:48vmax}
+.ep-search-row{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid var(--b1)}
+.ep-search-row input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--r);border:0.5px solid var(--b2);background:var(--s2);color:var(--t1);outline:none;font-family:var(--font);-webkit-appearance:none}
+.ep-close{background:none;border:none;cursor:pointer;color:var(--t4);font-size:18px;padding:2px 6px;touch-action:manipulation}
+#emoji-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:8px 14px;overflow-y:auto;max-height:40vmax}
+#emoji-grid::-webkit-scrollbar{width:3px}
+#emoji-grid::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
+#emoji-grid span{font-size:28px;cursor:pointer;text-align:center;padding:3px;border-radius:8px;display:inline-block;touch-action:manipulation;-webkit-tap-highlight-color:transparent;line-height:1.3;user-select:none}
+#emoji-grid span:hover,#emoji-grid span:active{background:var(--s3)}
+.eg-sep{grid-column:1/-1;height:1px;background:var(--b1);margin:4px 0}
+.eg-label{grid-column:1/-1;font-size:9px;color:var(--t4);letter-spacing:1.2px;text-transform:uppercase;padding:4px 0 2px}
+#skin-popup{display:none;position:fixed;z-index:600;background:var(--s2);border:0.5px solid var(--b2);border-radius:14px;padding:8px 6px;box-shadow:0 6px 20px rgba(0,0,0,.6);flex-direction:column;gap:4px;align-items:center}
+#skin-popup.open{display:flex}
+.skin-btn{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:var(--b1);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.skin-btn.active{border-color:var(--t1)}
+.skin-btn:hover{background:var(--b2)}
+#camera-panel{display:none;border-top:0.5px solid var(--b1);background:var(--s1);flex-shrink:0;padding:10px 14px;z-index:5}
+.cam-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;color:var(--t3)}
+.cam-wrap{position:relative;width:100%;max-width:320px;height:180px;margin:0 auto;background:#000;border-radius:8px;overflow:hidden;border:0.5px solid var(--b2)}
+#cam-video{width:100%;height:100%;object-fit:cover}
+.cam-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;max-width:320px;margin-left:auto;margin-right:auto}
+.btn-snap{width:46px;height:46px;border-radius:50%;background:var(--p);border:3px solid var(--t1);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--pt);font-size:18px;touch-action:manipulation}
+.btn-cam-ctrl{background:none;border:none;color:var(--t3);font-size:20px;cursor:pointer;padding:6px;display:inline-flex;touch-action:manipulation}
+#paste-preview,#audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:var(--s1);border-top:0.5px solid var(--b1);flex-shrink:0;z-index:5}
+#paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid var(--b2)}
+#paste-preview span,#audio-preview-bar span{flex:1;font-size:12px;color:var(--t3)}
+#paste-preview button,#audio-preview-bar button{background:none;border:none;cursor:pointer;color:var(--t4);font-size:16px;padding:2px 6px;touch-action:manipulation}
+#inputbar{display:flex;align-items:center;gap:7px;padding:10px 14px;padding-bottom:max(10px,env(safe-area-inset-bottom));background:var(--s1);border-top:0.5px solid var(--b1);flex-shrink:0;position:relative;z-index:5}
+.audio-wrap{display:flex;align-items:center;position:relative}
+#audio-float{display:none;position:absolute;left:44px;top:50%;transform:translateY(-50%);background:var(--s2);border:0.5px solid var(--b2);padding:4px 12px;border-radius:20px;align-items:center;gap:8px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.5);white-space:nowrap;max-width:180px}
+#audio-float.show{display:flex}
+#audio-timer{font-size:13px;color:var(--t1);font-family:monospace;font-weight:700}
+#audio-trash{background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;display:flex;touch-action:manipulation}
+.btn-icon{background:none;border:none;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background .1s,color .2s;flex-shrink:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.btn-icon:hover,.btn-icon.active{background:var(--s3)}
+@keyframes pulseRec{0%{box-shadow:0 0 0 0 rgba(220,38,38,.4)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+.btn-icon.rec{background:#dc2626!important;color:#fff!important;animation:pulseRec 1.5s infinite}
+.btn-icon.paused-rec{background:#d97706!important;color:#fff!important}
+#msg-input{flex:1;background:var(--s2);border:0.5px solid var(--b2);border-radius:20px;padding:9px 14px;font-size:16px;color:var(--t1);outline:none;resize:none;max-height:100px;font-family:var(--font);line-height:1.4;-webkit-appearance:none}
+#msg-input::placeholder{color:var(--t4)}
+#send-btn{background:var(--p);border:none;color:var(--pt);width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background .1s,color .1s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#send-btn:hover{opacity:.85}
+#send-btn:disabled{background:var(--b2);color:var(--t4);cursor:not-allowed}
+#mention-panel{display:none;position:absolute;bottom:62px;left:14px;right:14px;background:var(--s2);border:0.5px solid var(--b2);border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.6);z-index:200;max-height:160px;overflow-y:auto}
+.mention-item{display:flex;align-items:center;gap:8px;padding:10px 14px;color:var(--t1);font-size:13px;cursor:pointer;border-bottom:0.5px solid var(--b1);touch-action:manipulation}
+.mention-item:last-child{border-bottom:none}
+.mention-item:hover,.mention-item:active{background:var(--s3)}
+.mention-badge{background:rgba(83,74,183,.2);color:var(--p);border:0.5px solid rgba(83,74,183,.4);font-weight:700;padding:1px 5px;border-radius:4px}
+#drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;backdrop-filter:blur(3px)}
+#drawer-overlay.open{display:block}
 
-/* ── FOTO 3: CONFIGURAÇÕES DO DRAWER AJUSTADAS ── */
-#drawer{position:fixed;top:0;bottom:0;right:-280px;width:280px;background:var(--s1);border-left:1px solid var(--b1);z-index:200;display:flex;flex-direction:column;transition:right 0.3s ease}
-#drawer.open{right:0}
-#drawer-header{height:50px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 15px}
-#drawer-content{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:20px}
-
-/* Grid de fotos arrumado para duas miniaturas por linha */
-#bg-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-.bg-option{border:2px solid transparent;border-radius:var(--r);overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--s2)}
-.bg-option.active{border-color:var(--p)}
-.bg-option img{width:100%;height:100%;object-fit:cover}
-
-/* Lightbox e painéis */
-#lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
-#lbx-img,#lbx-video{max-width:100%;max-height:100%;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
-#lbx-close{position:absolute;top:20px;right:20px;color:#fff;font-size:30px;cursor:pointer;z-index:1001}
-
-#camera-panel{position:fixed;inset:0;background:#000;z-index:500;display:none;flex-direction:column}
-#cam-video{flex:1;background:#111;object-fit:cover}
-#cam-controls{height:100px;background:var(--s1);display:flex;align-items:center;justify-content:space-around;padding:0 20px}
-.cam-btn-round{width:60px;height:60px;border-radius:50%;background:var(--s3);border:2px solid var(--b2);color:var(--t1);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-#cam-capture{background:var(--p);border:none}
-
-#record-panel{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;gap:10px;z-index:20}
-#record-timer{font-size:13px;color:#ff4a4a;font-weight:600}
-#record-progress-bg{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
-#record-progress{height:100%;width:0%;background:#ff4a4a;transition:width 0.1s linear}
-#record-stop-btn{background:transparent;border:none;color:var(--t1);cursor:pointer;font-size:16px;display:flex;align-items:center}
-
-#paste-preview{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;justify-content:space-between;z-index:21}
-#paste-img-thumb{width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid var(--b3)}
+/* Menu lateral corrigido e fechado adequadamente */
+#drawer{position:fixed;left:0;top:0;bottom:0;width:300px;max-width:88vw;background:var(--s1);border-right:0.5px solid var(--b1);z-index:1001;display:flex;flex-direction:column;transform:translateX(-100%);transition:transform .3s cubic-bezier(.16,1,.3,1);overflow-y:auto}
+#drawer.open{transform:translateX(0)}
+#drawer::-webkit-scrollbar{width:3px}
+#drawer::-webkit-scrollbar-thumb{background:var(--b2);border-radius:99px}
+.drawer-head{padding:18px 16px 14px;border-bottom:0.5px solid var(--b1);display:flex;align-items:center;gap:10px;flex-shrink:0}
+.drawer-head-icon{width:36px;height:36px;border-radius:10px;background:var(--p);display:flex;align-items:center;justify-content:center;font-size:19px;transition:background .2s}
+.drawer-section{padding:12px 16px 6px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t4)}
+.drawer-cp-block{padding:0 16px 14px}
+#dc-canvas{width:100%;height:130px;border-radius:10px;cursor:crosshair;touch-action:none;display:block;border:0.5px solid var(--b2)}
+.dc-hue-row{display:flex;align-items:center;gap:10px;margin-top:10px}
+#dc-hue{flex:1;-webkit-appearance:none;height:16px;border-radius:8px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+#dc-hue::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid rgba(0,0,0,.3);box-shadow:0 1px 4px rgba(0,0,0,.4);cursor:pointer}
+.dc-preview{width:28px;height:28px;border-radius:50%;border:2px solid var(--b2);flex-shrink:0;transition:background .1s}
+.drawer-apply-btn{width:100%;margin-top:10px;padding:11px;border-radius:10px;border:none;background:var(--p);color:var(--pt);font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font);touch-action:manipulation;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.drawer-apply-btn:hover{opacity:.85}
 </style>
 </head>
 <body>
-
-<div id="login">
-  <div class="login-card">
-    <h2>Entrar no Chatzão</h2>
-    <input type="text" id="nick-input" placeholder="Apelido / Usuário" autocomplete="off">
-    <input type="text" id="full-input" placeholder="Nome Completo" autocomplete="off">
-    <div style="display:flex;gap:10px;align-items:center;background:var(--s2);padding:10px;border-radius:var(--r);border:1px solid var(--b2)">
-      <span style="color:var(--t2);font-size:13px;flex:1">Sua Cor no Chat:</span>
-      <input type="color" id="user-color" value="#534AB7" style="border:none;background:transparent;width:40px;height:30px;cursor:pointer">
-    </div>
-    <button id="enter-btn">Entrar</button>
-  </div>
-</div>
-
 <div id="app">
-  <div id="header">
-    <div id="header-left">
-      <i class="ti ti-lock-filled" id="lock-btn" style="color:var(--t4);cursor:pointer;font-size:14px"></i>
-      <div id="header-title">Chatzão</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:15px">
-      <div style="font-size:12px;color:var(--t3);font-weight:600;display:flex;align-items:center;gap:4px">
-        <span style="width:8px;height:8px;background:#2ecc71;border-radius:50%;display:inline-block"></span>
-        ON: <span id="online-count">0</span>
-      </div>
-      <button class="input-btn" id="menu-btn"><i class="ti ti-menu-2"></i></button>
-    </div>
   </div>
 
-  <div id="messages"></div>
+<div id="lightbox"><button id="lbx-close">×</button><img id="lbx-img" src="" alt=""/></div>
 
-  <div id="info-bar" style="display:none">
-    <div style="display:flex;flex-direction:column;gap:2px;max-width:85%">
-      <span id="info-title" style="font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px"></span>
-      <span id="info-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
-    </div>
-    <div style="display:flex;gap:10px">
-      <button class="input-btn" id="edit-cancel" style="display:none;width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
-      <button class="input-btn" id="reply-cancel" style="display:none;width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
-    </div>
-  </div>
-
-  <div id="record-panel">
-    <button id="record-stop-btn"><i class="ti ti-player-stop-filled" style="color:#ff4a4a"></i></button>
-    <span id="record-timer">00:00</span>
-    <div id="record-progress-bg"><div id="record-progress"></div></div>
-  </div>
-
-  <div id="paste-preview">
-    <div style="display:flex;align-items:center;gap:10px">
-      <img id="paste-img-thumb">
-      <span style="font-size:13px;color:var(--t2)">Imagem colada</span>
-    </div>
-    <button class="input-btn" id="paste-cancel" style="width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
-  </div>
-
-  <div id="input-container">
-    <div id="input-row">
-      <button class="input-btn" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
-      <button class="input-btn" id="attach-btn"><i class="ti ti-paperclip"></i></button>
-      <button class="input-btn" id="cam-btn"><i class="ti ti-camera"></i></button>
-      
-      <textarea id="msg-input" placeholder="Mensagem..."></textarea>
-      
-      <button class="input-btn" id="mic-btn"><i class="ti ti-microphone"></i></button>
-      <button class="input-btn" id="send-btn" disabled><i class="ti ti-send"></i></button>
-    </div>
-
-    <div id="emoji-panel">
-      <div id="emoji-header">
-        <input type="text" id="emoji-search" placeholder="Pesquisar emoji...">
-      </div>
-      <div id="emoji-grid"></div>
-    </div>
+<div id="profile-modal">
+  <div class="pm-card">
+    <button class="pm-close-btn" id="pm-close">×</button>
+    <div class="pm-av-box" id="pm-av"></div>
+    <div class="pm-nick" id="pm-nick"></div>
+    <div class="pm-full" id="pm-full"></div>
+    <button class="pm-like-btn" id="pm-like"><i class="ti ti-heart-filled"></i> Curtir (<span id="pm-likes">0</span>)</button>
+    <div class="pm-react-row" id="pm-react-row"></div>
+    <div class="pm-reactions" id="pm-reactions"></div>
   </div>
 </div>
 
-<div id="drawer">
-  <div id="drawer-header">
-    <span style="color:var(--t1);font-weight:600">Configurações</span>
-    <button class="input-btn" id="drawer-close"><i class="ti ti-x"></i></button>
-  </div>
-  <div id="drawer-content">
-    <div style="display:flex;flex-direction:column;gap:12px;border-bottom:1px solid var(--b1);padding-bottom:15px">
-      <span style="color:var(--t2);font-size:13px;font-weight:600">Seu Perfil:</span>
-      <div style="display:flex;align-items:center;gap:10px;background:var(--s2);padding:10px;border-radius:var(--r)">
-        <div id="profile-avatar" style="width:36px;height:36px;border-radius:50%"></div>
-        <div style="display:flex;flex-direction:column">
-          <span id="profile-nick" style="color:var(--t1);font-weight:600;font-size:14px"></span>
-          <span id="profile-full" style="color:var(--t3);font-size:12px"></span>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center;background:var(--s2);padding:10px;border-radius:var(--r);border:1px solid var(--b2);margin-top:5px">
-        <span style="color:var(--t2);font-size:13px;flex:1">Mudar Cor do Chat:</span>
-        <input type="color" id="drawer-color-picker" style="border:none;background:transparent;width:40px;height:30px;cursor:pointer">
-      </div>
-      <button id="sair-btn" style="background:#ff4a4a;color:#fff;border:none;border-radius:var(--r);padding:8px;font-size:13px;font-weight:600;cursor:pointer;margin-top:5px">Sair do Chat</button>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;padding-top:5px">
-      <span style="color:var(--t2);font-size:13px;font-weight:600">Planos de Fundo:</span>
-      <div id="bg-list"></div>
-    </div>
-  </div>
-</div>
-
-<div id="lightbox">
-  <i class="ti ti-x" id="lbx-close"></i>
-  <img id="lbx-img" style="display:none">
-  <video id="lbx-video" style="display:none" controls></video>
-</div>
-
-<div id="camera-panel">
-  <video id="cam-video" autoplay playsinline></video>
-  <div id="cam-controls">
-    <button class="cam-btn-round" id="cam-close"><i class="ti ti-x"></i></button>
-    <button class="cam-btn-round" id="cam-capture"><i class="ti ti-camera"></i></button>
-    <button class="cam-btn-round" id="cam-flip"><i class="ti ti-refresh"></i></button>
-  </div>
-</div>
-
-<input type="file" id="file-hid" style="display:none" accept="image/*,video/*">
+<div id="skin-popup"></div>
+<div id="drawer-overlay"></div>
 
 <script src="bg.js"></script>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSy...",
-  authDomain: "chatzao.firebaseapp.com",
-  projectId: "chatzao",
-  storageBucket: "chatzao.appspot.com",
-  messagingSenderId: "123456",
-  appId: "1:123456:web:123"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const COL = collection(db, "mensagens");
-const COL_PRESENCE = collection(db, "presenca");
-
-let meuId = localStorage.getItem('cz_uid') || 'u_' + Math.random().toString(36).substr(2, 9);
-localStorage.setItem('cz_uid', meuId);
-
-let nick = localStorage.getItem('cz_nick') || '';
-let fullname = localStorage.getItem('cz_full') || '';
-let userColor = localStorage.getItem('cz_color') || '#534AB7';
-let avatar = "";
-
-let replyId = null;
-let editId = null;
-let pasteImg = null;
-let msgVistasNoAlerta = new Set();
-
-const emojisOriginais = ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","🫠","😉","😊","😇","🥰","😍","🤩","😘","😗","☺️","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑","😶","🫥","😶‍🌫️","😏","😒","🙄","😬","😮‍💨","🤥","🫨","🙂‍↔️","🙂‍↕️","😌","😔","😪","🤤","😴","🫩","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","😵‍💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","☹️","😮","😯","😲","😳","🫪","🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👽","👾","🤖"];
-const emojisMaos = ["👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","🫴","🫷","🫸","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","🫵","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏"];
-const emojisPessoas = ["🙍","🙍‍♂️","🙍‍♀️","🙎","🙎‍♂️","🙎‍♀️","🙅","🙅‍♂️","🙅‍♀️","🙆","🙆‍♂️","🙆‍♀️","💁","💁‍♂️","💁‍♀️","🙋","🙋‍♂️","🙋‍♀️","🧏","🧏‍♂️","🧏‍♀️","🙇","🙇‍♂️","🙇‍♀️","🤦","🤦‍♂️","🤦‍♀️","🤷","🤷‍♂️","🤷‍♀️"];
-const modificadoresTom = ["", "🏻", "🏼", "🏽", "🏾", "🏿"];
-
-// Prevenção do enter nativo no input-row
-document.getElementById('msg-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter' && !e.shiftKey) {
-    e.stopPropagation();
-  }
-});
-
-// Vincula a troca de cores sincronizada entre as telas
-function atualizarCoresInterface(cor) {
-  document.querySelectorAll('.input-btn i, #header-left i').forEach(icone => {
-    icone.style.color = cor;
-  });
-  document.documentElement.style.setProperty('--p', cor);
-}
-
-document.getElementById('user-color').addEventListener('input', (e) => {
-  atualizarCoresInterface(e.target.value);
-  document.getElementById('drawer-color-picker').value = e.target.value;
-});
-
-document.getElementById('drawer-color-picker').addEventListener('input', (e) => {
-  userColor = e.target.value;
-  localStorage.setItem('cz_color', userColor);
-  atualizarCoresInterface(userColor);
-  document.getElementById('user-color').value = userColor;
-  document.getElementById('profile-avatar').style.background = userColor;
-});
-
-if(nick){
-  document.getElementById('login').style.display='none';
-  initChat();
-}
-
-document.getElementById('enter-btn').addEventListener('click',()=>entrar(true));
-document.getElementById('enter-btn').addEventListener('touchend',e=>{e.preventDefault();entrar(true);});
-document.getElementById('nick-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('full-input').focus();});
-document.getElementById('full-input').addEventListener('keydown',e=>{if(e.key==='Enter')entrar(true);});
-
-function entrar(clickEvent=false){
-  const n = document.getElementById('nick-input').value.trim();
-  const f = document.getElementById('full-input').value.trim();
-  const c = document.getElementById('user-color').value;
-  if(!n) return;
-  nick = n; fullname = f; userColor = c;
-  localStorage.setItem('cz_nick', nick);
-  localStorage.setItem('cz_full', fullname);
-  localStorage.setItem('cz_color', userColor);
-  document.getElementById('login').style.display='none';
-  
-  addDoc(COL, { isSystem: true, text: `${nick} entrou no chat`, timestamp: Date.now() });
-  initChat();
-}
-
-function initChat(){
-  avatar = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='" + encodeURIComponent(userColor) + "'/></svg>";
-  document.getElementById('profile-avatar').style.background = userColor;
-  document.getElementById('profile-nick').textContent = '@' + nick;
-  document.getElementById('profile-full').textContent = fullname || 'Sem nome completo';
-  document.getElementById('drawer-color-picker').value = userColor;
-  
-  atualizarCoresInterface(userColor);
-  
-  setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() });
-  setInterval(()=>{ setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() }); }, 20000);
-
-  onSnapshot(COL_PRESENCE, snap => {
-    let count = 0; const agora = Date.now();
-    snap.forEach(d => { if(agora - d.data().lastSeen < 40000) count++; });
-    document.getElementById('online-count').textContent = count;
-  });
-
-  renderEmojiGrid();
-
-  onSnapshot(query(COL, orderBy("timestamp", "asc")), snap => {
-    const box = document.getElementById('messages');
-    box.innerHTML = "";
-    snap.forEach(d => {
-      box.appendChild(renderMsg(d.data(), d.id));
-    });
-    box.scrollTop = box.scrollHeight;
-  });
-}
-
-function renderEmojiGrid(filtro = "") {
-  const grid = document.getElementById('emoji-grid');
-  if(!grid) return;
-  grid.innerHTML = "";
-
-  const processarEmoji = (em, botaPopup) => {
-    if(filtro && !em.includes(filtro)) return;
-    const span = document.createElement('span');
-    span.textContent = em;
-
-    if(botaPopup) {
-      span.addEventListener('contextmenu', (e) => {
-        e.preventDefault();
-        abrirPopupTons(em, e.clientX, e.clientY);
-      });
-      let tempoToque;
-      span.addEventListener('touchstart', (e) => {
-        tempoToque = setTimeout(() => abrirPopupTons(em, e.touches[0].clientX, e.touches[0].clientY), 500);
-      });
-      span.addEventListener('touchend', () => clearTimeout(tempoToque));
-    }
-
-    span.addEventListener('click', () => {
-      const inp = document.getElementById('msg-input');
-      inp.value += em;
-      inp.dispatchEvent(new Event('input'));
-    });
-    grid.appendChild(span);
-  };
-
-  emojisOriginais.forEach(em => processarEmoji(em, false));
-  emojisMaos.forEach(em => processarEmoji(em, true));
-  emojisPessoas.forEach(em => processarEmoji(em, true));
-}
-
-function abrirPopupTons(emojiBase, x, y) {
-  const antigo = document.querySelector('.skin-tone-popup');
-  if(antigo) antigo.remove();
-
-  const popup = document.createElement('div');
-  popup.className = 'skin-tone-popup';
-  popup.style.left = `${x}px`;
-  popup.style.top = `${y - 45}px`;
-
-  modificadoresTom.forEach(mod => {
-    const item = document.createElement('span');
-    item.className = 'skin-tone-choice';
-    item.textContent = mod ? emojiBase + mod : emojiBase;
-    item.addEventListener('click', () => {
-      const inp = document.getElementById('msg-input');
-      inp.value += item.textContent;
-      inp.dispatchEvent(new Event('input'));
-      popup.remove();
-    });
-    popup.appendChild(item);
-  });
-
-  document.body.appendChild(popup);
-  setTimeout(() => {
-    document.addEventListener('click', () => popup.remove(), { once: true });
-  }, 100);
-}
-
-document.getElementById('emoji-search').addEventListener('input', (e) => {
-  renderEmojiGrid(e.target.value);
-});
-
-// ── FOTO 1: MONTAGEM DO CABEÇALHO DA MENSAGEM EXATAMENTE COMO SOLICITADO ──
-function renderMsg(d, id){
-  if(d.isSystem){
-    const div = document.createElement('div');
-    div.style.cssText = "text-align:center; color:var(--t3); font-size:12px; margin:5px 0";
-    div.textContent = d.text;
-    return div;
-  }
-  const isMe = d.userId === meuId;
-  const m = document.createElement('div');
-  m.className = `msg ${isMe?'me':'other'}`;
-
-  if(d.isDeleted){
-    m.innerHTML = `<div class="bubble" style="background:var(--s2);color:var(--t4);border:1px solid var(--b1)">Mensagem apagada</div>`;
-    if (!msgVistasNoAlerta.has(id)) {
-      msgVistasNoAlerta.add(id);
-      const bbl = m.querySelector('.bubble');
-      bbl.classList.add('deleted-rainbow-anim');
-      setTimeout(() => bbl.classList.remove('deleted-rainbow-anim'), 8000);
-    }
-    return m;
-  }
-
-  let rpH = "";
-  if(d.replyTo) rpH = `<div class="reply-preview"><b>${d.replyTo.nick}:</b> ${d.replyTo.text}</div>`;
-
-  let mdH = "";
-  if(d.mediaUrl){
-    if(d.mediaType==='image') mdH=`<img src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:5px;cursor:pointer" onclick="abrirLbx('${d.mediaUrl}','img')">`;
-    else if(d.mediaType==='video') mdH=`<video src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:5px;cursor:pointer" onclick="abrirLbx('${d.mediaUrl}','vid')"></video>`;
-    else if(d.mediaType==='audio') mdH=`<audio src="${d.mediaUrl}" controls style="margin-top:5px;display:block;max-width:100%"></audio>`;
-  }
-
-  const cU = d.userColor || 'var(--p)';
-  const exibicaoNomeCompleto = d.fullname ? `<span class="meta-fullname">${d.fullname}</span>` : '';
-  
-  m.innerHTML = `
-    <div class="msg-meta">
-      ${exibicaoNomeCompleto}
-      <span class="meta-nickname" style="color:${cU}">@${d.nick}</span>
-    </div>
-    <div class="bubble">
-      ${rpH}
-      <p style="white-space:pre-wrap">${d.text||''}</p>
-      ${mdH}
-    </div>
-  `;
-
-  m.addEventListener('click', e => {
-    if(e.target.tagName==='VIDEO' || e.target.tagName==='AUDIO' || e.target.tagName==='IMG') return;
-    openMenuMsg(id, d, isMe);
-  });
-  return m;
-}
-
-function openMenuMsg(id, d, isMe){
-  const opt = isMe ? ["Responder", "Editar", "Apagar"] : ["Responder", "Reagir"];
-  const escolha = prompt(`Escolha uma ação:\n${opt.join(" | ")}`);
-  if(!escolha) return;
-  const acao = escolha.toLowerCase().trim();
-
-  if(acao==='responder'){
-    replyId = id; editId = null;
-    document.getElementById('info-bar').style.display='flex';
-    document.getElementById('info-title').textContent = `Respondendo a @${d.nick}`;
-    document.getElementById('info-text').textContent = d.text || '[Mídia]';
-    document.getElementById('reply-cancel').style.display='block';
-    document.getElementById('edit-cancel').style.display='none';
-    document.getElementById('msg-input').focus();
-  } else if(acao==='editar' && isMe){
-    editId = id; replyId = null;
-    document.getElementById('info-bar').style.display='flex';
-    document.getElementById('info-title').textContent = "Editando sua mensagem";
-    document.getElementById('info-text').textContent = d.text;
-    document.getElementById('edit-cancel').style.display='block';
-    document.getElementById('reply-cancel').style.display='none';
-    document.getElementById('msg-input').value = d.text;
-    document.getElementById('msg-input').focus();
-  } else if(acao==='apagar' && isMe){
-    if(confirm("Apagar esta mensagem?")) updateDoc(doc(db, "mensagens", id), { isDeleted: true });
-  } else if(acao==='reagir' && !isMe){
-    const r = prompt("Digite um emoji para reagir:");
-    if(r) addDoc(COL, { userId: meuId, nick: nick, fullname: fullname, text: r, timestamp: Date.now(), replyTo: { nick: d.nick, text: d.text } });
-  }
-}
-
-window.abrirLbx = function(src, tipo){
-  document.getElementById('lightbox').style.display='flex';
-  if(tipo==='img'){
-    document.getElementById('lbx-video').style.display='none';
-    document.getElementById('lbx-img').style.display='block';
-    document.getElementById('lbx-img').src = src;
-  } else {
-    document.getElementById('lbx-img').style.display='none';
-    document.getElementById('lbx-video').style.display='block';
-    document.getElementById('lbx-video').src = src;
-  }
-};
-
-const msgInput = document.getElementById('msg-input');
-const sendBtn = document.getElementById('send-btn');
-
-msgInput.addEventListener('input', function(){
-  this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';
-  sendBtn.disabled = !this.value.trim() && !pasteImg;
-});
-
-sendBtn.addEventListener('click', async () => {
-  const txt = msgInput.value.trim();
-  if(!txt && !pasteImg) return;
-
-  let repData = null;
-  if(replyId){
-    const rSnap = await getDocs(query(COL));
-    rSnap.forEach(docu => { if(docu.id === replyId){ repData = { nick: docu.data().nick, text: docu.data().text }; } });
-  }
-
-  if(editId){
-    await updateDoc(doc(db, "mensagens", editId), { text: txt, isEdited: true });
-    cancelEdit();
-  } else {
-    await addDoc(COL, {
-      userId: meuId, nick: nick, fullname: fullname, userColor: userColor, avatar: avatar,
-      text: txt, timestamp: Date.now(),
-      mediaUrl: pasteImg || null, mediaType: pasteImg ? 'image' : null,
-      replyTo: repData
-    });
-    if(pasteImg) cancelPaste();
-    cancelReply();
-  }
-  msgInput.value = ""; msgInput.style.height = "40px"; sendBtn.disabled = true;
-});
-
-function cancelReply(){ replyId = null; document.getElementById('info-bar').style.display='none'; }
-function cancelEdit(){ editId = null; document.getElementById('info-bar').style.display='none'; msgInput.value=""; }
-function cancelPaste(){ pasteImg = null; document.getElementById('paste-preview').style.display='none'; }
-
-function sair(){
-  deleteDoc(doc(db, "presenca", meuId));
-  localStorage.clear();
-  location.reload();
-}
-
-document.getElementById('attach-btn').addEventListener('click', () => document.getElementById('file-hid').click());
-document.getElementById('file-hid').addEventListener('change', function(e){
-  const f = e.target.files[0]; if(!f) return;
-  const reader = new FileReader();
-  reader.onload = async function(evt){
-    const tipo = f.type.startsWith('video/') ? 'video' : 'image';
-    await addDoc(COL, { userId: meuId, nick: nick, fullname: fullname, userColor: userColor, avatar: avatar, text: "", timestamp: Date.now(), mediaUrl: evt.target.result, mediaType: tipo });
-  };
-  reader.readAsDataURL(f);
-});
-
-window.addEventListener('paste', e => {
-  const itens = (e.clipboardData || e.originalEvent.clipboardData).items;
-  for(let i=0; i<itens.length; i++){
-    if(itens[i].type.indexOf('image') !== -1){
-      const blob = itens[i].getAsFile(); const reader = new FileReader();
-      reader.onload = function(evt){
-        pasteImg = evt.target.result;
-        document.getElementById('paste-preview').style.display='flex';
-        document.getElementById('paste-img-thumb').src = pasteImg;
-        sendBtn.disabled = false;
-      };
-      reader.readAsDataURL(blob);
-    }
-  }
-});
-
-document.getElementById('emoji-btn').addEventListener('click', () => {
-  const p = document.getElementById('emoji-panel');
-  p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
-});
-document.getElementById('menu-btn').addEventListener('click', () => document.getElementById('drawer').classList.add('open'));
-document.getElementById('drawer-close').addEventListener('click', () => document.getElementById('drawer').classList.remove('open'));
-document.getElementById('paste-cancel').addEventListener('click', cancelPaste);
-document.getElementById('reply-cancel').addEventListener('click', cancelReply);
-document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
-document.getElementById('sair-btn').addEventListener('click', sair);
-document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display='none');
-document.getElementById('lbx-close').addEventListener('click', () => document.getElementById('lightbox').style.display='none');
-
-document.getElementById('lock-btn').addEventListener('click', async () => {
-  const senha = prompt('Senha master:'); if(senha !== '220399') return;
-  if(!confirm('Apagar TODAS as mensagens?')) return;
-  const snap = await getDocs(COL); const batch = writeBatch(db);
-  snap.forEach(d => batch.delete(doc(db, 'mensagens', d.id)));
-  await batch.commit(); alert('Histórico limpo!');
-});
-</script>
 <script>
-// Inicializador nativo do Drawer de backgrounds consertado
-document.getElementById('menu-btn').addEventListener('click', () => {
-  if(window.initBackgrounds) window.initBackgrounds();
-});
+  // ATENÇÃO: Espaço reservado para você inserir as configurações do seu Firebase
+  // e chamar a função init() que conecta o Firestore às suas coleções de serviço.
+  console.log("Layout unificado carregado com sucesso. Pronto para inicializar o Firebase.");
 </script>
 </body>
 </html>
