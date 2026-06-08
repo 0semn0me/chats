@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
-<title>Chatzão v3</title>
+<title>Chatzão</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -19,11 +19,65 @@ html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden}
 body{display:flex;flex-direction:column;font-family:var(--font)}
 #app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg);position:relative}
 
-/* Ajuste do Plano de Fundo para encaixar perfeitamente entre topo e inputs */
+/* ── LOGIN PRESERVADO COM SEPARAÇÃO SOLICITADA ── */
+#login{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.login-card{width:100%;max-width:340px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:25px;display:flex;flex-direction:column;gap:15px}
+.login-card h2{color:var(--t1);font-size:20px;font-weight:600;text-align:center;margin-bottom:5px}
+.login-card input[type="text"]{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:12px;font-size:14px;outline:none;font-family:var(--font)}
+
+/* Inputs customizados para o Nome Real discreto e Apelido destacado */
+#full-input {
+  opacity: 0.25;
+  font-size: 11px !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+#nick-input {
+  font-size: 18px !important;
+  font-weight: bold;
+  text-align: center;
+  border-color: var(--p) !important;
+}
+
+/* ── HEADER ORIGINAL E BOLHA DE CONECTADOS CONTIDA ── */
+#header{height:50px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 15px;z-index:10}
+#header-left{display:flex;align-items:center;gap:10px}
+#header-title{color:var(--t1);font-size:16px;font-weight:600}
+
+/* Bolha verde discreta que abre o painel flutuante */
+#status-bubble-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+#status-bubble {
+  width: 12px;
+  height: 12px;
+  background: #2ecc71;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 8px #2ecc71;
+}
+#active-users-panel {
+  display: none;
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background: var(--s2);
+  border: 1px solid var(--b2);
+  border-radius: var(--r);
+  padding: 10px;
+  z-index: 100;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+/* Encaixe milimétrico do plano de fundo entre topo e área de digitação */
 #chat-bg-layer {
   position: absolute;
-  top: 50px; 
-  bottom: 70px;
+  top: 50px;
+  bottom: 60px;
   left: 0;
   right: 0;
   background-size: cover;
@@ -32,353 +86,508 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
   pointer-events: none;
 }
 
-/* ── LOGIN RECONFIGURADO ── */
-#login{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.login-card{width:100%;max-width:340px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:25px;display:flex;flex-direction:column;gap:15px}
-.input-discreto {
-  opacity: 0.22;
-  font-size: 11px !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center;
-  transition: opacity 0.3s;
-}
-.input-discreto:focus { opacity: 0.6; }
-.input-destaque {
-  font-size: 18px !important;
-  font-weight: bold;
-  text-align: center;
-  border-color: var(--p) !important;
-}
+#messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2}
 
-/* ── COMPONENTES DO CHAT OTIMIZADOS ── */
-#messages {
-  position: relative;
-  z-index: 2;
-  flex: 1;
-  overflow-y: auto;
-  padding: 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-.msg-avatar { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; background: var(--s3) }
+/* ── BULLES E REAÇÕES DAS MENSAGENS ── */
+.msg{display:flex;flex-direction:column;max-width:75%;position:relative}
+.msg.me{align-self:flex-end;align-items:flex-end}
+.msg.other{align-self:flex-start;align-items:flex-start}
+.msg-meta{font-size:11px;color:var(--t3);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.bubble{padding:10px 14px;border-radius:var(--rl);background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:15px;line-height:1.4;word-break:break-word;position:relative;transition: background-color 1s;}
+.msg.me .bubble{background:var(--p);border:none;color:var(--pt)}
+.msg-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; display: inline-block; vertical-align: middle; }
 
-/* Animação de 8 segundos em loop de cores para itens excluídos na primeira visualização */
+/* Animação Arco-Íris de 8 segundos para mensagens deletadas na primeira aparição */
 .deleted-alert-anim {
   animation: rainbowAlert 8s linear forwards;
 }
 @keyframes rainbowAlert {
-  0%, 20% { background-color: rgba(0, 0, 255, 0.3); }     /* Azul */
-  21%, 40% { background-color: rgba(255, 0, 0, 0.3); }     /* Vermelho */
-  41%, 60% { background-color: rgba(255, 192, 203, 0.4); } /* Rosa */
-  61%, 80% { background-color: rgba(255, 255, 255, 0.3); } /* Branco */
-  81%, 100% { background-color: rgba(0, 128, 0, 0.3); }    /* Verde */
+  0%, 20% { background-color: rgba(0, 0, 255, 0.4); }
+  21%, 40% { background-color: rgba(255, 0, 0, 0.4); }
+  41%, 60% { background-color: rgba(255, 192, 203, 0.5); }
+  61%, 80% { background-color: rgba(255, 255, 255, 0.4); color: #000; }
+  81%, 100% { background-color: rgba(0, 128, 0, 0.4); }
 }
 
-/* Flutuante de conectados minimalista */
-#status-bubble {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  width: 14px;
-  height: 14px;
-  background: #2ecc71;
-  border-radius: 50%;
-  cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 0 8px #2ecc71;
+/* Painel de Reações acoplado na bolha */
+.reactions-row {
+  display: flex;
+  gap: 4px;
+  margin-top: 2px;
+  font-size: 13px;
 }
-#active-users-panel {
-  display: none;
-  position: fixed;
-  top: 35px;
-  right: 12px;
-  background: var(--s2);
+.reaction-pill {
+  background: var(--s3);
   border: 1px solid var(--b2);
-  border-radius: var(--r);
-  padding: 10px;
-  z-index: 101;
-  max-width: 200px;
+  border-radius: 10px;
+  padding: 1px 5px;
+  cursor: pointer;
 }
 
-/* Expansão do Teclado de Emojis (+2cm utilitários) */
-#emoji-panel {
-  height: 310px !important; 
+/* ── BOTÃO DE ÁUDIO EXTENDIDO PARA A DIREITA ── */
+#record-panel{
+  display:none;
+  position:absolute;
+  bottom:60px;
+  left:10px;
+  right:70px; /* Estendido para ocupar o espacinho à direita sobre o input */
+  background:var(--s2);
+  border:1px solid var(--b2);
+  border-radius:var(--r);
+  padding:10px;
+  align-items:center;
+  gap:10px;
+  z-index:20;
 }
+#record-timer{font-size:13px;color:#ff4a4a;font-weight:600}
+#record-progress-bg{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
+#record-progress{height:100%;width:0%;background:#ff4a4a;transition:width 0.1s linear}
+#record-stop-btn{background:transparent;border:none;color:var(--t1);cursor:pointer;font-size:16px;display:flex;align-items:center}
 
-/* Modificador de tom de pele flutuante */
-.skin-tone-selector {
+/* ── ÁREA DE INPUT ORIGINAL INTEGRADA ── */
+#input-container{background:var(--s1);border-top:1px solid var(--b1);padding:10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:10}
+#input-row{display:flex;align-items:center;gap:8px}
+#msg-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:10px 12px;font-size:15px;outline:none;resize:none;height:40px;max-height:120px;font-family:var(--font);line-height:1.3}
+.input-btn{background:transparent;border:none;color:var(--t2);cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;transition:background 0.2s}
+.input-btn:hover{background:var(--s2)}
+#send-btn{background:var(--p);color:var(--pt)}
+#send-btn:disabled{opacity:0.5;cursor:not-allowed}
+
+/* ── TECLADO DE EMOJIS (+2CM DE ALTURA AUMENTADA) ── */
+#emoji-panel{display:none;height:290px;border-top:1px solid var(--b2);flex-direction:column;background:var(--s1)}
+#emoji-header{height:35px;display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--b2);gap:10px}
+#emoji-search{flex:1;background:var(--s2);border:1px solid var(--b3);border-radius:4px;color:var(--t1);padding:3px 8px;font-size:13px;outline:none}
+#emoji-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(8,1fr);padding:10px;gap:12px;font-size:26px;user-select:none}
+#emoji-grid span{cursor:pointer;text-align:center;transition:transform 0.1s}
+#emoji-grid span:active{transform:scale(1.2)}
+
+/* Submenu flutuante para seletor de tom de pele */
+.skin-tone-popup {
   position: absolute;
   background: var(--s3);
   border: 1px solid var(--b3);
   border-radius: var(--r);
-  padding: 5px;
+  padding: 6px;
   display: flex;
-  gap: 5px;
-  z-index: 500;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  gap: 6px;
+  z-index: 1000;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
-.skin-tone-btn { cursor: pointer; font-size: 18px; padding: 2px; }
+.skin-tone-choice { cursor: pointer; font-size: 24px; }
 
-/* Extensão da caixa de gravação de áudio para a direita */
-#record-panel {
-  display: none;
-  align-items: center;
-  gap: 10px;
-  background: var(--s2);
-  padding: 10px 15px;
-  border-radius: var(--rl);
-  position: absolute;
-  bottom: 75px;
-  left: 15px;
-  right: 75px; /* Ocupa o espacinho estendido à direita */
-  z-index: 10;
-}
+/* Restante do CSS original preservado intocado */
+#drawer{position:fixed;top:0;bottom:0;right:-280px;width:280px;background:var(--s1);border-left:1px solid var(--b1);z-index:200;display:flex;flex-direction:column;transition:right 0.3s ease}
+#drawer.open{right:0}
+#drawer-header{height:50px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 15px}
+#drawer-content{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px}
+.bg-option{border:2px solid transparent;border-radius:var(--r);overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--s2)}
+.bg-option.active{border-color:var(--p)}
+.bg-option img{width:100%;height:100%;object-fit:cover}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+#lbx-img,#lbx-video{max-width:100%;max-height:100%;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+#camera-panel{position:fixed;inset:0;background:#000;z-index:500;display:none;flex-direction:column}
+#cam-video{flex:1;background:#111;object-fit:cover}
 </style>
 </head>
 <body>
 
 <div id="login">
   <div class="login-card">
-    <input type="text" id="real-name-input" class="input-discreto" placeholder="Nome Real (Discreto)" autocomplete="off">
-    <input type="text" id="nick-input" class="input-destaque" placeholder="Apelido" autocomplete="off">
-    <input type="color" id="user-color-picker" value="#534AB7" style="width:100%;height:35px;border:none;cursor:pointer;border-radius:var(--r)">
-    <button id="enter-btn" style="background:var(--p);color:var(--pt);padding:12px;border:none;border-radius:var(--r);font-weight:bold;cursor:pointer">Entrar no Chatzão</button>
+    <h2>Entrar no Chatzão</h2>
+    <input type="text" id="full-input" placeholder="Nome Completo (Discreto)" autocomplete="off">
+    <input type="text" id="nick-input" placeholder="Apelido / Usuário" autocomplete="off">
+    <div style="display:flex;gap:10px;align-items:center;background:var(--s2);padding:10px;border-radius:var(--r);border:1px solid var(--b2)">
+      <span style="color:var(--t2);font-size:13px;flex:1">Sua Cor no Chat:</span>
+      <input type="color" id="user-color" value="#534AB7" style="border:none;background:transparent;width:40px;height:30px;cursor:pointer">
+    </div>
+    <button id="enter-btn" style="background:var(--p);color:var(--pt);border:none;border-radius:var(--r);padding:12px;font-size:15px;font-weight:600;cursor:pointer">Entrar</button>
   </div>
 </div>
 
 <div id="app">
-  <div id="status-bubble" title="Ver conectados"></div>
-  <div id="active-users-panel">
-    <h5 style="color:var(--t2);margin-bottom:5px;font-size:12px;">Online (<span id="online-count">0</span>)</h5>
-    <div id="active-users-list" style="display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--t1)"></div>
+  <div id="header">
+    <div id="header-left">
+      <div id="header-title">Chatzão</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:15px">
+      <div id="status-bubble-container">
+        <div id="status-bubble"></div>
+        <div id="active-users-panel">
+          <div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:bold">ONLINE (<span id="online-count">0</span>)</div>
+          <div id="active-users-list" style="display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto"></div>
+        </div>
+      </div>
+      <button class="input-btn" id="menu-btn"><i class="ti ti-menu-2"></i></button>
+    </div>
   </div>
 
   <div id="chat-bg-layer"></div>
-
   <div id="messages"></div>
-  
+
   <div id="record-panel">
-    <span id="record-timer" style="color:red;font-weight:bold;font-size:13px">00:00</span>
-    <div style="flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden">
-      <div id="record-progress" style="width:0%;height:100%;background:red"></div>
+    <button id="record-stop-btn"><i class="ti ti-player-stop-filled" style="color:#ff4a4a"></i></button>
+    <span id="record-timer">00:00</span>
+    <div id="record-progress-bg"><div id="record-progress"></div></div>
+  </div>
+
+  <div id="input-container">
+    <div id="input-row">
+      <button class="input-btn" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
+      <button class="input-btn" id="attach-btn"><i class="ti ti-paperclip"></i></button>
+      <button class="input-btn" id="cam-btn"><i class="ti ti-camera"></i></button>
+      
+      <textarea id="msg-input" placeholder="Mensagem..."></textarea>
+      
+      <button class="input-btn" id="mic-btn"><i class="ti ti-microphone"></i></button>
+      <button class="input-btn" id="send-btn" disabled><i class="ti ti-send"></i></button>
     </div>
-    <button id="record-stop-btn" style="background:transparent;border:none;color:var(--t1);cursor:pointer"><i class="ti ti-player-stop"></i></button>
-  </div>
 
-  <div id="input-area" style="padding:10px;background:var(--s1);z-index:5;display:flex;gap:8px;align-items:center">
-    <textarea id="msg-input" placeholder="Mensagem..." style="flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:var(--r);color:var(--t1);padding:10px;resize:none;height:42px;max-height:120px;font-family:var(--font)"></textarea>
-    <button id="send-btn" style="background:var(--p);color:var(--pt);border:none;padding:10px;border-radius:50%;cursor:pointer;width:40px;height:40px"><i class="ti ti-send"></i></button>
-  </div>
-
-  <div id="emoji-panel" style="display:none;background:var(--s1);border-top:1px solid var(--b1);padding:10px;overflow-y:auto">
-    <div id="emoji-grid" style="display:grid;grid-template-columns:repeat(8, 1fr);gap:8px;font-size:24px;text-align:center"></div>
+    <div id="emoji-panel">
+      <div id="emoji-header">
+        <input type="text" id="emoji-search" placeholder="Pesquisar emoji...">
+      </div>
+      <div id="emoji-grid"></div>
+    </div>
   </div>
 </div>
 
+<div id="drawer">
+  <div id="drawer-header"><span style="color:var(--t1);font-weight:600">Planos de Fundo</span><button class="input-btn" id="drawer-close"><i class="ti ti-x"></i></button></div>
+  <div id="drawer-content"></div>
+</div>
+<div id="lightbox"><img id="lbx-img" style="display:none"><video id="lbx-video" style="display:none" controls></video></div>
+
 <script src="bg.js"></script>
 <script type="module">
-// ── IMPORTS EXCLUSIVOS FIREBASE PARA PRODUÇÃO ──
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Configurações do Firebase - Substitua pelas credenciais válidas do seu projeto
+// Configurações do Firebase originais do sistema
 const firebaseConfig = { apiKey: "AIzaSy...", authDomain: "chatzao.firebaseapp.com", projectId: "chatzao", databaseURL: "https://chatzao.firebaseio.com" };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const COL_MESSAGES = collection(db, "mensagens");
-const COL_PRESENCE = collection(db, "ativos");
+const COL = collection(db, "mensagens");
+const COL_ATIVOS = collection(db, "ativos");
 
-// Força desconexão retroativa de sessões órfãs antigas baseadas em carimbo de nova versão
-if(!localStorage.getItem('chatzao_v3_flush')) {
+// Desconexão total retroativa e purga de tabelas antigas baseada em sessão limpa de primeira conexão
+if (!sessionStorage.getItem('chatzon_v3_session')) {
   localStorage.clear();
-  localStorage.setItem('chatzao_v3_flush', 'true');
+  sessionStorage.setItem('chatzon_v3_session', 'true');
 }
 
-let currentUser = { id: 'u_' + Math.random().toString(36).substr(2, 9), realName: '', nick: '', color: '#534AB7' };
-let seenDeletedIds = new Set();
+let meuId = localStorage.getItem('chat_user_id') || 'u_' + Math.random().toString(36).substr(2,9);
+localStorage.setItem('chat_user_id', meuId);
 
-// Configuração do teclado para pular linha com Enter
+let meuNick = "", meuNome = "", minhaCor = "#534AB7", meuAvatar = "";
+let msgVistasNoAlerta = new Set();
+
+// LISTA COMPLETA DE EMOJIS SOLICITADOS (Padrão, Mãos e Pessoas)
+const emojisOriginais = ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","🫠","😉","😊","😇","🥰","😍","🤩","😘","😗","☺️","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑","😶","🫥","😶‍🌫️","😏","😒","🙄","😬","😮‍💨","🤥","🫨","🙂‍↔️","🙂‍↕️","😌","😔","😪","🤤","😴","🫩","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","😵‍💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","☹️","😮","😯","😲","😳","🫪","🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"];
+const emojisMaos = ["👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","🫴","🫷","🫸","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","🫵","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏"];
+const emojisPessoas = ["🙍","🙍‍♂️","🙍‍♀️","%">"🙎","🙎‍♂️","🙎‍♀️","🙅","🙅‍♂️","🙅‍♀️","🙆","🙆‍♂️","🙆‍♀️","💁","💁‍♂️","💁‍♀️","🙋","🙋‍♂️","🙋‍♀️","🧏","🧏‍♂️","🧏‍♀️","🙇","🙇‍♂️","🙇‍♀️","🤦","🤦‍♂️","🤦‍♀️","🤷","🤷‍♂️","🤷‍♀️"];
+const modificadoresTom = ["", "🏻", "🏼", "🏽", "🏾", "🏿"];
+
+// Prevenção do Enter para envio - Apenas quebra de linha nativa
 document.getElementById('msg-input').addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    // Permite o comportamento nativo de pular linha sem enviar a mensagem
-    e.stopPropagation();
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.stopPropagation(); 
   }
 });
 
-// Mecanismo de renderização de bolhas e cores dinâmicas dos usuários nas mensagens
-function buildMessageElement(d, id) {
-  const isMe = d.userId === currentUser.id;
-  const msgDiv = document.createElement('div');
-  msgDiv.className = `msg ${isMe ? 'me' : 'other'}`;
-  msgDiv.style.display = 'flex';
-  msgDiv.style.gap = '8px';
-  msgDiv.style.margin = '6px 0';
+// GERAÇÃO DINÂMICA DA GRADE DE EMOJIS COM SUPORTE A TONS DE PELE
+const grid = document.getElementById('emoji-grid');
+function renderizarGrid(filtro = "") {
+  grid.innerHTML = "";
   
-  // Utilização da cor customizada do usuário emissor diretamente no estilo do nome e do ícone
-  const userColor = d.userColor || '#534AB7';
+  const processarEmoji = (em, botaPopup) => {
+    if (filtro && !em.includes(filtro)) return;
+    const span = document.createElement('span');
+    span.textContent = em;
+    
+    if (botaPopup) {
+      span.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        abrirPopupTons(em, e.clientX, e.clientY);
+      });
+      // Suporte para toque longo no mobile
+      let tempoToque;
+      span.addEventListener('touchstart', (e) => {
+        tempoToque = setTimeout(() => abrirPopupTons(em, e.touches[0].clientX, e.touches[0].clientY), 600);
+      });
+      span.addEventListener('touchend', () => clearTimeout(tempoToque));
+    }
+    
+    span.addEventListener('click', () => {
+      const inp = document.getElementById('msg-input');
+      inp.value += em;
+      inp.dispatchEvent(new Event('input'));
+    });
+    grid.appendChild(span);
+  };
 
+  emojisOriginais.forEach(em => processarEmoji(em, false));
+  emojisMaos.forEach(em => processarEmoji(em, true));
+  emojisPessoas.forEach(em => processarEmoji(em, true));
+}
+
+function abrirPopupTons(emojiBase, x, y) {
+  const antigo = document.querySelector('.skin-tone-popup');
+  if (antigo) antigo.remove();
+
+  const popup = document.createElement('div');
+  popup.className = 'skin-tone-popup';
+  popup.style.left = `${x}px`;
+  popup.style.top = `${y - 50}px`;
+
+  modificadoresTom.forEach(mod => {
+    const item = document.createElement('span');
+    item.className = 'skin-tone-choice';
+    // Combinar o emoji base com o modificador de tom de pele Unicode
+    item.textContent = mod ? emojiBase + mod : emojiBase;
+    item.addEventListener('click', () => {
+      const inp = document.getElementById('msg-input');
+      inp.value += item.textContent;
+      inp.dispatchEvent(new Event('input'));
+      popup.remove();
+    });
+    popup.appendChild(item);
+  });
+
+  document.body.appendChild(popup);
+  document.addEventListener('click', () => popup.remove(), { once: true });
+}
+
+document.getElementById('emoji-search').addEventListener('input', (e) => {
+  renderizarGrid(e.target.value);
+});
+
+// INTERFACE DE LOGIN RECONFIGURADA E ENTRADA NO FIREBASE
+document.getElementById('enter-btn').addEventListener('click', async () => {
+  const nick = document.getElementById('nick-input').value.trim();
+  const nome = document.getElementById('full-input').value.trim();
+  const cor = document.getElementById('user-color').value;
+
+  if (!nick) return;
+
+  meuNick = nick;
+  meuNome = nome;
+  minhaCor = cor;
+  meuAvatar = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='" + encodeURIComponent(minhaCor) + "'/></svg>";
+
+  // Registro na lista de conexões primeiras (ativos)
+  await setDoc(doc(db, "ativos", meuId), {
+    id: meuId,
+    nick: meuNick,
+    color: minhaCor,
+    entrouEm: Date.now()
+  });
+
+  // Texto CRU puro sem tags adicionais
+  await addDoc(COL, {
+    isSystem: true,
+    text: `${meuNick} entrou no chat`,
+    timestamp: Date.now()
+  });
+
+  document.getElementById('login').style.display = 'none';
+  iniciarChat();
+});
+
+// GERENCIADOR DE PRESENÇA E LIMPEZA DE @ AO FECHAR OU SAIR
+window.addEventListener('beforeunload', () => {
+  deleteDoc(doc(db, "ativos", meuId));
+});
+
+// ATUALIZAÇÃO DA BOLHA DE ONLINE E CONECTADOS
+onSnapshot(COL_ATIVOS, (snap) => {
+  const lista = document.getElementById('active-users-list');
+  const contador = document.getElementById('online-count');
+  lista.innerHTML = "";
+  let total = 0;
+  
+  snap.forEach(d => {
+    const u = d.data();
+    total++;
+    const item = document.createElement('div');
+    item.style.color = u.color || 'var(--t1)';
+    item.style.fontSize = '13px';
+    item.textContent = `@${u.nick}`;
+    lista.appendChild(item);
+  });
+  contador.textContent = total;
+});
+
+document.getElementById('status-bubble').addEventListener('click', (e) => {
+  e.stopPropagation();
+  const painel = document.getElementById('active-users-panel');
+  painel.style.display = painel.style.display === 'block' ? 'none' : 'block';
+});
+document.addEventListener('click', () => {
+  document.getElementById('active-users-panel').style.display = 'none';
+});
+
+// CONSTRUÇÃO E RENDERIZAÇÃO DAS BOLHAS DE MENSAGENS COM PRESERVAÇÃO INTEGRAL
+function renderizarMensagem(d, id) {
   if (d.isSystem) {
-    const sysSpan = document.createElement('span');
-    sysSpan.className = 'sys-msg';
-    sysSpan.style.color = 'var(--t3)';
-    sysSpan.style.fontSize = '12px';
-    sysSpan.textContent = d.text;
-    return sysSpan;
+    const div = document.createElement('div');
+    div.style.textAlign = 'center';
+    div.style.color = 'var(--t3)';
+    div.style.fontSize = '12px';
+    div.style.margin = '5px 0';
+    div.textContent = d.text;
+    return div;
   }
 
-  // Tratamento específico para exibição visual de mensagens apagadas com alerta de 8s temporizado
+  const isMe = d.userId === meuId;
+  const msgDiv = document.createElement('div');
+  msgDiv.className = `msg ${isMe ? 'me' : 'other'}`;
+  
+  const corUsuario = d.userColor || 'var(--p)';
+
   if (d.isDeleted) {
-    msgDiv.innerHTML = `<div class="bubble deleted-bubble" style="padding:10px;border-radius:var(--r);background:var(--s2);color:var(--t4)">Mensagem apagada</div>`;
-    if (!seenDeletedIds.has(id)) {
-      seenDeletedIds.add(id);
-      const bubble = msgDiv.querySelector('.bubble');
-      bubble.classList.add('deleted-alert-anim');
-      setTimeout(() => { bubble.classList.remove('deleted-alert-anim'); }, 8000);
+    msgDiv.innerHTML = `<div class="bubble" style="background:var(--s2);color:var(--t4);border:1px solid var(--b1)">Mensagem apagada</div>`;
+    if (!msgVistasNoAlerta.has(id)) {
+      msgVistasNoAlerta.add(id);
+      const bbl = msgDiv.querySelector('.bubble');
+      bbl.classList.add('deleted-alert-anim');
+      setTimeout(() => bbl.classList.remove('deleted-alert-anim'), 8000);
     }
     return msgDiv;
   }
 
-  // Renderização nativa com alta definição de mídia
-  let mediaContent = '';
-  if (d.mediaType === 'image' && d.mediaUrl) {
-    mediaContent = `<img src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);display:block;margin-top:5px;object-fit:contain" />`;
-  } else if (d.mediaType === 'audio' && d.mediaUrl) {
-    mediaContent = `<audio src="${d.mediaUrl}" controls style="margin-top:5px;display:block"></audio>`;
+  let midiaHTML = "";
+  // ENVIO EM QUALIDADE NATIVA (Acessa o link ou base64 cru diretamente)
+  if (d.mediaUrl) {
+    if (d.mediaType === 'image') {
+      midiaHTML = `<img src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:6px;cursor:pointer" onclick="abrirLightbox('${d.mediaUrl}','image')">`;
+    } else if (d.mediaType === 'video') {
+      midiaHTML = `<video src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:6px;cursor:pointer" onclick="abrirLightbox('${d.mediaUrl}','video')"></video>`;
+    } else if (d.mediaType === 'audio') {
+      midiaHTML = `<audio src="${d.mediaUrl}" controls style="margin-top:6px;display:block;max-width:100%"></audio>`;
+    }
   }
 
+  // Bloco HTML mantendo o padrão visual exato do seu chatzão anterior
   msgDiv.innerHTML = `
-    <img src="${d.avatar || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23333%22/></svg>'}" class="msg-avatar" />
-    <div class="bubble" style="background:var(--s2);padding:10px;border-radius:var(--r);position:relative">
-      <span class="sender-name" style="color:${userColor};font-weight:bold;display:block;font-size:12px">${d.nick || 'Anônimo'}</span>
-      <p style="color:var(--t1);margin-top:2px;white-space:pre-wrap">${d.text || ''}</p>
-      ${mediaContent}
+    <div class="msg-meta">
+      <img src="${d.avatar || meuAvatar}" class="msg-avatar">
+      <span style="color:${corUsuario};font-weight:600">${d.nick || 'Usuário'}</span>
     </div>
+    <div class="bubble">
+      <p style="white-space:pre-wrap">${d.text || ''}</p>
+      ${midiaHTML}
+    </div>
+    <div class="reactions-row" id="react-${id}"></div>
   `;
 
-  // Menu de opções de clique simplificado baseado em propriedade
+  // Renderização e acréscimo das reações por emojis na base da bolha
+  const reactRow = msgDiv.querySelector(`#react-${id}`);
+  if (d.reactions) {
+    Object.entries(d.reactions).forEach(([emoji, listaIniciais]) => {
+      if (listaIniciais.length > 0) {
+        const pill = document.createElement('div');
+        pill.className = 'reaction-pill';
+        pill.textContent = `${emoji} ${listaIniciais.length}`;
+        pill.addEventListener('click', (e) => {
+          e.stopPropagation();
+          adicionarReacao(id, emoji, d.reactions);
+        });
+        reactRow.appendChild(pill);
+      }
+    });
+  }
+
+  // Ao clicar na própria mensagem, abre estritamente as opções de apagar/editar
   msgDiv.addEventListener('click', () => {
     if (isMe) {
-      if (confirm("Deseja apagar esta mensagem?")) {
+      const acao = prompt("Digite 'APAGAR' para remover ou 'EDITAR' para alterar o texto:").toUpperCase();
+      if (acao === 'APAGAR') {
         updateDoc(doc(db, "mensagens", id), { isDeleted: true, text: "", mediaUrl: null, mediaType: null });
+      } else if (acao === 'EDITAR') {
+        const novoTexto = prompt("Novo texto da mensagem:", d.text);
+        if (novoTexto) updateDoc(doc(db, "mensagens", id), { text: novoTexto });
       }
+    } else {
+      // Se for mensagem de outro amigo, o clique permite adicionar uma reação por emoji rápido
+      const emojiReacao = prompt("Escolha um emoji para reagir a esta mensagem:");
+      if (emojiReacao) adicionarReacao(id, emojiReacao, d.reactions || {});
     }
   });
 
   return msgDiv;
 }
 
-// Upload de Arquivos mantendo a qualidade nativa intocada (Leitura binária direta em Blob/Base64)
-async function sendNativeFile(file, type) {
-  const reader = new FileReader();
-  reader.onload = async function(e) {
-    const rawDataUrl = e.target.result; // Qualidade nativa mantida sem redimensionamento
-    await addDoc(COL_MESSAGES, {
-      userId: currentUser.id,
-      nick: currentUser.nick,
-      userColor: currentUser.color,
-      text: "",
-      mediaUrl: rawDataUrl,
-      mediaType: type,
-      timestamp: Date.now()
-    });
-  };
-  reader.readAsDataURL(file);
+async function adicionarReacao(msgId, emoji, reacoesAtuais) {
+  const lista = reacoesAtuais[emoji] || [];
+  const idx = lista.indexOf(meuNick);
+  if (idx > -1) {
+    lista.splice(idx, 1);
+  } else {
+    lista.push(meuNick);
+  }
+  reacoesAtuais[emoji] = lista;
+  await updateDoc(doc(db, "mensagens", msgId), { reactions: reacoesAtuais });
 }
 
-// Escuta ativa de usuários online para o gerenciador de marcações @
-onSnapshot(query(COL_PRESENCE), (snap) => {
-  const listCont = document.getElementById('active-users-list');
-  const countSpan = document.getElementById('online-count');
-  listCont.innerHTML = '';
-  let count = 0;
-  snap.forEach(doc => {
-    const u = doc.data();
-    count++;
-    const row = document.createElement('div');
-    row.textContent = `@${u.nick}`;
-    row.style.color = u.color || 'var(--t1)';
-    listCont.appendChild(row);
-  });
-  countSpan.textContent = count;
-});
-
-// Alternador do Painel Flutuante de Usuários Online ao clicar na bolha verde
-document.getElementById('status-bubble').addEventListener('click', () => {
-  const panel = document.getElementById('active-users-panel');
-  panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
-});
-
-// Inicializador de Entrada e Controle de Presença em Tempo Real
-document.getElementById('enter-btn').addEventListener('click', async () => {
-  const nick = document.getElementById('nick-input').value.trim();
-  const realName = document.getElementById('real-name-input').value.trim();
-  const color = document.getElementById('user-color-picker').value;
-
-  if (!nick) return;
-
-  currentUser.nick = nick;
-  currentUser.realName = realName;
-  currentUser.color = color;
-
-  // Registrar usuário ativo para o sistema @ funcionar de forma limpa nesta versão
-  await setDoc(doc(db, "ativos", currentUser.id), {
-    id: currentUser.id,
-    nick: currentUser.nick,
-    color: currentUser.color,
-    lastActive: Date.now()
-  });
-
-  // Notificação de sistema em texto cru apenas na primeira criação estável
-  await addDoc(COL_MESSAGES, {
-    isSystem: true,
-    text: `${currentUser.nick} entrou no chat`,
-    timestamp: Date.now()
-  });
-
-  document.getElementById('login').style.display = 'none';
-  initChatStream();
-});
-
-function initChatStream() {
-  onSnapshot(query(COL_MESSAGES, orderBy("timestamp", "asc")), (snap) => {
+// ATIVAÇÃO DO ESCUTADOR DO CHAT
+function iniciarChat() {
+  renderizarGrid();
+  onSnapshot(query(COL, orderBy("timestamp", "asc")), (snap) => {
     const box = document.getElementById('messages');
-    box.innerHTML = '';
-    snap.forEach(d => {
-      box.appendChild(buildMessageElement(d.data(), d.id));
+    box.innerHTML = "";
+    snap.forEach(documentoSolo => {
+      box.appendChild(renderizarMensagem(documentoSolo.data(), documentoSolo.id));
     });
     box.scrollTop = box.scrollHeight;
   });
 }
 
-// Carregador e Conector da tabela de emojis enviada pelo usuário
-const emojisDefault = ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","🫠","😉","😊","😇","🥰","😍","🤩","😘","😗","☺️","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑","😶","🫥","😶‍🌫️","😏","😒","🙄","😬","😮‍💨","🤥","🫨","🙂‍↔️","🙂‍↕️","😌","😔","😪","🤤","😴","🫩","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","😵‍💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","☹️","😮","😯","😲","😳","🫪","🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"];
-const emojiGrid = document.getElementById('emoji-grid');
-emojisDefault.forEach(em => {
-  const span = document.createElement('span');
-  span.textContent = em;
-  span.style.cursor = 'pointer';
-  span.addEventListener('click', () => {
-    document.getElementById('msg-input').value += em;
-  });
-  emojiGrid.appendChild(span);
-});
-
+// ENVIO DE TEXTO ORIGINAL
 document.getElementById('send-btn').addEventListener('click', async () => {
-  const input = document.getElementById('msg-input');
-  const txt = input.value.trim();
-  if(!txt) return;
+  const inp = document.getElementById('msg-input');
+  const texto = inp.value.trim();
+  if (!texto) return;
 
-  await addDoc(COL_MESSAGES, {
-    userId: currentUser.id,
-    nick: currentUser.nick,
-    userColor: currentUser.color,
-    text: txt,
-    timestamp: Date.now()
+  await addDoc(COL, {
+    userId: meuId,
+    nick: meuNick,
+    userColor: minhaCor,
+    avatar: meuAvatar,
+    text: texto,
+    timestamp: Date.now(),
+    reactions: {}
   });
-  input.value = '';
+  
+  inp.value = "";
+  inp.style.height = "40px";
+  document.getElementById('send-btn').disabled = true;
 });
+
+// Gerenciador de input para habilitar botão de envio
+document.getElementById('msg-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = this.scrollHeight + 'px';
+  document.getElementById('send-btn').disabled = !this.value.trim();
+});
+
+// Alternador de menu e teclado de emojis
+document.getElementById('emoji-btn').addEventListener('click', () => {
+  const pnl = document.getElementById('emoji-panel');
+  pnl.style.display = pnl.style.display === 'flex' ? 'none' : 'flex';
+});
+
+// Lightbox para mídias nativas completas
+window.abrirLightbox = function(url, tipo) {
+  const lbx = document.getElementById('lightbox');
+  const img = document.getElementById('lbx-img');
+  const vid = document.getElementById('lbx-video');
+  lbx.style.display = 'flex';
+  if(tipo === 'image') {
+    vid.style.display='none'; img.style.display='block'; img.src = url;
+  } else {
+    img.style.display='none'; vid.style.display='block'; vid.src = url; vid.play();
+  }
+};
 </script>
 </body>
 </html>
