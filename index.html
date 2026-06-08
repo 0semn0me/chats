@@ -210,7 +210,7 @@ body{display:flex;flex-direction:column;font-family:var(--font);align-items:cent
 .pm-reactions{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;justify-content:center;width:100%}
 .pm-react-badge{background:var(--s2);border:0.5px solid var(--b2);border-radius:12px;padding:2px 8px;font-size:13px;display:flex;align-items:center;gap:4px}
 
-/* MENU LATERAL CORRIGIDO (DRAWER) */
+/* MENU LATERAL INTERNO (DRAWER) */
 #drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1000;backdrop-filter:blur(3px)}
 #drawer-overlay.open{display:block}
 
@@ -251,6 +251,7 @@ body{display:flex;flex-direction:column;font-family:var(--font);align-items:cent
 <div id="app">
   <div id="login" class="active">
     <div class="login-row">
+      <input type="file" id="avatar-input" accept="image/*" style="display:none">
       <div class="av-pick" id="login-avatar-btn">
         <i class="ti ti-camera av-icon" id="login-av-icon"></i>
       </div>
@@ -294,7 +295,7 @@ body{display:flex;flex-direction:column;font-family:var(--font);align-items:cent
 
     <div id="edit-bar">
       <div class="rb-content">
-        <div class="rb-name" style="color:#d97706">Editar Mensagem</div>
+        <div class="rb-name" style="color:#d97706">Editar%20Mensagem</div>
         <div class="rb-text" id="edit-text"></div>
       </div>
       <button class="bar-close" id="edit-cancel">×</button>
@@ -392,37 +393,173 @@ body{display:flex;flex-direction:column;font-family:var(--font);align-items:cent
 
 <div id="drawer-overlay"></div>
 
-<script src="bg.js"></script>
-<script>
-// Mantendo o bind dos eventos nativos do seu script para os previews, cancelamentos e exclusão master.
-document.getElementById('paste-cancel').addEventListener('click',()=>{
-  pasteImg=null;
-  document.getElementById('paste-preview').style.display='none';
-});
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc, writeBatch, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// EVENTOS DE BOTÕES DE ENTRADA / SAÍDA E DIÁLOGOS
-document.getElementById('enter-btn').addEventListener('click',()=>entrar(true));
-document.getElementById('enter-btn').addEventListener('touchend',e=>{e.preventDefault();entrar(true);});
-document.getElementById('nick-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('full-input').focus();});
-document.getElementById('full-input').addEventListener('keydown',e=>{if(e.key==='Enter')entrar(true);});
-document.getElementById('reply-cancel').addEventListener('click',cancelReply);
-document.getElementById('edit-cancel').addEventListener('click',cancelEdit);
-document.getElementById('sair-btn').addEventListener('click',sair);
-document.getElementById('lightbox').addEventListener('click',()=>document.getElementById('lightbox').style.display='none');
-document.getElementById('lbx-close').addEventListener('click',()=>document.getElementById('lightbox').style.display='none');
+  // SUAS CREDENCIAIS DO FIREBASE DO SEU PROJETO REAL:
+  const firebaseConfig = {
+    apiKey: "AIzaSyAsX...",
+    authDomain: "chatzao-app.firebaseapp.com",
+    projectId: "chatzao-app",
+    storageBucket: "chatzao-app.appspot.com",
+    messagingSenderId: "123456789",
+    appId: "1:12345:web:abcde"
+  };
 
-document.getElementById('lock-btn').addEventListener('click',async()=>{
-  const senha=prompt('Senha master:');if(senha!=='220399')return;
-  if(!confirm('Apagar TODAS as mensagens?'))return;
-  const snap=await getDocs(COL);const batch=writeBatch(db);
-  snap.forEach(d=>batch.delete(doc(db,'mensagens',d.id)));
-  await batch.commit();alert('Histórico limpo!');
-});
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const COL = collection(db, "mensagens");
+
+  // VARIÁVEIS DE CONTROLE LOCAL
+  let currentUser = null;
+  let avatarBase64 = "";
+
+  // CONTROLE DE SELEÇÃO DE FOTO DE PERFIL
+  const avatarInput = document.getElementById('avatar-input');
+  const loginAvatarBtn = document.getElementById('login-avatar-btn');
+  const loginAvIcon = document.getElementById('login-av-icon');
+
+  loginAvatarBtn.addEventListener('click', () => avatarInput.click());
+
+  avatarInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        avatarBase64 = event.target.result;
+        loginAvatarBtn.innerHTML = `<img src="${avatarBase64}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  // FUNÇÃO ENTRAR (LOGIN COM ARMAZENAMENTO LOCAL)
+  async function entrar() {
+    const nick = document.getElementById('nick-input').value.trim();
+    const full = document.getElementById('full-input').value.trim();
+    const errEl = document.getElementById('login-err');
+
+    if (!nick || !full) {
+      errEl.innerText = "Preencha o apelido e o nome completo!";
+      errEl.style.display = "block";
+      return;
+    }
+
+    currentUser = { nick, full, avatar: avatarBase64 || "https://api.dicebear.com/7.x/bottts/svg?seed=" + nick };
+    localStorage.setItem('chatzao_user', JSON.stringify(currentUser));
+
+    document.getElementById('login').classList.remove('active');
+    document.getElementById('chat-area').classList.add('active');
+    document.getElementById('me-label').innerText = `@${currentUser.nick}`;
+    
+    inicializarChat();
+  }
+
+  document.getElementById('enter-btn').addEventListener('click', entrar);
+
+  // CONECTA ESCUTA EM TEMPO REAL E ENVIO
+  function inicializarChat() {
+    const q = query(COL, orderBy("timestamp", "asc"));
+    onSnapshot(q, (snapshot) => {
+      const messagesContainer = document.getElementById('messages');
+      // Limpa preservando o background
+      const bg = document.getElementById('bg-overlay');
+      messagesContainer.innerHTML = "";
+      messagesContainer.appendChild(bg);
+
+      snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const msgId = docSnap.id;
+        criarElementoMensagem(data, msgId);
+      });
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+  }
+
+  async function enviarMensagem() {
+    const input = document.getElementById('msg-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    await addDoc(COL, {
+      user: currentUser.nick,
+      fullname: currentUser.full,
+      avatar: currentUser.avatar,
+      text: text,
+      timestamp: Date.now()
+    });
+
+    input.value = "";
+    document.getElementById('send-btn').disabled = true;
+  }
+
+  document.getElementById('send-btn').addEventListener('click', enviarMensagem);
+  document.getElementById('msg-input').addEventListener('input', (e) => {
+    document.getElementById('send-btn').disabled = !e.target.value.trim();
+  });
+
+  // CRIAÇÃO DOS BALÕES NA TELA
+  function criarElementoMensagem(data, id) {
+    const messagesContainer = document.getElementById('messages');
+    const isMine = data.user === currentUser.nick;
+
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `msg ${isMine ? 'mine' : 'theirs'}`;
+
+    msgDiv.innerHTML = `
+      <div class="senders">
+        <div class="avatar"><img src="${data.avatar}"></div>
+        <div class="sender-names">
+          <span class="sender-nick" style="color:var(--t1)">${data.user}</span>
+        </div>
+      </div>
+      <div class="bubble-wrapper">
+        <div class="bubble" style="background:${isMine ? 'var(--p)' : 'var(--s2)'}; color:#fff">
+          ${data.text}
+        </div>
+      </div>
+    `;
+    messagesContainer.appendChild(msgDiv);
+  }
+
+  // EVENTOS DE INTERFACE (MENU LATERAL)
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
+
+  document.getElementById('menu-btn').addEventListener('click', () => {
+    drawer.classList.add('open');
+    overlay.classList.add('open');
+  });
+
+  overlay.addEventListener('click', () => {
+    drawer.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+
+  function sair() {
+    localStorage.removeItem('chatzao_user');
+    window.location.reload();
+  }
+  document.getElementById('sair-btn').addEventListener('click', sair);
+
+  // AUTO-LOGIN SE JÁ EXISTIR SESSÃO SALVA
+  const saved = localStorage.getItem('chatzao_user');
+  if (saved) {
+    currentUser = JSON.parse(saved);
+    document.getElementById('login').classList.remove('active');
+    document.getElementById('chat-area').classList.add('active');
+    document.getElementById('me-label').innerText = `@${currentUser.nick}`;
+    inicializarChat();
+  }
 </script>
 
+<script src="bg.js"></script>
 <script>
-  // ZONA DE INICIALIZAÇÃO DO FIREBASE (Coloque aqui as tuas chaves init)
-  console.log("Layout Unificado pronto e corrigido.");
+  // Eventos de limpeza de previews nativos criados anteriormente
+  document.getElementById('paste-cancel').addEventListener('click',()=>{
+    document.getElementById('paste-preview').style.display='none';
+  });
 </script>
 </body>
 </html>
