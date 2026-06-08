@@ -23,11 +23,21 @@
         <input type="text" id="nick-input" class="input-field" placeholder="Ex: joaosilva" maxlength="15" autocomplete="off">
       </div>
 
+      <div class="input-group">
+        <label class="label-field">Sua Fotinho</label>
+        <button type="button" id="avatar-upload-trigger" class="input-field" style="text-align:left; cursor:pointer;">
+          <i class="ti ti-camera"></i> Selecionar Imagem
+        </button>
+        <input type="file" id="avatar-file-input" accept="image/*" style="display:none">
+        <span id="avatar-status" style="font-size:10px; color:var(--p); margin-top:-15px; display:none; margin-bottom:10px;">Foto selecionada!</span>
+      </div>
+
       <button id="enter-btn" class="login-btn"><i class="ti ti-login"></i> Entrar no Clube</button>
     </div>
   </div>
 
   <div id="app">
+    <div id="bg-overlay"></div>
     <div id="header">
       <div class="h-left">
         <button id="open-menu-btn" class="menu-btn"><i class="ti ti-menu-2 icon-dynamic"></i></button>
@@ -46,6 +56,7 @@
     <div id="bar-panels">
       <div id="input-bar">
         <button id="emoji-toggle-btn" class="bar-icon"><i class="ti ti-mood-smile icon-dynamic"></i></button>
+        <button id="img-btn" class="bar-icon"><i class="ti ti-photo icon-dynamic"></i></button>
         <textarea id="full-input" placeholder="Mensagem..." rows="1"></textarea>
         <button id="send-btn"><i class="ti ti-send"></i></button>
       </div>
