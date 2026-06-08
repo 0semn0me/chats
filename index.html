@@ -24,9 +24,14 @@
       </div>
 
       <div class="input-group">
-        <label class="label-field">Link da Fotinho (Opcional)</label>
-        <input type="text" id="avatar-input" class="input-field" placeholder="Cole a URL da sua imagem..." autocomplete="off">
-      </div>
+  <label class="label-field">Sua Fotinho de Perfil</label>
+  <button id="avatar-upload-trigger" class="bg-item-btn">
+    <i class="ti ti-camera"></i> Selecionar imagem do dispositivo
+  </button>
+  <input type="file" id="avatar-file-input" accept="image/*" style="display:none">
+  <span id="avatar-status" style="font-size:10px; color:var(--p); margin-top:4px; display:none;">Foto selecionada com sucesso!</span>
+</div>
+
 
       <button id="enter-btn" class="login-btn"><i class="ti ti-login"></i> Entrar no Chat</button>
     </div>
