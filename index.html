@@ -7,8 +7,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --font:system-ui,-apple-system,sans-serif;
+:root{\n  --font:system-ui,-apple-system,sans-serif;
   --r:8px;--rl:14px;
   --p:#534AB7;--pt:#fff;
   --bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;
@@ -17,134 +16,39 @@
 }
 html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden}
 body{display:flex;flex-direction:column;font-family:var(--font)}
-#app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg);position:relative}
+#app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
 
-/* ── LOGIN PRESERVADO COM SEPARAÇÃO SOLICITADA ── */
+/* ── LOGIN ── */
 #login{position:fixed;inset:0;background:var(--bg);z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
 .login-card{width:100%;max-width:340px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rl);padding:25px;display:flex;flex-direction:column;gap:15px}
 .login-card h2{color:var(--t1);font-size:20px;font-weight:600;text-align:center;margin-bottom:5px}
 .login-card input[type="text"]{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:12px;font-size:14px;outline:none;font-family:var(--font)}
 
-/* Inputs customizados para o Nome Real discreto e Apelido destacado */
-#full-input {
-  opacity: 0.25;
-  font-size: 11px !important;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  text-align: center;
-}
-#nick-input {
-  font-size: 18px !important;
-  font-weight: bold;
-  text-align: center;
-  border-color: var(--p) !important;
-}
-
-/* ── HEADER ORIGINAL E BOLHA DE CONECTADOS CONTIDA ── */
-#header{height:50px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 15px;z-index:10}
+/* ── HEADER ── */
+#header{height:50px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 15px;z-index:10}
 #header-left{display:flex;align-items:center;gap:10px}
 #header-title{color:var(--t1);font-size:16px;font-weight:600}
 
-/* Bolha verde discreta que abre o painel flutuante */
-#status-bubble-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-#status-bubble {
-  width: 12px;
-  height: 12px;
-  background: #2ecc71;
-  border-radius: 50%;
-  cursor: pointer;
-  box-shadow: 0 0 8px #2ecc71;
-}
-#active-users-panel {
-  display: none;
-  position: absolute;
-  top: 25px;
-  right: 0;
-  background: var(--s2);
-  border: 1px solid var(--b2);
-  border-radius: var(--r);
-  padding: 10px;
-  z-index: 100;
-  min-width: 160px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-}
-
-/* Encaixe milimétrico do plano de fundo entre topo e área de digitação */
-#chat-bg-layer {
-  position: absolute;
-  top: 50px;
-  bottom: 60px;
-  left: 0;
-  right: 0;
-  background-size: cover;
-  background-position: center;
-  z-index: 1;
-  pointer-events: none;
-}
-
-#messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:2}
-
-/* ── BULLES E REAÇÕES DAS MENSAGENS ── */
+/* ── MAIN CHAT ── */
+#messages{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative}
 .msg{display:flex;flex-direction:column;max-width:75%;position:relative}
 .msg.me{align-self:flex-end;align-items:flex-end}
 .msg.other{align-self:flex-start;align-items:flex-start}
-.msg-meta{font-size:11px;color:var(--t3);margin-bottom:3px;display:flex;align-items:center;gap:5px}
-.bubble{padding:10px 14px;border-radius:var(--rl);background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:15px;line-height:1.4;word-break:break-word;position:relative;transition: background-color 1s;}
+
+/* ESTILIZAÇÃO COMPLETA DOS NOMES SEPARADOS NO CHAT */
+.msg-meta{font-size:11px;color:var(--t3);margin-bottom:3px;display:flex;flex-direction:column;line-height:1.25}
+.msg-meta .meta-fullname{font-size:10px;color:var(--t4);font-weight:400;margin-bottom:1px}
+.msg-meta .meta-nickname{font-size:14px;font-weight:800}
+
+.bubble{padding:10px 14px;border-radius:var(--rl);background:var(--s1);border:1px solid var(--b1);color:var(--t1);font-size:15px;line-height:1.4;word-break:break-word;position:relative}
 .msg.me .bubble{background:var(--p);border:none;color:var(--pt)}
-.msg-avatar { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; display: inline-block; vertical-align: middle; }
 
-/* Animação Arco-Íris de 8 segundos para mensagens deletadas na primeira aparição */
-.deleted-alert-anim {
-  animation: rainbowAlert 8s linear forwards;
-}
-@keyframes rainbowAlert {
-  0%, 20% { background-color: rgba(0, 0, 255, 0.4); }
-  21%, 40% { background-color: rgba(255, 0, 0, 0.4); }
-  41%, 60% { background-color: rgba(255, 192, 203, 0.5); }
-  61%, 80% { background-color: rgba(255, 255, 255, 0.4); color: #000; }
-  81%, 100% { background-color: rgba(0, 128, 0, 0.4); }
-}
+/* ── REPLIES & EDITS ── */
+.reply-preview{font-size:12px;background:rgba(0,0,0,0.2);padding:6px 10px;border-left:3px solid var(--p);border-radius:4px;margin-bottom:6px;color:var(--t2);max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.msg.me .reply-preview{border-left-color:var(--pt)}
+#info-bar{background:var(--s2);border-top:1px solid var(--b1);padding:8px 15px;display:flex;align-items:center;justify-content:space-between;font-size:13px;color:var(--t2);z-index:11}
 
-/* Painel de Reações acoplado na bolha */
-.reactions-row {
-  display: flex;
-  gap: 4px;
-  margin-top: 2px;
-  font-size: 13px;
-}
-.reaction-pill {
-  background: var(--s3);
-  border: 1px solid var(--b2);
-  border-radius: 10px;
-  padding: 1px 5px;
-  cursor: pointer;
-}
-
-/* ── BOTÃO DE ÁUDIO EXTENDIDO PARA A DIREITA ── */
-#record-panel{
-  display:none;
-  position:absolute;
-  bottom:60px;
-  left:10px;
-  right:70px; /* Estendido para ocupar o espacinho à direita sobre o input */
-  background:var(--s2);
-  border:1px solid var(--b2);
-  border-radius:var(--r);
-  padding:10px;
-  align-items:center;
-  gap:10px;
-  z-index:20;
-}
-#record-timer{font-size:13px;color:#ff4a4a;font-weight:600}
-#record-progress-bg{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
-#record-progress{height:100%;width:0%;background:#ff4a4a;transition:width 0.1s linear}
-#record-stop-btn{background:transparent;border:none;color:var(--t1);cursor:pointer;font-size:16px;display:flex;align-items:center}
-
-/* ── ÁREA DE INPUT ORIGINAL INTEGRADA ── */
+/* ── INPUT ── */
 #input-container{background:var(--s1);border-top:1px solid var(--b1);padding:10px;display:flex;flex-direction:column;gap:8px;position:relative;z-index:10}
 #input-row{display:flex;align-items:center;gap:8px}
 #msg-input{flex:1;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);color:var(--t1);padding:10px 12px;font-size:15px;outline:none;resize:none;height:40px;max-height:120px;font-family:var(--font);line-height:1.3}
@@ -153,40 +57,70 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 #send-btn{background:var(--p);color:var(--pt)}
 #send-btn:disabled{opacity:0.5;cursor:not-allowed}
 
-/* ── TECLADO DE EMOJIS (+2CM DE ALTURA AUMENTADA) ── */
-#emoji-panel{display:none;height:290px;border-top:1px solid var(--b2);flex-direction:column;background:var(--s1)}
+/* ── PANELS ── */
+#emoji-panel{display:none;height:290px;border-top:1px solid var(--b2);flex-direction:column}
 #emoji-header{height:35px;display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--b2);gap:10px}
 #emoji-search{flex:1;background:var(--s2);border:1px solid var(--b3);border-radius:4px;color:var(--t1);padding:3px 8px;font-size:13px;outline:none}
 #emoji-grid{flex:1;overflow-y:auto;display:grid;grid-template-columns:repeat(8,1fr);padding:10px;gap:12px;font-size:26px;user-select:none}
 #emoji-grid span{cursor:pointer;text-align:center;transition:transform 0.1s}
 #emoji-grid span:active{transform:scale(1.2)}
 
-/* Submenu flutuante para seletor de tom de pele */
+/* Submenu flutuante para tons de pele */
 .skin-tone-popup {
-  position: absolute;
+  position: fixed;
   background: var(--s3);
   border: 1px solid var(--b3);
   border-radius: var(--r);
   padding: 6px;
   display: flex;
   gap: 6px;
-  z-index: 1000;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
 }
-.skin-tone-choice { cursor: pointer; font-size: 24px; }
+.skin-tone-choice { cursor: pointer; font-size: 22px; }
 
-/* Restante do CSS original preservado intocado */
+/* Animação Arco-Íris para mensagens deletadas */
+@keyframes rainbowAlert {
+  0%, 20% { background-color: rgba(0, 0, 255, 0.4); color: #fff; }
+  21%, 40% { background-color: rgba(255, 0, 0, 0.4); color: #fff; }
+  41%, 60% { background-color: rgba(255, 192, 203, 0.5); color: #fff; }
+  61%, 80% { background-color: rgba(255, 255, 255, 0.4); color: #000; }
+  81%, 100% { background-color: rgba(0, 128, 0, 0.4); color: #fff; }
+}
+.deleted-rainbow-anim {
+  animation: rainbowAlert 8s linear forwards;
+}
+
 #drawer{position:fixed;top:0;bottom:0;right:-280px;width:280px;background:var(--s1);border-left:1px solid var(--b1);z-index:200;display:flex;flex-direction:column;transition:right 0.3s ease}
 #drawer.open{right:0}
-#drawer-header{height:50px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:between;padding:0 15px}
+#drawer-header{height:50px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;padding:0 15px}
 #drawer-content{flex:1;overflow-y:auto;padding:15px;display:flex;flex-direction:column;gap:15px}
 .bg-option{border:2px solid transparent;border-radius:var(--r);overflow:hidden;cursor:pointer;position:relative;aspect-ratio:16/9;background:var(--s2)}
 .bg-option.active{border-color:var(--p)}
 .bg-option img{width:100%;height:100%;object-fit:cover}
+
+/* ── LIGHTBOX ── */
 #lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
 #lbx-img,#lbx-video{max-width:100%;max-height:100%;border-radius:var(--r);box-shadow:0 4px 20px rgba(0,0,0,0.5)}
+#lbx-close{position:absolute;top:20px;right:20px;color:#fff;font-size:30px;cursor:pointer;z-index:1001}
+
+/* ── CAMERA ── */
 #camera-panel{position:fixed;inset:0;background:#000;z-index:500;display:none;flex-direction:column}
 #cam-video{flex:1;background:#111;object-fit:cover}
+#cam-controls{height:100px;background:var(--s1);display:flex;align-items:center;justify-content:space-around;padding:0 20px}
+.cam-btn-round{width:60px;height:60px;border-radius:50%;background:var(--s3);border:2px solid var(--b2);color:var(--t1);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+#cam-capture{background:var(--p);border:none}
+
+/* ── AUDIO RECORD PANEL ── */
+#record-panel{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;gap:10px;z-index:20}
+#record-timer{font-size:13px;color:#ff4a4a;font-weight:600}
+#record-progress-bg{flex:1;height:4px;background:var(--b1);border-radius:2px;overflow:hidden}
+#record-progress{height:100%;width:0%;background:#ff4a4a;transition:width 0.1s linear}
+#record-stop-btn{background:transparent;border:none;color:var(--t1);cursor:pointer;font-size:16px;display:flex;align-items:center}
+
+/* ── PASTE PREVIEW ── */
+#paste-preview{display:none;position:absolute;bottom:60px;left:10px;right:10px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--r);padding:10px;align-items:center;justify-content:space-between;z-index:21}
+#paste-img-thumb{width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid var(--b3)}
 </style>
 </head>
 <body>
@@ -194,40 +128,56 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 <div id="login">
   <div class="login-card">
     <h2>Entrar no Chatzão</h2>
-    <input type="text" id="full-input" placeholder="Nome Completo (Discreto)" autocomplete="off">
     <input type="text" id="nick-input" placeholder="Apelido / Usuário" autocomplete="off">
+    <input type="text" id="full-input" placeholder="Nome Completo" autocomplete="off">
     <div style="display:flex;gap:10px;align-items:center;background:var(--s2);padding:10px;border-radius:var(--r);border:1px solid var(--b2)">
       <span style="color:var(--t2);font-size:13px;flex:1">Sua Cor no Chat:</span>
       <input type="color" id="user-color" value="#534AB7" style="border:none;background:transparent;width:40px;height:30px;cursor:pointer">
     </div>
-    <button id="enter-btn" style="background:var(--p);color:var(--pt);border:none;border-radius:var(--r);padding:12px;font-size:15px;font-weight:600;cursor:pointer">Entrar</button>
+    <button id="enter-btn">Entrar</button>
   </div>
 </div>
 
 <div id="app">
   <div id="header">
     <div id="header-left">
+      <i class="ti ti-lock-filled" id="lock-btn" style="color:var(--t4);cursor:pointer;font-size:14px"></i>
       <div id="header-title">Chatzão</div>
     </div>
     <div style="display:flex;align-items:center;gap:15px">
-      <div id="status-bubble-container">
-        <div id="status-bubble"></div>
-        <div id="active-users-panel">
-          <div style="font-size:11px;color:var(--t3);margin-bottom:6px;font-weight:bold">ONLINE (<span id="online-count">0</span>)</div>
-          <div id="active-users-list" style="display:flex;flex-direction:column;gap:5px;max-height:150px;overflow-y:auto"></div>
-        </div>
+      <div style="font-size:12px;color:var(--t3);font-weight:600;display:flex;align-items:center;gap:4px">
+        <span style="width:8px;height:8px;background:#2ecc71;border-radius:50%;display:inline-block"></span>
+        ON: <span id="online-count">0</span>
       </div>
       <button class="input-btn" id="menu-btn"><i class="ti ti-menu-2"></i></button>
     </div>
   </div>
 
-  <div id="chat-bg-layer"></div>
   <div id="messages"></div>
+
+  <div id="info-bar" style="display:none">
+    <div style="display:flex;flex-direction:column;gap:2px;max-width:85%">
+      <span id="info-title" style="font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.5px"></span>
+      <span id="info-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="input-btn" id="edit-cancel" style="display:none;width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
+      <button class="input-btn" id="reply-cancel" style="display:none;width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
+    </div>
+  </div>
 
   <div id="record-panel">
     <button id="record-stop-btn"><i class="ti ti-player-stop-filled" style="color:#ff4a4a"></i></button>
     <span id="record-timer">00:00</span>
     <div id="record-progress-bg"><div id="record-progress"></div></div>
+  </div>
+
+  <div id="paste-preview">
+    <div style="display:flex;align-items:center;gap:10px">
+      <img id="paste-img-thumb">
+      <span style="font-size:13px;color:var(--t2)">Imagem colada</span>
+    </div>
+    <button class="input-btn" id="paste-cancel" style="width:24px;height:24px;font-size:16px"><i class="ti ti-x"></i></button>
   </div>
 
   <div id="input-container">
@@ -252,71 +202,177 @@ body{display:flex;flex-direction:column;font-family:var(--font)}
 </div>
 
 <div id="drawer">
-  <div id="drawer-header"><span style="color:var(--t1);font-weight:600">Planos de Fundo</span><button class="input-btn" id="drawer-close"><i class="ti ti-x"></i></button></div>
-  <div id="drawer-content"></div>
+  <div id="drawer-header">
+    <span style="color:var(--t1);font-weight:600">Configurações</span>
+    <button class="input-btn" id="drawer-close"><i class="ti ti-x"></i></button>
+  </div>
+  <div id="drawer-content">
+    <div style="display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--b1);padding-bottom:15px">
+      <span style="color:var(--t2);font-size:13px;font-weight:600">Seu Perfil:</span>
+      <div style="display:flex;align-items:center;gap:10px;background:var(--s2);padding:10px;border-radius:var(--r)">
+        <div id="profile-avatar" style="width:36px;height:36px;border-radius:50%"></div>
+        <div style="display:flex;flex-direction:column">
+          <span id="profile-nick" style="color:var(--t1);font-weight:600;font-size:14px"></span>
+          <span id="profile-full" style="color:var(--t3);font-size:12px"></span>
+        </div>
+      </div>
+      <button id="sair-btn" style="background:#ff4a4a;color:#fff;border:none;border-radius:var(--r);padding:8px;font-size:13px;font-weight:600;cursor:pointer">Sair do Chat</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;padding-top:5px">
+      <span style="color:var(--t2);font-size:13px;font-weight:600">Planos de Fundo:</span>
+      <div id="bg-list" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+  </div>
 </div>
-<div id="lightbox"><img id="lbx-img" style="display:none"><video id="lbx-video" style="display:none" controls></video></div>
+
+<div id="lightbox">
+  <i class="ti ti-x" id="lbx-close"></i>
+  <img id="lbx-img" style="display:none">
+  <video id="lbx-video" style="display:none" controls></video>
+</div>
+
+<div id="camera-panel">
+  <video id="cam-video" autoplay playsinline></video>
+  <div id="cam-controls">
+    <button class="cam-btn-round" id="cam-close"><i class="ti ti-x"></i></button>
+    <button class="cam-btn-round" id="cam-capture"><i class="ti ti-camera"></i></button>
+    <button class="cam-btn-round" id="cam-flip"><i class="ti ti-refresh"></i></button>
+  </div>
+</div>
+
+<input type="file" id="file-hid" style="display:none" accept="image/*,video/*">
 
 <script src="bg.js"></script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc, doc, setDoc, deleteDoc, updateDoc, onSnapshot, query, orderBy, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Configurações do Firebase originais do sistema
-const firebaseConfig = { apiKey: "AIzaSy...", authDomain: "chatzao.firebaseapp.com", projectId: "chatzao", databaseURL: "https://chatzao.firebaseio.com" };
+const firebaseConfig = {
+  apiKey: "AIzaSy...",
+  authDomain: "chatzao.firebaseapp.com",
+  projectId: "chatzao",
+  storageBucket: "chatzao.appspot.com",
+  messagingSenderId: "123456",
+  appId: "1:123456:web:123"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const COL = collection(db, "mensagens");
-const COL_ATIVOS = collection(db, "ativos");
+const COL_PRESENCE = collection(db, "presenca");
 
-// Desconexão total retroativa e purga de tabelas antigas baseada em sessão limpa de primeira conexão
-if (!sessionStorage.getItem('chatzon_v3_session')) {
-  localStorage.clear();
-  sessionStorage.setItem('chatzon_v3_session', 'true');
-}
+let meuId = localStorage.getItem('cz_uid') || 'u_' + Math.random().toString(36).substr(2, 9);
+localStorage.setItem('cz_uid', meuId);
 
-let meuId = localStorage.getItem('chat_user_id') || 'u_' + Math.random().toString(36).substr(2,9);
-localStorage.setItem('chat_user_id', meuId);
+let nick = localStorage.getItem('cz_nick') || '';
+let fullname = localStorage.getItem('cz_full') || '';
+let userColor = localStorage.getItem('cz_color') || '#534AB7';
+let avatar = "";
 
-let meuNick = "", meuNome = "", minhaCor = "#534AB7", meuAvatar = "";
+let replyId = null;
+let editId = null;
+let pasteImg = null;
 let msgVistasNoAlerta = new Set();
 
-// LISTA COMPLETA DE EMOJIS SOLICITADOS (Padrão, Mãos e Pessoas)
-const emojisOriginais = ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","🫠","😉","😊","😇","🥰","😍","🤩","😘","😗","☺️","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑","😶","🫥","😶‍🌫️","😏","😒","🙄","😬","😮‍💨","🤥","🫨","🙂‍↔️","🙂‍↕️","😌","😔","😪","🤤","😴","🫩","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","😵‍💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","☹️","😮","😯","😲","😳","🫪","🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👻","👽","👾","🤖"];
+const emojisOriginais = ["😀","😃","😄","😁","😆","😅","🤣","😂","🙂","🙃","🫠","😉","😊","😇","🥰","😍","🤩","😘","😗","☺️","😚","😙","🥲","😋","😛","😜","🤪","😝","🤑","🤗","🤭","🫢","🫣","🤫","🤔","🫡","🤐","🤨","😐","😑","😶","🫥","😶‍🌫️","😏","😒","🙄","😬","😮‍💨","🤥","🫨","🙂‍↔️","🙂‍↕️","😌","😔","😪","🤤","😴","🫩","😷","🤒","🤕","🤢","🤮","🤧","🥵","🥶","🥴","😵","😵‍💫","🤯","🤠","🥳","🥸","😎","🤓","🧐","😕","🫤","😟","🙁","☹️","😮","😯","😲","😳","🫪","🥺","🥹","😦","😧","😨","😰","😥","😢","😭","😱","😖","😣","😞","😓","😩","😫","🥱","😤","😡","😠","🤬","😈","👿","💀","☠️","💩","🤡","👹","👺","👽","👾","🤖"];
 const emojisMaos = ["👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","🫴","🫷","🫸","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","🖕","👇","☝️","🫵","👍","👎","✊","👊","🤛","🤜","👏","🙌","👐","🤲","🤝","🙏"];
-const emojisPessoas = ["🙍","🙍‍♂️","🙍‍♀️","%">"🙎","🙎‍♂️","🙎‍♀️","🙅","🙅‍♂️","🙅‍♀️","🙆","🙆‍♂️","🙆‍♀️","💁","💁‍♂️","💁‍♀️","🙋","🙋‍♂️","🙋‍♀️","🧏","🧏‍♂️","🧏‍♀️","🙇","🙇‍♂️","🙇‍♀️","🤦","🤦‍♂️","🤦‍♀️","🤷","🤷‍♂️","🤷‍♀️"];
+const emojisPessoas = ["🙍","🙍‍♂️","🙍‍♀️","🙎","🙎‍♂️","🙎‍♀️","🙅","🙅‍♂️","🙅‍♀️","🙆","🙆‍♂️","🙆‍♀️","💁","💁‍♂️","💁‍♀️","🙋","🙋‍♂️","🙋‍♀️","🧏","🧏‍♂️","🧏‍♀️","🙇","🙇‍♂️","🙇‍♀️","🤦","🤦‍♂️","🤦‍♀️","🤷","🤷‍♂️","🤷‍♀️"];
 const modificadoresTom = ["", "🏻", "🏼", "🏽", "🏾", "🏿"];
 
-// Prevenção do Enter para envio - Apenas quebra de linha nativa
+// ── 1. PREVENÇÃO DO ENTER PARA NÃO ENVIAR A MENSAGEM ──
 document.getElementById('msg-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter' && !e.shiftKey) {
-    e.stopPropagation(); 
+    e.stopPropagation();
   }
 });
 
-// GERAÇÃO DINÂMICA DA GRADE DE EMOJIS COM SUPORTE A TONS DE PELE
-const grid = document.getElementById('emoji-grid');
-function renderizarGrid(filtro = "") {
-  grid.innerHTML = "";
+// ── 2. SELETOR DE COR DINÂMICO PARA OS ÍCONES NATIVOS DO CHAT ──
+document.getElementById('user-color').addEventListener('input', (e) => {
+  const novaCor = e.target.value;
+  document.querySelectorAll('.input-btn i, #header-left i').forEach(icone => {
+    icone.style.color = novaCor;
+  });
+});
+
+if(nick){
+  document.getElementById('login').style.display='none';
+  initChat();
+}
+
+document.getElementById('enter-btn').addEventListener('click',()=>entrar(true));
+document.getElementById('enter-btn').addEventListener('touchend',e=>{e.preventDefault();entrar(true);});
+document.getElementById('nick-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('full-input').focus();});
+document.getElementById('full-input').addEventListener('keydown',e=>{if(e.key==='Enter')entrar(true);});
+
+function entrar(clickEvent=false){
+  const n = document.getElementById('nick-input').value.trim();
+  const f = document.getElementById('full-input').value.trim();
+  const c = document.getElementById('user-color').value;
+  if(!n) return;
+  nick = n; fullname = f; userColor = c;
+  localStorage.setItem('cz_nick', nick);
+  localStorage.setItem('cz_full', fullname);
+  localStorage.setItem('cz_color', userColor);
+  document.getElementById('login').style.display='none';
   
+  // Salva no Firestore contendo os dois campos independentes
+  addDoc(COL, { isSystem: true, text: `${nick} entrou no chat`, timestamp: Date.now() });
+  initChat();
+}
+
+function initChat(){
+  avatar = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='" + encodeURIComponent(userColor) + "'/></svg>";
+  document.getElementById('profile-avatar').style.background = userColor;
+  document.getElementById('profile-nick').textContent = '@' + nick;
+  document.getElementById('profile-full').textContent = fullname || 'Sem nome completo';
+  
+  document.querySelectorAll('.input-btn i, #header-left i').forEach(icone => {
+    icone.style.color = userColor;
+  });
+  
+  setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() });
+  setInterval(()=>{ setDoc(doc(db, "presenca", meuId), { nick: nick, fullname: fullname, color: userColor, lastSeen: Date.now() }); }, 20000);
+
+  onSnapshot(COL_PRESENCE, snap => {
+    let count = 0; const agora = Date.now();
+    snap.forEach(d => { if(agora - d.data().lastSeen < 40000) count++; });
+    document.getElementById('online-count').textContent = count;
+  });
+
+  renderEmojiGrid();
+
+  onSnapshot(query(COL, orderBy("timestamp", "asc")), snap => {
+    const box = document.getElementById('messages');
+    box.innerHTML = "";
+    snap.forEach(d => {
+      box.appendChild(renderMsg(d.data(), d.id));
+    });
+    box.scrollTop = box.scrollHeight;
+  });
+}
+
+function renderEmojiGrid(filtro = "") {
+  const grid = document.getElementById('emoji-grid');
+  if(!grid) return;
+  grid.innerHTML = "";
+
   const processarEmoji = (em, botaPopup) => {
-    if (filtro && !em.includes(filtro)) return;
+    if(filtro && !em.includes(filtro)) return;
     const span = document.createElement('span');
     span.textContent = em;
-    
-    if (botaPopup) {
+
+    if(botaPopup) {
       span.addEventListener('contextmenu', (e) => {
         e.preventDefault();
         abrirPopupTons(em, e.clientX, e.clientY);
       });
-      // Suporte para toque longo no mobile
       let tempoToque;
       span.addEventListener('touchstart', (e) => {
-        tempoToque = setTimeout(() => abrirPopupTons(em, e.touches[0].clientX, e.touches[0].clientY), 600);
+        tempoToque = setTimeout(() => abrirPopupTons(em, e.touches[0].clientX, e.touches[0].clientY), 500);
       });
       span.addEventListener('touchend', () => clearTimeout(tempoToque));
     }
-    
+
     span.addEventListener('click', () => {
       const inp = document.getElementById('msg-input');
       inp.value += em;
@@ -332,17 +388,16 @@ function renderizarGrid(filtro = "") {
 
 function abrirPopupTons(emojiBase, x, y) {
   const antigo = document.querySelector('.skin-tone-popup');
-  if (antigo) antigo.remove();
+  if(antigo) antigo.remove();
 
   const popup = document.createElement('div');
   popup.className = 'skin-tone-popup';
   popup.style.left = `${x}px`;
-  popup.style.top = `${y - 50}px`;
+  popup.style.top = `${y - 45}px`;
 
   modificadoresTom.forEach(mod => {
     const item = document.createElement('span');
     item.className = 'skin-tone-choice';
-    // Combinar o emoji base com o modificador de tom de pele Unicode
     item.textContent = mod ? emojiBase + mod : emojiBase;
     item.addEventListener('click', () => {
       const inp = document.getElementById('msg-input');
@@ -354,240 +409,211 @@ function abrirPopupTons(emojiBase, x, y) {
   });
 
   document.body.appendChild(popup);
-  document.addEventListener('click', () => popup.remove(), { once: true });
+  setTimeout(() => {
+    document.addEventListener('click', () => popup.remove(), { once: true });
+  }, 100);
 }
 
 document.getElementById('emoji-search').addEventListener('input', (e) => {
-  renderizarGrid(e.target.value);
+  renderEmojiGrid(e.target.value);
 });
 
-// INTERFACE DE LOGIN RECONFIGURADA E ENTRADA NO FIREBASE
-document.getElementById('enter-btn').addEventListener('click', async () => {
-  const nick = document.getElementById('nick-input').value.trim();
-  const nome = document.getElementById('full-input').value.trim();
-  const cor = document.getElementById('user-color').value;
-
-  if (!nick) return;
-
-  meuNick = nick;
-  meuNome = nome;
-  minhaCor = cor;
-  meuAvatar = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='" + encodeURIComponent(minhaCor) + "'/></svg>";
-
-  // Registro na lista de conexões primeiras (ativos)
-  await setDoc(doc(db, "ativos", meuId), {
-    id: meuId,
-    nick: meuNick,
-    color: minhaCor,
-    entrouEm: Date.now()
-  });
-
-  // Texto CRU puro sem tags adicionais
-  await addDoc(COL, {
-    isSystem: true,
-    text: `${meuNick} entrou no chat`,
-    timestamp: Date.now()
-  });
-
-  document.getElementById('login').style.display = 'none';
-  iniciarChat();
-});
-
-// GERENCIADOR DE PRESENÇA E LIMPEZA DE @ AO FECHAR OU SAIR
-window.addEventListener('beforeunload', () => {
-  deleteDoc(doc(db, "ativos", meuId));
-});
-
-// ATUALIZAÇÃO DA BOLHA DE ONLINE E CONECTADOS
-onSnapshot(COL_ATIVOS, (snap) => {
-  const lista = document.getElementById('active-users-list');
-  const contador = document.getElementById('online-count');
-  lista.innerHTML = "";
-  let total = 0;
-  
-  snap.forEach(d => {
-    const u = d.data();
-    total++;
-    const item = document.createElement('div');
-    item.style.color = u.color || 'var(--t1)';
-    item.style.fontSize = '13px';
-    item.textContent = `@${u.nick}`;
-    lista.appendChild(item);
-  });
-  contador.textContent = total;
-});
-
-document.getElementById('status-bubble').addEventListener('click', (e) => {
-  e.stopPropagation();
-  const painel = document.getElementById('active-users-panel');
-  painel.style.display = painel.style.display === 'block' ? 'none' : 'block';
-});
-document.addEventListener('click', () => {
-  document.getElementById('active-users-panel').style.display = 'none';
-});
-
-// CONSTRUÇÃO E RENDERIZAÇÃO DAS BOLHAS DE MENSAGENS COM PRESERVAÇÃO INTEGRAL
-function renderizarMensagem(d, id) {
-  if (d.isSystem) {
+// ── 3. RENDERIZADOR DAS MENSAGENS COM APELIDO E NOME EXTRA SEPARADOS NO TOPO ──
+function renderMsg(d, id){
+  if(d.isSystem){
     const div = document.createElement('div');
-    div.style.textAlign = 'center';
-    div.style.color = 'var(--t3)';
-    div.style.fontSize = '12px';
-    div.style.margin = '5px 0';
+    div.style.cssText = "text-align:center; color:var(--t3); font-size:12px; margin:5px 0";
     div.textContent = d.text;
     return div;
   }
-
   const isMe = d.userId === meuId;
-  const msgDiv = document.createElement('div');
-  msgDiv.className = `msg ${isMe ? 'me' : 'other'}`;
-  
-  const corUsuario = d.userColor || 'var(--p)';
+  const m = document.createElement('div');
+  m.className = `msg ${isMe?'me':'other'}`;
 
-  if (d.isDeleted) {
-    msgDiv.innerHTML = `<div class="bubble" style="background:var(--s2);color:var(--t4);border:1px solid var(--b1)">Mensagem apagada</div>`;
+  if(d.isDeleted){
+    m.innerHTML = `<div class="bubble" style="background:var(--s2);color:var(--t4);border:1px solid var(--b1)">Mensagem apagada</div>`;
     if (!msgVistasNoAlerta.has(id)) {
       msgVistasNoAlerta.add(id);
-      const bbl = msgDiv.querySelector('.bubble');
-      bbl.classList.add('deleted-alert-anim');
-      setTimeout(() => bbl.classList.remove('deleted-alert-anim'), 8000);
+      const bbl = m.querySelector('.bubble');
+      bbl.classList.add('deleted-rainbow-anim');
+      setTimeout(() => bbl.classList.remove('deleted-rainbow-anim'), 8000);
     }
-    return msgDiv;
+    return m;
   }
 
-  let midiaHTML = "";
-  // ENVIO EM QUALIDADE NATIVA (Acessa o link ou base64 cru diretamente)
-  if (d.mediaUrl) {
-    if (d.mediaType === 'image') {
-      midiaHTML = `<img src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:6px;cursor:pointer" onclick="abrirLightbox('${d.mediaUrl}','image')">`;
-    } else if (d.mediaType === 'video') {
-      midiaHTML = `<video src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:6px;cursor:pointer" onclick="abrirLightbox('${d.mediaUrl}','video')"></video>`;
-    } else if (d.mediaType === 'audio') {
-      midiaHTML = `<audio src="${d.mediaUrl}" controls style="margin-top:6px;display:block;max-width:100%"></audio>`;
-    }
+  let rpH = "";
+  if(d.replyTo) rpH = `<div class="reply-preview"><b>${d.replyTo.nick}:</b> ${d.replyTo.text}</div>`;
+
+  let mdH = "";
+  if(d.mediaUrl){
+    if(d.mediaType==='image') mdH=`<img src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:5px;cursor:pointer" onclick="abrirLbx('${d.mediaUrl}','img')">`;
+    else if(d.mediaType==='video') mdH=`<video src="${d.mediaUrl}" style="max-width:100%;border-radius:var(--r);margin-top:5px;cursor:pointer" onclick="abrirLbx('${d.mediaUrl}','vid')"></video>`;
+    else if(d.mediaType==='audio') mdH=`<audio src="${d.mediaUrl}" controls style="margin-top:5px;display:block;max-width:100%"></audio>`;
   }
 
-  // Bloco HTML mantendo o padrão visual exato do seu chatzão anterior
-  msgDiv.innerHTML = `
+  const cU = d.userColor || 'var(--p)';
+  const exibicaoNomeCompleto = d.fullname ? `<span class="meta-fullname">${d.fullname}</span>` : '';
+  
+  // Nome Completo renderizado estritamente acima do Apelido destacado
+  m.innerHTML = `
     <div class="msg-meta">
-      <img src="${d.avatar || meuAvatar}" class="msg-avatar">
-      <span style="color:${corUsuario};font-weight:600">${d.nick || 'Usuário'}</span>
+      ${exibicaoNomeCompleto}
+      <span class="meta-nickname" style="color:${cU}">@${d.nick}</span>
     </div>
     <div class="bubble">
-      <p style="white-space:pre-wrap">${d.text || ''}</p>
-      ${midiaHTML}
+      ${rpH}
+      <p style="white-space:pre-wrap">${d.text||''}</p>
+      ${mdH}
     </div>
-    <div class="reactions-row" id="react-${id}"></div>
   `;
 
-  // Renderização e acréscimo das reações por emojis na base da bolha
-  const reactRow = msgDiv.querySelector(`#react-${id}`);
-  if (d.reactions) {
-    Object.entries(d.reactions).forEach(([emoji, listaIniciais]) => {
-      if (listaIniciais.length > 0) {
-        const pill = document.createElement('div');
-        pill.className = 'reaction-pill';
-        pill.textContent = `${emoji} ${listaIniciais.length}`;
-        pill.addEventListener('click', (e) => {
-          e.stopPropagation();
-          adicionarReacao(id, emoji, d.reactions);
-        });
-        reactRow.appendChild(pill);
-      }
-    });
+  m.addEventListener('click', e => {
+    if(e.target.tagName==='VIDEO' || e.target.tagName==='AUDIO' || e.target.tagName==='IMG') return;
+    openMenuMsg(id, d, isMe);
+  });
+  return m;
+}
+
+function openMenuMsg(id, d, isMe){
+  const opt = isMe ? ["Responder", "Editar", "Apagar"] : ["Responder", "Reagir"];
+  const escolha = prompt(`Escolha uma ação:\n${opt.join(" | ")}`);
+  if(!escolha) return;
+  const acao = escolha.toLowerCase().trim();
+
+  if(acao==='responder'){
+    replyId = id; editId = null;
+    document.getElementById('info-bar').style.display='flex';
+    document.getElementById('info-title').textContent = `Respondendo a @${d.nick}`;
+    document.getElementById('info-text').textContent = d.text || '[Mídia]';
+    document.getElementById('reply-cancel').style.display='block';
+    document.getElementById('edit-cancel').style.display='none';
+    document.getElementById('msg-input').focus();
+  } else if(acao==='editar' && isMe){
+    editId = id; replyId = null;
+    document.getElementById('info-bar').style.display='flex';
+    document.getElementById('info-title').textContent = "Editando sua mensagem";
+    document.getElementById('info-text').textContent = d.text;
+    document.getElementById('edit-cancel').style.display='block';
+    document.getElementById('reply-cancel').style.display='none';
+    document.getElementById('msg-input').value = d.text;
+    document.getElementById('msg-input').focus();
+  } else if(acao==='apagar' && isMe){
+    if(confirm("Apagar esta mensagem?")) updateDoc(doc(db, "mensagens", id), { isDeleted: true });
+  } else if(acao==='reagir' && !isMe){
+    const r = prompt("Digite um emoji para reagir:");
+    if(r) addDoc(COL, { userId: meuId, nick: nick, fullname: fullname, text: r, timestamp: Date.now(), replyTo: { nick: d.nick, text: d.text } });
   }
-
-  // Ao clicar na própria mensagem, abre estritamente as opções de apagar/editar
-  msgDiv.addEventListener('click', () => {
-    if (isMe) {
-      const acao = prompt("Digite 'APAGAR' para remover ou 'EDITAR' para alterar o texto:").toUpperCase();
-      if (acao === 'APAGAR') {
-        updateDoc(doc(db, "mensagens", id), { isDeleted: true, text: "", mediaUrl: null, mediaType: null });
-      } else if (acao === 'EDITAR') {
-        const novoTexto = prompt("Novo texto da mensagem:", d.text);
-        if (novoTexto) updateDoc(doc(db, "mensagens", id), { text: novoTexto });
-      }
-    } else {
-      // Se for mensagem de outro amigo, o clique permite adicionar uma reação por emoji rápido
-      const emojiReacao = prompt("Escolha um emoji para reagir a esta mensagem:");
-      if (emojiReacao) adicionarReacao(id, emojiReacao, d.reactions || {});
-    }
-  });
-
-  return msgDiv;
 }
 
-async function adicionarReacao(msgId, emoji, reacoesAtuais) {
-  const lista = reacoesAtuais[emoji] || [];
-  const idx = lista.indexOf(meuNick);
-  if (idx > -1) {
-    lista.splice(idx, 1);
+window.abrirLbx = function(src, tipo){
+  document.getElementById('lightbox').style.display='flex';
+  if(tipo==='img'){
+    document.getElementById('lbx-video').style.display='none';
+    document.getElementById('lbx-img').style.display='block';
+    document.getElementById('lbx-img').src = src;
   } else {
-    lista.push(meuNick);
-  }
-  reacoesAtuais[emoji] = lista;
-  await updateDoc(doc(db, "mensagens", msgId), { reactions: reacoesAtuais });
-}
-
-// ATIVAÇÃO DO ESCUTADOR DO CHAT
-function iniciarChat() {
-  renderizarGrid();
-  onSnapshot(query(COL, orderBy("timestamp", "asc")), (snap) => {
-    const box = document.getElementById('messages');
-    box.innerHTML = "";
-    snap.forEach(documentoSolo => {
-      box.appendChild(renderizarMensagem(documentoSolo.data(), documentoSolo.id));
-    });
-    box.scrollTop = box.scrollHeight;
-  });
-}
-
-// ENVIO DE TEXTO ORIGINAL
-document.getElementById('send-btn').addEventListener('click', async () => {
-  const inp = document.getElementById('msg-input');
-  const texto = inp.value.trim();
-  if (!texto) return;
-
-  await addDoc(COL, {
-    userId: meuId,
-    nick: meuNick,
-    userColor: minhaCor,
-    avatar: meuAvatar,
-    text: texto,
-    timestamp: Date.now(),
-    reactions: {}
-  });
-  
-  inp.value = "";
-  inp.style.height = "40px";
-  document.getElementById('send-btn').disabled = true;
-});
-
-// Gerenciador de input para habilitar botão de envio
-document.getElementById('msg-input').addEventListener('input', function() {
-  this.style.height = 'auto';
-  this.style.height = this.scrollHeight + 'px';
-  document.getElementById('send-btn').disabled = !this.value.trim();
-});
-
-// Alternador de menu e teclado de emojis
-document.getElementById('emoji-btn').addEventListener('click', () => {
-  const pnl = document.getElementById('emoji-panel');
-  pnl.style.display = pnl.style.display === 'flex' ? 'none' : 'flex';
-});
-
-// Lightbox para mídias nativas completas
-window.abrirLightbox = function(url, tipo) {
-  const lbx = document.getElementById('lightbox');
-  const img = document.getElementById('lbx-img');
-  const vid = document.getElementById('lbx-video');
-  lbx.style.display = 'flex';
-  if(tipo === 'image') {
-    vid.style.display='none'; img.style.display='block'; img.src = url;
-  } else {
-    img.style.display='none'; vid.style.display='block'; vid.src = url; vid.play();
+    document.getElementById('lbx-img').style.display='none';
+    document.getElementById('lbx-video').style.display='block';
+    document.getElementById('lbx-video').src = src;
   }
 };
+
+const msgInput = document.getElementById('msg-input');
+const sendBtn = document.getElementById('send-btn');
+
+msgInput.addEventListener('input', function(){
+  this.style.height = 'auto'; this.style.height = this.scrollHeight + 'px';
+  sendBtn.disabled = !this.value.trim() && !pasteImg;
+});
+
+sendBtn.addEventListener('click', async () => {
+  const txt = msgInput.value.trim();
+  if(!txt && !pasteImg) return;
+
+  let repData = null;
+  if(replyId){
+    const rSnap = await getDocs(query(COL));
+    rSnap.forEach(docu => { if(docu.id === replyId){ repData = { nick: docu.data().nick, text: docu.data().text }; } });
+  }
+
+  if(editId){
+    await updateDoc(doc(db, "mensagens", editId), { text: txt, isEdited: true });
+    cancelEdit();
+  } else {
+    await addDoc(COL, {
+      userId: meuId, nick: nick, fullname: fullname, userColor: userColor, avatar: avatar,
+      text: txt, timestamp: Date.now(),
+      mediaUrl: pasteImg || null, mediaType: pasteImg ? 'image' : null,
+      replyTo: repData
+    });
+    if(pasteImg) cancelPaste();
+    cancelReply();
+  }
+  msgInput.value = ""; msgInput.style.height = "40px"; sendBtn.disabled = true;
+});
+
+function cancelReply(){ replyId = null; document.getElementById('info-bar').style.display='none'; }
+function cancelEdit(){ editId = null; document.getElementById('info-bar').style.display='none'; msgInput.value=""; }
+function cancelPaste(){ pasteImg = null; document.getElementById('paste-preview').style.display='none'; }
+
+function sair(){
+  deleteDoc(doc(db, "presenca", meuId));
+  localStorage.clear();
+  location.reload();
+}
+
+document.getElementById('attach-btn').addEventListener('click', () => document.getElementById('file-hid').click());
+document.getElementById('file-hid').addEventListener('change', function(e){
+  const f = e.target.files[0]; if(!f) return;
+  const reader = new FileReader();
+  reader.onload = async function(evt){
+    const tipo = f.type.startsWith('video/') ? 'video' : 'image';
+    await addDoc(COL, { userId: meuId, nick: nick, fullname: fullname, userColor: userColor, avatar: avatar, text: "", timestamp: Date.now(), mediaUrl: evt.target.result, mediaType: tipo });
+  };
+  reader.readAsDataURL(f);
+});
+
+window.addEventListener('paste', e => {
+  const itens = (e.clipboardData || e.originalEvent.clipboardData).items;
+  for(let i=0; i<itens.length; i++){
+    if(itens[i].type.indexOf('image') !== -1){
+      const blob = itens[i].getAsFile(); const reader = new FileReader();
+      reader.onload = function(evt){
+        pasteImg = evt.target.result;
+        document.getElementById('paste-preview').style.display='flex';
+        document.getElementById('paste-img-thumb').src = pasteImg;
+        sendBtn.disabled = false;
+      };
+      reader.readAsDataURL(blob);
+    }
+  }
+});
+
+document.getElementById('emoji-btn').addEventListener('click', () => {
+  const p = document.getElementById('emoji-panel');
+  p.style.display = p.style.display === 'flex' ? 'none' : 'flex';
+});
+document.getElementById('menu-btn').addEventListener('click', () => document.getElementById('drawer').classList.add('open'));
+document.getElementById('drawer-close').addEventListener('click', () => document.getElementById('drawer').classList.remove('open'));
+document.getElementById('paste-cancel').addEventListener('click', cancelPaste);
+document.getElementById('reply-cancel').addEventListener('click', cancelReply);
+document.getElementById('edit-cancel').addEventListener('click', cancelEdit);
+document.getElementById('sair-btn').addEventListener('click', sair);
+document.getElementById('lightbox').addEventListener('click', () => document.getElementById('lightbox').style.display='none');
+document.getElementById('lbx-close').addEventListener('click', () => document.getElementById('lightbox').style.display='none');
+
+document.getElementById('lock-btn').addEventListener('click', async () => {
+  const senha = prompt('Senha master:'); if(senha !== '220399') return;
+  if(!confirm('Apagar TODAS as mensagens?')) return;
+  const snap = await getDocs(COL); const batch = writeBatch(db);
+  snap.forEach(d => batch.delete(doc(db, 'mensagens', d.id)));
+  await batch.commit(); alert('Histórico limpo!');
+});
+</script>
+<script>
+document.getElementById('menu-btn').addEventListener('click', () => {
+  if(window.initBackgrounds) window.initBackgrounds();
+});
 </script>
 </body>
 </html>
