@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAs7M-I2V5X-XvG2Y8M1W3O_8b4z7Y",
@@ -13,37 +13,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let avatarBase64 = '';
+// --- Lógica de Interação ---
+function inicializarEventos() {
+  const openMenuBtn = document.getElementById('open-menu-btn');
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawer-overlay');
 
-function inicializarApp() {
-  const avatarInput = document.getElementById('avatar-file-input');
-  const avatarTrigger = document.getElementById('avatar-upload-trigger');
-  
-  if(avatarTrigger) {
-    avatarTrigger.addEventListener('click', () => avatarInput.click());
-    avatarInput.addEventListener('change', (e) => {
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        avatarBase64 = ev.target.result;
-        document.getElementById('avatar-status').style.display = 'block';
-      };
-      reader.readAsDataURL(e.target.files[0]);
+  // Abertura e Fechamento do Menu Premium
+  if (openMenuBtn) {
+    openMenuBtn.addEventListener('click', () => {
+      drawer.classList.add('active');
+      overlay.classList.add('active');
     });
   }
 
-  document.getElementById('enter-btn').addEventListener('click', () => {
-    const nome = document.getElementById('nome-real-input').value.trim();
-    const nick = document.getElementById('nick-input').value.trim();
-    if (!nome || !nick) return alert("Preencha Nome e Nick!");
-    localStorage.setItem('chat_nick', nick);
-    localStorage.setItem('chat_nome_real', nome);
-    if(avatarBase64) localStorage.setItem('chat_avatar', avatarBase64);
-    location.reload();
-  });
+  if (overlay) {
+    overlay.addEventListener('click', () => {
+      drawer.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  }
 
+  // Lógica de Login Persistente
+  const loginBtn = document.getElementById('enter-btn');
+  if (loginBtn) {
+    loginBtn.addEventListener('click', () => {
+      const nick = document.getElementById('nick-input').value;
+      if (nick) {
+        localStorage.setItem('chat_nick', nick);
+        location.reload();
+      }
+    });
+  }
+
+  // Verifica estado de autenticação
   if (localStorage.getItem('chat_nick')) {
     document.getElementById('login-screen').style.display = 'none';
   }
 }
 
-document.addEventListener('DOMContentLoaded', inicializarApp);
+document.addEventListener('DOMContentLoaded', inicializarEventos);
