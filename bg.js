@@ -1,16 +1,23 @@
-const BG_IMAGES = {
-    "homer_hedge": "https://pin.it/6PV16AFY9",
-    "bugs_stoned": "https://pin.it/4Hz4bdKkM",
-    "squidward_coffee": "https://pin.it/DqC9a9xk0",
-    "homer_peeking": "https://pin.it/2dfbFRq6R",
-    "bart_peeking": "https://pin.it/6NJXEe9PF",
-    "bart_flashlight": "https://pin.it/10De0hASZ",
-    "mordecai_rigby": "https://pin.it/37szSHRJZ",
-    "rick_morty": "https://pin.it/3m0gi5YFG",
-    "gumball_darwin": "https://pin.it/1GcpWSt1B",
-    "extra_1": "https://pin.it/7CO7pCMsQ",
-    "extra_2": "https://pin.it/6q7FfxSN7"
+// bg.js — Planos de fundo do Chatzão
+window.CHATZAO_BG = [
+  { id: "homer_hedge", label: "Homer (Hedge)", src: "https://pin.it/6PV16AFY9" },
+  { id: "bugs_stoned", label: "Bugs (Stoned)", src: "https://pin.it/4Hz4bdKkM" },
+  { id: "squidward_coffee", label: "Squidward (Coffee)", src: "https://pin.it/DqC9a9xk0" },
+  { id: "homer_peeking", label: "Homer (Peeking)", src: "https://pin.it/2dfbFRq6R" },
+  { id: "bart_peeking", label: "Bart (Bart)", src: "https://pin.it/6NJXEe9PF" },
+  { id: "bart_flashlight", label: "Bart Flashlight", src: "https://pin.it/10De0hASZ" },
+  { id: "mordecai_rigby", label: "Mordecai & Rigby", src: "https://pin.it/37szSHRJZ" },
+  { id: "rick_morty", label: "Rick and Morty", src: "https://pin.it/3m0gi5YFG" },
+  { id: "gumball_darwin", label: "Gumball", src: "https://pin.it/1GcpWSt1B" },
+  { id: "extra_1", label: "Extra 1", src: "https://pin.it/7CO7pCMsQ" },
+  { id: "extra_2", label: "Extra 2", src: "https://pin.it/6q7FfxSN7" }
+];
+
+// Função para buscar a URL do fundo baseada no ID
+window.getBackgroundById = function(id) {
+  const bg = window.CHATZAO_BG.find(item => item.id === id);
+  return bg ? bg.src : null;
 };
 
-// Certifique-se de que o seu código principal acesse este objeto
-window.BG_IMAGES = BG_IMAGES;
+// Exemplo de uso:
+// console.log(getBackgroundById("homer_hedge"));
