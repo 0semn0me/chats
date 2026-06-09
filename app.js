@@ -1,29 +1,31 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, collection, getDocs, writeBatch, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-const firebaseConfig = { /* COLOQUE SUAS CHAVES AQUI */ };
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+// RESET DE SISTEMA: Aponta para a nova coleção
+const db = getFirestore();
+const MSG_COLLECTION = "mensagens_v2";
 
-// 1. Senha Mestre (Conferida)
-document.getElementById('lock-btn').onclick = async () => {
-    const s = prompt('Senha Master:');
-    if (s === 'SUA_SENHA_AQUI') {
-        if (confirm('Limpar histórico?')) {
-            const snap = await getDocs(collection(db, 'mensagens'));
-            const b = writeBatch(db);
-            snap.forEach(d => b.delete(doc(db, 'mensagens', d.id)));
-            await b.commit();
-            location.reload();
-        }
+// Envio com Shift+Enter
+const input = document.getElementById('msg-input');
+input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && e.shiftKey) {
+        e.preventDefault();
+        enviarMensagem();
     }
-};
+});
 
-// 2. Conexão de Eventos (Botões)
-document.getElementById('audio-btn').onclick = () => { /* Iniciar Gravador */ };
-document.getElementById('cam-btn').onclick = () => { /* Iniciar Câmera */ };
-document.getElementById('emoji-btn').onclick = () => { /* Abrir Menu Emojis */ };
-document.getElementById('menu-btn').onclick = () => { /* Menu de Personalização */ };
-document.getElementById('logout-btn').onclick = () => { location.reload(); };
+// Qualidade de Mídia (Nativa)
+async function capturarMidia() {
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+        video: { width: { ideal: 4096 }, height: { ideal: 2160 } }, audio: true 
+    });
+    // ... lógica de processamento mantendo o blob original
+}
 
-console.log("Sistema Chatzão verificado e carregado.");
+// Lógica de Deletar com Animação
+async function deletarMensagem(msgId, element) {
+    element.classList.add('msg-deleted');
+    setTimeout(() => {
+        deleteDoc(doc(db, MSG_COLLECTION, msgId));
+    }, 8000);
+}
