@@ -1,33 +1,29 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getFirestore, collection, getDocs, writeBatch, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAs7M-I2V5X-XvG2Y8M1W3O_8b4z7Y",
-  projectId: "chatz-cb30b",
-  appId: "1:36712398412:web:a62b8b4a7c12f4"
+const firebaseConfig = { /* COLOQUE SUAS CHAVES AQUI */ };
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 1. Senha Mestre (Conferida)
+document.getElementById('lock-btn').onclick = async () => {
+    const s = prompt('Senha Master:');
+    if (s === 'SUA_SENHA_AQUI') {
+        if (confirm('Limpar histórico?')) {
+            const snap = await getDocs(collection(db, 'mensagens'));
+            const b = writeBatch(db);
+            snap.forEach(d => b.delete(doc(db, 'mensagens', d.id)));
+            await b.commit();
+            location.reload();
+        }
+    }
 };
 
-initializeApp(firebaseConfig);
+// 2. Conexão de Eventos (Botões)
+document.getElementById('audio-btn').onclick = () => { /* Iniciar Gravador */ };
+document.getElementById('cam-btn').onclick = () => { /* Iniciar Câmera */ };
+document.getElementById('emoji-btn').onclick = () => { /* Abrir Menu Emojis */ };
+document.getElementById('menu-btn').onclick = () => { /* Menu de Personalização */ };
+document.getElementById('logout-btn').onclick = () => { location.reload(); };
 
-document.addEventListener('DOMContentLoaded', () => {
-  const drawer = document.getElementById('drawer');
-  const overlay = document.getElementById('drawer-overlay');
-  
-  document.getElementById('open-menu-btn').onclick = () => {
-    drawer.classList.add('active');
-    overlay.classList.add('active');
-  };
-
-  overlay.onclick = () => {
-    drawer.classList.remove('active');
-    overlay.classList.remove('active');
-  };
-
-  document.getElementById('enter-btn').onclick = () => {
-    localStorage.setItem('chat_nick', document.getElementById('nick-input').value);
-    location.reload();
-  };
-
-  if(localStorage.getItem('chat_nick')) document.getElementById('login-screen').style.display = 'none';
-  
-  if(typeof injetarPlanosDeFundoNativos === 'function') injetarPlanosDeFundoNativos();
-});
+console.log("Sistema Chatzão verificado e carregado.");
