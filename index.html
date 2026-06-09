@@ -1,30 +1,34 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <title>Chat Amigos</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="app">
-        <header id="top-bar">
-            <button id="menu-btn"><i class="ti ti-menu-2"></i></button>
-            <button id="lock-btn"><i class="ti ti-lock"></i></button>
-            <div id="user-info"></div>
-            <button id="logout-btn"><i class="ti ti-logout"></i></button>
-        </header>
-
-        <main id="messages"></main>
-
-        <footer id="input-area">
-            <button class="btn-tool" id="audio-btn"><i class="ti ti-microphone"></i></button>
-            <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
-            <button class="btn-tool" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
-            <button class="btn-tool" id="cam-btn"><i class="ti ti-camera"></i></button>
-            <button id="send-btn"><i class="ti ti-send"></i></button>
-        </footer>
+        <div id="login">
+            <div class="avatar-pick" id="avatar-pick"><i class="ti ti-camera"></i></div>
+            <input id="fullname-input" placeholder="Nome Completo">
+            <input id="nickname-input" placeholder="Apelido">
+            <button id="enter-btn">Entrar</button>
+        </div>
+        <div id="chat-area" style="display:none;">
+            <header id="topbar">
+                <button id="menu-btn"><i class="ti ti-menu-2"></i></button>
+                <div id="status-pill"><div class="online-dot"></div></div>
+                <button id="logout-btn">Sair</button>
+            </header>
+            <main id="messages"></main>
+            <footer id="inputbar">
+                <button id="audio-btn"><i class="ti ti-microphone"></i></button>
+                <textarea id="msg-input" rows="1" placeholder="Mensagem..."></textarea>
+                <button id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
+                <button id="send-btn"><i class="ti ti-send"></i></button>
+            </footer>
+        </div>
     </div>
     <script type="module" src="app.js"></script>
 </body>
