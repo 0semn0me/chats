@@ -1,17 +1,16 @@
-window.CHATZAO_BG = [
-  { id: "bg-01", label: "Padrao", src: "none" }
-];
-
-window.injetarPlanosDeFundoNativos = () => {
-  const container = document.getElementById('drawer-bg-list');
-  if(!container) return;
-  container.innerHTML = '';
-  window.CHATZAO_BG.forEach(bg => {
-    const btn = document.createElement('button');
-    btn.innerText = bg.label;
-    btn.style.display = 'block';
-    btn.style.width = '100%';
-    btn.onclick = () => document.body.style.backgroundImage = bg.src !== "none" ? `url(${bg.src})` : 'none';
-    container.appendChild(btn);
-  });
+const BG_IMAGES = {
+    "homer_hedge": "https://pin.it/6PV16AFY9",
+    "bugs_stoned": "https://pin.it/4Hz4bdKkM",
+    "squidward_coffee": "https://pin.it/DqC9a9xk0",
+    "homer_peeking": "https://pin.it/2dfbFRq6R",
+    "bart_peeking": "https://pin.it/6NJXEe9PF",
+    "bart_flashlight": "https://pin.it/10De0hASZ",
+    "mordecai_rigby": "https://pin.it/37szSHRJZ",
+    "rick_morty": "https://pin.it/3m0gi5YFG",
+    "gumball_darwin": "https://pin.it/1GcpWSt1B",
+    "extra_1": "https://pin.it/7CO7pCMsQ",
+    "extra_2": "https://pin.it/6q7FfxSN7"
 };
+
+// Certifique-se de que o seu código principal acesse este objeto
+window.BG_IMAGES = BG_IMAGES;
