@@ -1,55 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Premium Friends Club</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chatzão</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="app">
+        <header id="top-bar">
+            <button id="menu-btn"><i class="ti ti-menu-2"></i></button>
+            <button id="lock-btn"><i class="ti ti-lock"></i></button>
+            <div id="user-info"></div>
+            <button id="logout-btn"><i class="ti ti-logout"></i></button>
+        </header>
 
-  <div id="login-screen">
-    <div class="login-card">
-      <div class="login-logo">Chatzão</div>
-      <div class="input-group">
-        <label class="label-field">Nome de Exibição</label>
-        <input type="text" id="nome-real-input" class="input-field" placeholder="Ex: João Silva">
-      </div>
-      <div class="input-group">
-        <label class="label-field">Identificador (@nick)</label>
-        <input type="text" id="nick-input" class="input-field" placeholder="Ex: joaosilva">
-      </div>
-      <button id="enter-btn" class="login-btn">Entrar no Clube</button>
-    </div>
-  </div>
+        <main id="messages"></main>
 
-  <div id="app">
-    <div id="drawer-overlay"></div>
-    <div id="drawer">
-        <div id="drawer-bg-list"></div>
+        <footer id="input-area">
+            <button class="btn-tool" id="audio-btn"><i class="ti ti-microphone"></i></button>
+            <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
+            <button class="btn-tool" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
+            <button class="btn-tool" id="cam-btn"><i class="ti ti-camera"></i></button>
+            <button id="send-btn"><i class="ti ti-send"></i></button>
+        </footer>
     </div>
-    
-    <div id="header">
-      <button id="open-menu-btn" class="bar-icon"><i class="ti ti-menu-2"></i></button>
-      <span class="room-title">Chatzão</span>
-      <button id="sair-btn" class="bar-icon"><i class="ti ti-logout"></i></button>
-    </div>
-    
-    <div id="chat-container"></div>
-    
-    <div id="bar-panels">
-      <div id="input-bar">
-        <textarea id="full-input" placeholder="Mensagem..." rows="1"></textarea>
-        <button id="emoji-toggle-btn" class="bar-icon"><i class="ti ti-mood-smile"></i></button>
-        <button id="img-btn" class="bar-icon"><i class="ti ti-photo"></i></button>
-        <button id="mic-btn" class="bar-icon"><i class="ti ti-microphone"></i></button>
-        <button id="send-btn"><i class="ti ti-send"></i></button>
-      </div>
-    </div>
-  </div>
-
-  <script src="bg.js"></script>
-  <script type="module" src="app.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
