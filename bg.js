@@ -1,3 +1,4 @@
-// bg.js - Chatzão backgrounds
-// Para adicionar imagens: rode setup_chatzao.py no PC com as fotos originais
-const BG_B64 = {};
+window.CHATZAO_BG = {
+    anime: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    neon: "linear-gradient(to right, #0f0c29, #302b63, #24243e)"
+};
