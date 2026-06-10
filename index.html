@@ -11,92 +11,83 @@
       --font-sans:system-ui,-apple-system,sans-serif;
       --border-radius-md:8px;
       --border-radius-lg:12px;
-      --theme-primary: #F4D03F; /* Amarelo original do Chatzão */
+      --theme-primary: #F4D03F; /* Amarelo premium original */
       --theme-text: #000000;
       --bg-dark: #0e0e0e;
       --bg-panel: #161616;
     }
     html,body{height:100%;height:100dvh;background:var(--bg-dark);overflow:hidden;}
     body{display:flex;flex-direction:column;}
-    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:var(--bg-dark);overflow:hidden}
+    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:var(--bg-dark);overflow:hidden;transition: background 0.3s ease;}
     
-    /* Login Screen */
+    /* Login */
     #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:var(--bg-dark)}
-    #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
+    #login h2{font-size:22px;font-weight:600;color:#fff;text-align:center;letter-spacing:0.5px}
     #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
-    #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
+    #login input{width:260px;font-size:15px;padding:12px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
     #login input:focus{box-shadow:0 0 0 2px rgba(244,208,63,0.33)}
-    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
-    #login button:hover{opacity:0.9}
-    #login .err{font-size:13px;color:#E24B4A;display:none}
+    #login button{width:260px;padding:12px;font-size:15px;font-weight:600;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
     
-    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
-    .avatar-pick:hover{border-color:var(--theme-primary)}
-    .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-    .av-icon{font-size:24px;color:#555;pointer-events:none}
+    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+    .avatar-pick img{width:100%;height:100%;object-fit:cover}
     .login-row{display:flex;align-items:center;gap:14px;width:260px}
     
-    /* Chat Main Area */
-    #chat-area{display:none;flex-direction:column;height:100%;background:var(--bg-dark)}
+    /* Chat Area */
+    #chat-area{display:none;flex-direction:column;height:100%;background:transparent}
     
     /* Topbar Premium */
-    #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:var(--bg-panel)}
-    #topbar .left-actions{display:flex;align-items:center;gap:12px}
-    #topbar .btn-menu{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center}
-    #topbar .btn-lock-clear{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;display:inline-flex;align-items:center}
-    #topbar .right{display:flex;align-items:center;gap:12px}
-    #topbar .me{font-size:13px;color:#eee;display:flex;align-items:center;gap:8px;font-weight:500}
-    #topbar .sub-me{font-size:11px;color:#888;display:block}
-    #topbar .online-dot{width:8px;height:8px;background:#1D9E75;border-radius:50%;display:inline-block}
-    #topbar .btn-logout{background:none;border:none;color:#aaa;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;border:0.5px solid #333;padding:4px 10px;border-radius:6px}
-    #topbar .btn-logout:hover{color:#E24B4A}
+    #topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid #222;flex-shrink:0;background:var(--bg-panel)}
+    #topbar .left-actions{display:flex;align-items:center;gap:16px}
+    #topbar .btn-menu{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center}
+    #topbar .btn-lock-clear{background:none;border:none;color:#555;cursor:pointer;font-size:18px;display:inline-flex;align-items:center}
+    #topbar .right{display:flex;align-items:center}
+    #topbar .me{font-size:14px;color:#eee;display:flex;align-items:center;font-weight:600;text-align:right}
+    #topbar .sub-me{font-size:11px;color:#888;display:block;font-weight:400}
+    #topbar .online-dot{width:8px;height:8px;background:#1D9E75;border-radius:50%;margin-left:10px}
+    #topbar .btn-logout{background:none;border:0.5px solid #333;color:#aaa;cursor:pointer;font-size:13px;padding:6px 12px;border-radius:6px;margin-left:14px;font-weight:500}
     
-    /* Messages Stream */
-    #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+    /* Stream */
+    #messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0}
     #messages::-webkit-scrollbar{width:4px}
     #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
     
-    .msg{display:flex;flex-direction:column;gap:2px;max-width:80%;position:relative}
+    .msg{display:flex;flex-direction:column;max-width:75%}
     .msg.mine{align-self:flex-end;align-items:flex-end}
     .msg.theirs{align-self:flex-start;align-items:flex-start}
-    .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
-    .mine .bubble-wrapper{flex-direction:row-reverse}
     
-    .bubble{padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.5;word-break:break-word;position:relative;white-space:pre-wrap}
-    .mine .bubble{background:#262626;color:#fff;border-bottom-right-radius:3px}
-    .theirs .bubble{background:#1c1c1e;color:#fff;border-bottom-left-radius:3px}
+    .bubble{padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.4;word-break:break-word;white-space:pre-wrap}
+    .mine .bubble{background:#262626;color:#fff;border-bottom-right-radius:4px}
+    .theirs .bubble{background:#1c1c1e;color:#fff;border-bottom-left-radius:4px}
     
-    .senders{display:flex;align-items:center;gap:5px;margin-bottom:2px;font-size:11px;color:#888}
-    .meta{font-size:10px;color:#555;padding:2px 4px}
+    .senders{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:12px;color:#888}
+    .meta{font-size:10px;color:#555;margin-top:4px;padding:0 4px}
     
-    /* Input Control Bar */
-    #inputbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-panel);border-top:0.5px solid #222;flex-shrink:0}
-    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:9px 14px;font-size:14px;color:#fff;outline:none;resize:none;max-height:100px;font-family:var(--font-sans);line-height:1.4}
+    /* Input Bar com Botões Amarelos Separados */
+    #inputbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-panel);border-top:0.5px solid #222;flex-shrink:0}
+    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:24px;padding:10px 16px;font-size:15px;color:#fff;outline:none;resize:none;max-height:90px;font-family:var(--font-sans)}
     
-    .btn-icon{background:none;border:none;color:var(--theme-primary);font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.1s;flex-shrink:0}
-    .btn-icon:hover{background:#2a2a2a}
+    .btn-icon-yellow{background:none;border:none;color:var(--theme-primary);font-size:22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:transform 0.1s}
+    .btn-icon-yellow:active{transform:scale(0.9)}
     
-    #send-btn{background:var(--theme-primary);border:none;color:var(--theme-text);width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
+    #send-btn-yellow{background:var(--theme-primary);border:none;color:var(--theme-text);width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:transform 0.1s}
+    #send-btn-yellow:active{transform:scale(0.9)}
     
-    /* Theme Modal Customizer Overlay */
-    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
+    /* Modal Modernizado */
+    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
     #color-modal-overlay.open{display:flex}
-    #color-modal{background:#111;border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,0.7)}
-    .cm-handle{width:40px;height:4px;background:#333;border-radius:2px;margin:0 auto 16px}
-    .cm-section-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;margin-top:10px}
+    #color-modal{background:#121212;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;box-shadow:0 -10px 40px rgba(0,0,0,0.8);border-top:1px solid #222}
+    .cm-handle{width:36px;height:4px;background:#333;border-radius:2px;margin:0 auto 20px}
+    .cm-section-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;margin-top:8px}
     
-    /* Color Spectrum picker elements */
-    #color-canvas{width:100%;height:120px;border-radius:10px;cursor:crosshair;background:linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, #f00);display:none}
-    .cm-hue-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:24px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
-    .cm-preview{width:36px;height:36px;border-radius:50%;border:2px solid #444;background:var(--theme-primary)}
-    .cm-btn-apply-color{width:100%;padding:12px;background:var(--theme-primary);color:var(--theme-text);border:none;border-radius:12px;font-weight:bold;font-size:14px;cursor:pointer;margin-bottom:24px}
+    .cm-hue-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:20px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+    .cm-preview{width:32px;height:32px;border-radius:50%;border:2px solid #333;background:var(--theme-primary)}
+    .cm-btn-apply-color{width:100%;padding:14px;background:var(--theme-primary);color:var(--theme-text);border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:20px}
     
-    /* Background Grid Cards */
-    .bg-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:20px}
-    .bg-card{background:#1c1c1e;border:2px solid transparent;border-radius:12px;padding:35px 10px;text-align:center;cursor:pointer;color:#888;font-size:12px;font-weight:500;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-    .bg-card.active{border-color:var(--theme-primary);color:#fff;background:#262626}
-    .bg-card-icon{width:20px;height:20px;border-radius:4px;background:#333}
+    .bg-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:12px}
+    .bg-card{background:#1a1a1c;border:2px solid transparent;border-radius:14px;padding:30px 8px;text-align:center;cursor:pointer;color:#777;font-size:13px;font-weight:600;transition:all 0.2s}
+    .bg-card.active{border-color:var(--theme-primary);color:#fff;background:#222}
+    .bg-card-icon{width:22px;height:22px;border-radius:6px;margin:0 auto 10px}
   </style>
 </head>
 <body>
@@ -104,15 +95,15 @@
   <div id="app">
     <div id="login">
       <h2>💬 Chatzão</h2>
-      <p>Nome ou Apelido</p>
+      <p>Escolha seu Apelido para Entrar</p>
       <div class="login-row">
         <div class="avatar-pick" id="avatar-pick">
-          <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Chatzao" alt="Avatar">
+          <img id="avatar-img" src="https://api.dicebear.com/7.x/adventurer/svg?seed=ChatzaoDefault" alt="Avatar">
         </div>
         <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-          <input id="name-input" type="text" placeholder="Seu nome..." maxlength="30"/>
-          <div id="login-error" class="err">Por favor, digite um nome válido.</div>
-          <button id="enter-btn">Entrar no chat</button>
+          <input id="name-input" type="text" placeholder="Seu nome..." maxlength="25"/>
+          <div id="login-error" class="err" style="font-size:12px;color:#ff4a4a;display:none;">Insira um nome válido.</div>
+          <button id="enter-btn">Entrar no Chat</button>
         </div>
       </div>
     </div>
@@ -121,31 +112,31 @@
       <div id="topbar">
         <div class="left-actions">
           <button class="btn-menu" id="open-menu-btn"><i class="ti ti-menu-2"></i></button>
-          <button class="btn-lock-clear" id="lock-clear-btn" style="margin-left: 8px;"><i class="ti ti-lock"></i></button>
+          <button class="btn-lock-clear" id="lock-clear-btn"><i class="ti ti-lock"></i></button>
         </div>
         <div class="right">
           <div class="me">
-            <div style="text-align: right;">
-              <span id="my-name-display">CRARO da OI</span>
-              <span class="sub-me" id="my-sub-display">Usuário</span>
+            <div>
+              <span id="my-name-display">Carregando...</span>
+              <span class="sub-me" id="my-sub-display">Online</span>
             </div>
-            <div class="avatar" style="width:32px; height:32px; border-radius:50%; overflow:hidden; background:#222; margin-left:8px;">
-              <img id="my-topbar-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Chatzao" style="width:100%; height:100%; object-fit:cover;">
+            <div style="width:34px; height:34px; border-radius:50%; overflow:hidden; background:#222; margin-left:10px; border: 1.5px solid var(--theme-primary);">
+              <img id="my-topbar-avatar" src="" style="width:100%; height:100%; object-fit:cover;">
             </div>
-            <span class="online-dot" style="margin-left: 8px;"></span>
+            <span class="online-dot"></span>
           </div>
-          <button class="btn-logout" id="logout-btn" style="margin-left: 12px;">Sair</button>
+          <button class="btn-logout" id="logout-btn">Sair</button>
         </div>
       </div>
       
       <div id="messages"></div>
       
       <div id="inputbar">
-        <button class="btn-icon" id="audio-btn"><i class="ti ti-microphone"></i></button>
+        <button class="btn-icon-yellow" id="audio-btn"><i class="ti ti-microphone"></i></button>
         <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
-        <button class="btn-icon" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
-        <button class="btn-icon" id="camera-btn"><i class="ti ti-camera"></i></button>
-        <button id="send-btn"><i class="ti ti-brand-telegram"></i></button>
+        <button class="btn-icon-yellow" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
+        <button class="btn-icon-yellow" id="camera-btn"><i class="ti ti-camera"></i></button>
+        <button id="send-btn-yellow"><i class="ti ti-brand-telegram"></i></button>
       </div>
     </div>
   </div>
@@ -164,28 +155,22 @@
       <div class="cm-section-title">🖼️ Plano de Fundo</div>
       <div class="bg-grid">
         <div class="bg-card active" data-bg="padrao">
-          <div class="bg-card-icon" style="background: #0e0e0e;"></div>
-          Padrão
+          <div class="bg-card-icon" style="background: #0e0e0e;"></div>Padrão
         </div>
         <div class="bg-card" data-bg="patrick">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
-          Patrick
+          <div class="bg-card-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>Patrick
         </div>
         <div class="bg-card" data-bg="lula">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"></div>
-          Lula Molusco
+          <div class="bg-card-icon" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"></div>Lula
         </div>
         <div class="bg-card" data-bg="bugs">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);"></div>
-          Bugs Bunny
+          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);"></div>Bugs
         </div>
         <div class="bg-card" data-bg="homer">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);"></div>
-          Homer
+          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);"></div>Homer
         </div>
         <div class="bg-card" data-bg="marge">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);"></div>
-          Marge
+          <div class="bg-card-icon" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);"></div>Marge
         </div>
       </div>
     </div>
@@ -212,13 +197,12 @@
     window.orderBy = orderBy;
     window.onSnapshot = onSnapshot;
     window.FirebasePronto = true;
-    console.log("Chatzão: Firebase Carregado com Sucesso.");
   </script>
 
   <script src="bg.js"></script>
 
   <script>
-    let usuarioAtual = "CRARO da OI";
+    let usuarioAtual = "";
     let seedAvatar = Math.random().toString(36).substring(7);
 
     function init() {
@@ -227,12 +211,9 @@
       const enterBtn = document.getElementById('enter-btn');
       const nameInput = document.getElementById('name-input');
       const loginError = document.getElementById('login-error');
-      const sendBtn = document.getElementById('send-btn');
+      const sendBtn = document.getElementById('send-btn-yellow');
       const msgInput = document.getElementById('msg-input');
       const messagesContainer = document.getElementById('messages');
-      const myNameDisplay = document.getElementById('my-name-display');
-      const mySubDisplay = document.getElementById('my-sub-display');
-      const logoutBtn = document.getElementById('logout-btn');
       
       const openMenuBtn = document.getElementById('open-menu-btn');
       const colorModal = document.getElementById('color-modal-overlay');
@@ -241,10 +222,16 @@
       const applyColorBtn = document.getElementById('apply-color-btn');
       const bgCards = document.querySelectorAll('.bg-card');
 
-      // Randomize login avatar look
+      // Gera avatar do login
       document.getElementById('avatar-img').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
 
-      // 1. Logic for handling Login
+      // Gerenciar cliques de funções extras para expansão futura
+      document.getElementById('audio-btn').addEventListener('click', () => alert('🎙️ Função de Áudio iniciada!'));
+      document.getElementById('emoji-btn').addEventListener('click', () => alert('😃 Menu de Emojis aberto!'));
+      document.getElementById('camera-btn').addEventListener('click', () => alert('📸 Câmera ativada!'));
+      document.getElementById('lock-clear-btn').addEventListener('click', () => alert('🔒 Chat seguro de ponta a ponta.'));
+
+      // Evento de Entrada
       enterBtn.addEventListener('click', () => {
         const nome = nameInput.value.trim();
         if (nome.length < 2) {
@@ -254,8 +241,7 @@
         loginError.style.display = 'none';
         usuarioAtual = nome;
         
-        myNameDisplay.textContent = nome;
-        mySubDisplay.textContent = "Online";
+        document.getElementById('my-name-display').textContent = nome;
         document.getElementById('my-topbar-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
         
         loginDiv.style.display = 'none';
@@ -264,11 +250,7 @@
         conectarChatRealtime();
       });
 
-      nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') enterBtn.click();
-      });
-
-      // 2. Logic for sending Chat Text Messages
+      // Enviar Mensagem
       async function enviarMensagem() {
         const texto = msgInput.value.trim();
         if (!texto) return;
@@ -283,9 +265,7 @@
               timestamp: Date.now()
             });
           }
-        } catch (erro) {
-          console.error("Erro ao enviar mensagem: ", erro);
-        }
+        } catch (e) { console.error(e); }
       }
 
       sendBtn.addEventListener('click', enviarMensagem);
@@ -296,72 +276,47 @@
         }
       });
 
-      // 3. Realtime Messaging Listener from Firestore
+      // Firebase Sync
       function conectarChatRealtime() {
         if (!window.FirebasePronto) return;
-
-        const q = window.query(
-          window.collection(window.db, "mensagens"),
-          window.orderBy("timestamp", "asc")
-        );
+        const q = window.query(window.collection(window.db, "mensagens"), window.orderBy("timestamp", "asc"));
 
         window.onSnapshot(q, (snapshot) => {
           messagesContainer.innerHTML = "";
-          
           snapshot.forEach((docSnap) => {
             const dados = docSnap.data();
             const ehMinha = dados.usuario === usuarioAtual;
             const msgSeed = dados.seed || "default";
+            const hora = dados.timestamp ? new Date(dados.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
             
             const msgDiv = document.createElement('div');
             msgDiv.className = `msg ${ehMinha ? 'mine' : 'theirs'}`;
-            
-            const hora = dados.timestamp ? new Date(dados.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-            
             msgDiv.innerHTML = `
-              ${!ehMinha ? `
-                <div class="senders">
-                  <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${msgSeed}" style="width:16px;height:16px;border-radius:50%;">
-                  <span>${dados.usuario}</span>
-                </div>` : ''}
-              <div class="bubble-wrapper">
-                <div class="bubble">${dados.texto}</div>
-              </div>
+              ${!ehMinha ? `<div class="senders"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${msgSeed}" style="width:16px;height:16px;border-radius:50%;"><span>${dados.usuario}</span></div>` : ''}
+              <div class="bubble">${dados.texto}</div>
               <div class="meta">${hora}</div>
             `;
-            
             messagesContainer.appendChild(msgDiv);
           });
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
       }
 
-      // 4. Modal Theme Picker Panel Triggers
-      openMenuBtn.addEventListener('click', () => {
-        colorModal.classList.add('open');
-      });
-
-      colorModal.addEventListener('click', (e) => {
-        if (e.target === colorModal) colorModal.classList.remove('open');
-      });
-
-      hueSlider.addEventListener('input', () => {
-        const hslColor = `hsl(${hueSlider.value}, 85%, 60%)`;
-        colorPreview.style.backgroundColor = hslColor;
-      });
-
+      // Modal e Fundos
+      openMenuBtn.addEventListener('click', () => colorModal.classList.add('open'));
+      colorModal.addEventListener('click', (e) => { if (e.target === colorModal) colorModal.classList.remove('open'); });
+      hueSlider.addEventListener('input', () => { colorPreview.style.backgroundColor = `hsl(${hueSlider.value}, 85%, 60%)`; });
+      
       applyColorBtn.addEventListener('click', () => {
         const chosenHsl = `hsl(${hueSlider.value}, 85%, 60%)`;
         document.documentElement.style.setProperty('--theme-primary', chosenHsl);
         colorModal.classList.remove('open');
       });
 
-      // Background Selector Control
       bgCards.forEach(card => {
         card.addEventListener('click', () => {
           bgCards.forEach(c => c.classList.remove('active'));
           card.classList.add('active');
-          
           const bgKey = card.getAttribute('data-bg');
           let finalBg = "#0e0e0e";
           
@@ -372,21 +327,16 @@
           else if (bgKey === "marge") finalBg = "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)";
           
           document.getElementById('app').style.background = finalBg;
-          loginDiv.style.background = "transparent";
-          chatAreaDiv.style.background = "transparent";
         });
       });
 
-      logoutBtn.addEventListener('click', () => {
+      document.getElementById('logout-btn').addEventListener('click', () => {
         chatAreaDiv.style.display = 'none';
         loginDiv.style.display = 'flex';
-        nameInput.value = "";
       });
     }
 
-    window.addEventListener('load', () => {
-      setTimeout(init, 150);
-    });
+    window.addEventListener('load', () => setTimeout(init, 100));
   </script>
 </body>
 </html>
