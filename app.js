@@ -1,14 +1,22 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-const firebaseConfig = { /* Sua config aqui */ };
+// --- ATENÇÃO: COLE SUAS CONFIGURAÇÕES ABAIXO ---
+const firebaseConfig = {
+    apiKey: "SUA_API_KEY",
+    authDomain: "SEU_PROJETO.firebaseapp.com",
+    projectId: "SEU_PROJETO_ID",
+    storageBucket: "SEU_PROJETO.appspot.com",
+    messagingSenderId: "SEU_ID",
+    appId: "SEU_APP_ID"
+};
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-let currentUser = { name: '', nick: '' };
-
-// Evento de envio com Enter (pula linha com Shift)
-document.getElementById('msg-input').addEventListener('keydown', (e) => {
+// Lógica de Envio
+const msgInput = document.getElementById('msg-input');
+msgInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         enviarMensagem();
@@ -16,31 +24,19 @@ document.getElementById('msg-input').addEventListener('keydown', (e) => {
 });
 
 async function enviarMensagem() {
-    const input = document.getElementById('msg-input');
-    if (!input.value.trim()) return;
-
+    const text = msgInput.value.trim();
+    if (!text) return;
     await addDoc(collection(db, "conversas_v2"), {
-        text: input.value,
-        sender: currentUser.nick,
-        realName: currentUser.name,
+        text: text,
+        sender: document.getElementById('nick-name').value,
         timestamp: Date.now()
     });
-    input.value = '';
+    msgInput.value = '';
 }
 
-// Lógica de Deletar com Animação
-async function deletarMensagem(msgId, element) {
-    element.classList.add('deleting-animation');
-    
-    // Espera 8 segundos antes de remover do Firebase
-    setTimeout(async () => {
-        await deleteDoc(doc(db, "conversas_v2", msgId));
-    }, 8000);
-}
-
-// UI: Indicador de conexão flutuante
-document.getElementById('connection-indicator').addEventListener('click', () => {
-    alert("Lista de usuários online (em breve)");
+document.getElementById('btn-login').addEventListener('click', () => {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('chat-screen').style.display = 'flex';
 });
 
-console.log("Sistema Chatzão V2 carregado.");
+console.log("Chatzão V2 pronto e configurado.");
