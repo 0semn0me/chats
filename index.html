@@ -1,65 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatzão</title>
-    <style>
-        /* COLE AQUI O SEU CSS COMPLETO */
-        /* Certifique-se de que não faltou nenhuma chave '}' */
-        
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>Chatzão</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    /* CSS INTEGRADO - NÃO ALTERAR A ESTRUTURA */
+    :root{--font-sans:system-ui,-apple-system,sans-serif;--theme-primary: #E24B4A;--theme-text: #ffffff;--bg: #0e0e0e;}
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden;font-family:var(--font-sans)}
+    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;overflow:hidden}
+    
+    /* LOGIN E CHAT STYLES */
+    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem}
+    #chat-area{display:none;flex-direction:column;height:100%}
+    /* (Mantenha aqui todo o seu CSS original de layout) */
+  </style>
 </head>
 <body>
 
-    <div id="app">
-        </div>
+<div id="app">
+  <div id="login">...</div>
+  <div id="chat-area">...</div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, writeBatch, getDocs, deleteDoc, arrayUnion, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, writeBatch, getDocs, deleteDoc, arrayUnion, limit } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-            authDomain: "chatzao-a27ed.firebaseapp.com",
-            projectId: "chatzao-a27ed",
-            storageBucket: "chatzao-a27ed.firebasestorage.app",
-            messagingSenderId: "923740068926",
-            appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
-        };
+  const firebaseConfig = {
+    apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
+    authDomain: "chatzao-a27ed.firebaseapp.com",
+    projectId: "chatzao-a27ed",
+    storageBucket: "chatzao-a27ed.firebasestorage.app",
+    messagingSenderId: "923740068926",
+    appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        
-        // Fixando no escopo global para o seu código antigo funcionar
-        window.db = getFirestore(app);
-        window.collection = collection;
-        window.addDoc = addDoc;
-        window.updateDoc = updateDoc;
-        window.doc = doc;
-        window.query = query;
-        window.orderBy = orderBy;
-        window.onSnapshot = onSnapshot;
-        window.writeBatch = writeBatch;
-        window.getDocs = getDocs;
-        window.deleteDoc = deleteDoc;
-        window.arrayUnion = arrayUnion;
-        window.limit = limit;
-        
-        console.log("Firebase Global Ancorado");
-    </script>
+  const app = initializeApp(firebaseConfig);
+  window.db = getFirestore(app);
+  window.collection = collection;
+  window.addDoc = addDoc;
+  window.updateDoc = updateDoc;
+  window.doc = doc;
+  window.query = query;
+  window.orderBy = orderBy;
+  window.onSnapshot = onSnapshot;
+  window.writeBatch = writeBatch;
+  window.getDocs = getDocs;
+  window.deleteDoc = deleteDoc;
+  window.arrayUnion = arrayUnion;
+  window.limit = limit;
+  console.log("Firebase pronto");
+</script>
 
-    <script src="bg.js"></script>
+<script>
+  // COLE TODO O SEU CÓDIGO JS AQUI
+  function init() {
+    console.log("Iniciando app...");
+    // Sua lógica de login, chat, etc.
+  }
 
-    <script>
-        // Esta parte garante que o init só rode após tudo estar carregado
-        window.addEventListener('load', () => {
-            if (typeof init === 'function') {
-                init();
-                console.log("Função init() executada com sucesso.");
-            } else {
-                console.error("ERRO: A função init() não foi encontrada. Verifique se ela existe no seu arquivo bg.js ou se há erros de sintaxe lá.");
-            }
-        });
-    </script>
+  // Isso garante que o init rode após a página carregar
+  window.addEventListener('load', () => {
+    init();
+  });
+</script>
+
 </body>
 </html>
