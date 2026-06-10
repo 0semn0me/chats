@@ -1,46 +1,33 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão V2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatzão</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="login-screen">
-        <h2>💬 Chatzão V2</h2>
-        <div class="input-group">
-            <small>Nome real</small>
-            <input type="text" id="real-name" placeholder="Seu nome...">
+        <div class="login-box">
+            <h1>Chatzão</h1>
+            <input type="text" id="real-name" placeholder="Nome real">
+            <input type="text" id="nick-name" class="highlight-input" placeholder="Apelido (Destaque)">
+            <button id="btn-login">Entrar</button>
         </div>
-        <div class="input-group">
-            <small style="color: var(--theme-primary);">Apelido (Destaque)</small>
-            <input type="text" id="nickname" placeholder="Como te chamam?" style="font-weight:bold; border: 2px solid var(--theme-primary);">
-        </div>
-        <button id="btn-enter">Entrar no Chat</button>
     </div>
 
-    <div id="chat-screen" style="display:none;">
+    <div id="chat-screen" style="display: none;">
         <header>
-            <div id="connection-indicator" class="dot"></div>
             <div id="user-info"></div>
             <button id="btn-logout">Sair</button>
         </header>
-
         <div id="messages-container"></div>
-
         <div id="input-area">
-            <button id="btn-audio" class="extra-btn"><i class="ti ti-microphone"></i></button>
+            <button id="btn-audio">🎤</button>
             <textarea id="msg-input" placeholder="Mensagem..."></textarea>
-            <button id="btn-emoji" class="extra-btn"><i class="ti ti-mood-smile"></i></button>
-            <button id="btn-camera" class="extra-btn"><i class="ti ti-camera"></i></button>
-            <button id="btn-send"><i class="ti ti-send"></i></button>
+            <button id="btn-send">➤</button>
         </div>
-
-        <div id="emoji-picker" class="hidden">
-            </div>
     </div>
-
     <script type="module" src="app.js"></script>
 </body>
 </html>
