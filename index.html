@@ -2,15 +2,38 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Chatzão V2 - Conexão</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatzão</title>
+    <style>
+        body { background: #0e0e0e; color: white; font-family: sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; }
+        #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 15px; }
+        #chat-screen { display: none; flex-direction: column; height: 100vh; }
+        input, textarea { padding: 12px; border-radius: 8px; border: 1px solid #444; background: #222; color: white; width: 250px; }
+        button { padding: 10px 20px; background: #F4D03F; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #messages-container { flex: 1; padding: 10px; overflow-y: auto; }
+        #input-area { padding: 10px; display: flex; gap: 5px; background: #1a1a1a; }
+        textarea { flex: 1; }
+    </style>
 </head>
 <body>
-    <h1>Chatzão V2</h1>
-    <p>Verificando conexão com o Firebase...</p>
+
+    <div id="login-screen">
+        <h1>Chatzão</h1>
+        <input type="text" id="nick" placeholder="Seu apelido">
+        <button id="btn-login">Entrar no Chat</button>
+    </div>
+
+    <div id="chat-screen">
+        <div id="messages-container"></div>
+        <div id="input-area">
+            <textarea id="msg-input" placeholder="Digite uma mensagem..."></textarea>
+            <button id="btn-send">Enviar</button>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
         const firebaseConfig = {
             apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
@@ -22,15 +45,31 @@
             appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
         };
 
-        try {
-            const app = initializeApp(firebaseConfig);
-            const db = getFirestore(app);
-            console.log("SUCESSO: Chatzão conectado!");
-            alert("Chatzão conectado com sucesso!");
-        } catch (error) {
-            console.error("Erro na conexão:", error);
-            alert("Erro ao conectar: " + error.message);
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Lógica de Login
+        document.getElementById('btn-login').addEventListener('click', () => {
+            const nick = document.getElementById('nick').value;
+            if(nick) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('chat-screen').style.display = 'flex';
+            }
+        });
+
+        // Lógica de Envio
+        document.getElementById('btn-send').addEventListener('click', async () => {
+            const input = document.getElementById('msg-input');
+            const nick = document.getElementById('nick').value;
+            if (input.value.trim() !== "") {
+                await addDoc(collection(db, "mensagens"), {
+                    texto: input.value,
+                    usuario: nick,
+                    data: Date.now()
+                });
+                input.value = "";
+            }
+        });
     </script>
 </body>
 </html>
