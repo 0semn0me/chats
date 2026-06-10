@@ -6,7 +6,221 @@
   <title>Chatzão - Geral</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
+    *{box-sizing:border-box;margin:0;padding:0}<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>Chatzão - Geral</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    /* SEU CSS ORIGINAL COMPLETO */
     *{box-sizing:border-box;margin:0;padding:0}
+    :root{--font-sans:system-ui,-apple-system,sans-serif;--border-radius-md:8px;--border-radius-lg:12px;--theme-primary: #E24B4A;--theme-text: #ffffff;}
+    html,body{height:100%;height:100dvh;background:#0e0e0e;overflow:hidden;}
+    body{display:flex;flex-direction:column;}
+    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:#0e0e0e;overflow:hidden}
+    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:#0e0e0e}
+    #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
+    #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
+    #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
+    #login input:focus{box-shadow:0 0 0 2px rgba(226,75,74,0.33)}
+    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
+    #login button:hover{opacity:0.9}
+    #login .err{font-size:13px;color:#E24B4A;display:none}
+    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
+    .avatar-pick:hover{border-color:var(--theme-primary)}
+    .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .av-icon{font-size:24px;color:#555;pointer-events:none}
+    .login-row{display:flex;align-items:center;gap:14px;width:260px}
+    #chat-area{display:none;flex-direction:column;height:100%;background:#0e0e0e}
+    #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:#161616}
+    #topbar .title{font-size:15px;font-weight:500;color:#fff;display:flex;align-items:center;gap:6px}
+    #topbar .btn-lock-clear{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;display:inline-flex;align-items:center;padding:4px;transition:color 0.2s;margin-left:4px}
+    #topbar .btn-lock-clear:hover{color:#E24B4A}
+    #topbar .right{display:flex;align-items:center;gap:12px}
+    #topbar .me{font-size:12px;color:#eee;display:flex;align-items:center}
+    #topbar .btn-logout{background:none;border:none;color:#aaa;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;border:0.5px solid #333;padding:4px 10px;border-radius:6px}
+    #topbar .btn-logout:hover{color:#E24B4A}
+    .pill{font-size:12px;color:#fff;background:#1D9E75;padding:4px 14px;border-radius:99px;font-weight:500;display:flex;align-items:center;gap:5px}
+    #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+    #messages::-webkit-scrollbar{width:4px}
+    #messages::-webkit-scrollbar-track{background:transparent}
+    #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
+    .msg{display:flex;flex-direction:column;gap:2px;max-width:80%;position:relative}
+    .msg.mine{align-self:flex-end;align-items:flex-end}
+    .msg.theirs{align-self:flex-start;align-items:flex-start}
+    .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
+    .mine .bubble-wrapper{flex-direction:row-reverse}
+    .bubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative;white-space:pre-wrap}
+    .mine .bubble{border-bottom-right-radius:3px}
+    .theirs .bubble{border-bottom-left-radius:3px}
+    .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
+    .bubble audio{display:block;max-width:240px;outline:none;margin:4px 0}
+    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 10px;display:none;gap:8px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);max-width:280px;overflow-x:auto;white-space:nowrap;align-items:center}
+    .react-menu::-webkit-scrollbar{height:3px}
+    .react-menu::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
+    .mine .react-menu{right:0}
+    .theirs .react-menu{left:0}
+    .bubble-wrapper:hover .react-menu{display:flex}
+    .react-opt{font-size:18px;cursor:pointer;transition:transform 0.1s;padding:0 2px;display:inline-block}
+    .react-opt:hover{transform:scale(1.25)}
+    .msg-action-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:14px;display:inline-flex;align-items:center;justify-content:center;padding:2px 4px;border-radius:4px;transition:background 0.1s}
+    .msg-action-btn:hover{background:#333;color:#fff}
+    .msg-action-btn.btn-del:hover{color:#E24B4A;background:rgba(226,75,74,0.1)}
+    .menu-sep{width:1px;height:14px;background:#444;display:inline-block;margin:0 2px}
+    .reactions-badge{position:absolute;bottom:-10px;background:#1e1e1e;border:0.5px solid #333;border-radius:10px;padding:1px 6px;font-size:12px;display:flex;gap:3px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.3);cursor:help}
+    .mine .reactions-badge{right:8px}
+    .theirs .reactions-badge{left:8px}
+    .react-user-badge{color:#aaa;font-size:10px;margin-left:2px;font-weight:bold}
+    .reply-hint{opacity:0;transition:opacity 0.15s;font-size:14px;color:#555;cursor:pointer}
+    .bubble-wrapper:hover .reply-hint{opacity:1}
+    .reply-hint:hover{color:var(--theme-primary)}
+    .reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:0.85;border-left:3px solid rgba(255,255,255,0.3);width:100%}
+    .meta{font-size:11px;color:#555;padding:2px 4px;display:flex;align-items:center;gap:4px}
+    .edited-tag{font-size:10px;color:#666;font-style:italic}
+    .senders{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+    .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0;overflow:hidden}
+    .avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+    .sys{align-self:center;font-size:11px;color:#555;background:#1a1a1a;padding:2px 12px;border-radius:99px}
+    #reply-bar, #edit-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    .rb-content{flex:1;min-width:0}
+    .rb-name{font-size:12px;font-weight:500;margin-bottom:1px}
+    .rb-text{font-size:12px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .panel-bar-close{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px}
+    .panel-bar-close:hover{color:#aaa}
+    #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
+    .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
+    .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none}
+    .panel-search input:focus{box-shadow:0 0 0 2px rgba(226,75,74,0.33)}
+    .panel-close{background:none;border:none;cursor:pointer;color:#666;font-size:18px;line-height:1;padding:2px 6px}
+    .panel-close:hover{color:#aaa}
+    #sticker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:140px;overflow-y:auto}
+    #sticker-grid span{font-size:26px;cursor:pointer;text-align:center;padding:2px;border-radius:6px;transition:background 0.1s;display:inline-block}
+    #sticker-grid span:hover{background:#2a2a2a}
+    #sticker-grid::-webkit-scrollbar{width:4px}
+    #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
+    #tom-popup{display:none;position:fixed;z-index:500;background:#2a2a2a;border:0.5px solid #444;border-radius:14px;padding:8px;box-shadow:0 6px 20px rgba(0,0,0,0.6);flex-direction:column;gap:4px;align-items:center}
+    #tom-popup.open{display:flex}
+    .tom-pop-btn{width:36px;height:36px;border-radius:50%;border:2px solid transparent;background:#333;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color 0.15s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+    .tom-pop-btn.ativo{border-color:#fff}
+    .tom-pop-btn:hover{background:#444}
+    .sticker-sep{grid-column:1/-1;height:1px;background:#2a2a2a;margin:4px 0}
+    .sticker-sec-label{grid-column:1/-1;font-size:10px;color:#555;letter-spacing:1px;text-transform:uppercase;padding:2px 0}
+    #camera-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0;padding:10px 14px}
+    .camera-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .camera-header span{font-size:13px;color:#aaa;display:flex;align-items:center;gap:4px}
+    .camera-container{position:relative;width:100%;max-width:320px;height:180px;margin:0 auto;background:#000;border-radius:8px;overflow:hidden;border:0.5px solid #333}
+    #camera-video{width:100%;height:100%;object-fit:cover}
+    .camera-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;max-width:320px;margin-left:auto;margin-right:auto}
+    .btn-snap{width:44px;height:44px;border-radius:50%;background:#E24B4A;border:3px solid #fff;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.4);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px}
+    .btn-snap:hover{background:#c0392b}
+    .btn-cam-control{background:none;border:none;color:#888;font-size:20px;cursor:pointer;padding:6px;display:inline-flex;align-items:center;justify-content:center}
+    .btn-cam-control:hover{color:#ccc}
+    #paste-preview, #audio-preview-bar{display:none;align-items:center;gap:8px;padding:6px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
+    #paste-preview img{height:48px;width:48px;object-fit:cover;border-radius:6px;border:0.5px solid #333}
+    #paste-preview span, #audio-preview-bar span{flex:1;font-size:12px;color:#888}
+    #paste-preview button, #audio-preview-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 6px}
+    #paste-preview button:hover, #audio-preview-bar button:hover{color:#aaa}
+    #inputbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0;position:relative}
+    .audio-controls-container{display:flex;align-items:center;position:relative}
+    #audio-float-panel{display:none;position:absolute;left:48px;top:50%;transform:translateY(-50%);background:#222;border:0.5px solid #333;padding:4px 12px;border-radius:20px;align-items:center;gap:10px;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.5);white-space:nowrap}
+    #audio-timer{font-size:13px;color:#fff;font-family:monospace;font-weight:bold}
+    #audio-trash-btn{background:none;border:none;color:#888;cursor:pointer;font-size:14px;display:flex;align-items:center}
+    #audio-trash-btn:hover{color:#E24B4A}
+    .btn-icon{background:none;border:none;color:var(--theme-primary) !important;font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;transition:background 0.1s;flex-shrink:0}
+    .btn-icon:hover, .btn-icon.active{background:#2a2a2a}
+    .btn-icon.recording{background:#c0392b !important;color:#fff !important;animation:pulseAudio 1.5s infinite}
+    .btn-icon.paused{background:#e08a2e !important;color:#fff !important}
+    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:9px 14px;font-size:14px;color:#fff;outline:none;resize:none;max-height:100px;font-family:var(--font-sans);line-height:1.4}
+    #send-btn{background:var(--theme-primary);border:none;color:var(--theme-text);width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0;transition:background 0.1s}
+    #send-btn:hover{opacity:0.9}
+    #send-btn:disabled{background:#333;color:#555;cursor:not-allowed}
+    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px)}
+    #color-modal-overlay.open{display:flex}
+    #color-modal{background:#1a1a1a;border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:480px;box-shadow:0 -8px 30px rgba(0,0,0,0.5)}
+    .cm-handle{width:40px;height:4px;background:#444;border-radius:2px;margin:0 auto 16px}
+    .cm-title{font-size:16px;font-weight:600;color:#fff;text-align:center;margin-bottom:16px;letter-spacing:-0.3px}
+    #color-canvas{width:100%;height:160px;border-radius:10px;cursor:crosshair;touch-action:none;display:block}
+    .cm-hue-row{display:flex;align-items:center;gap:10px;margin-top:14px}
+    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:18px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
+    .cm-preview{width:32px;height:32px;border-radius:50%;border:2px solid #555;flex-shrink:0}
+    .cm-footer{display:flex;gap:10px;margin-top:16px}
+    .cm-btn{flex:1;padding:11px;border-radius:10px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-sans);touch-action:manipulation}
+    .cm-btn-cancel{background:#222;color:#aaa}
+    .cm-btn-apply{background:var(--theme-primary);color:var(--theme-text)}
+    #lightbox{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(5px)}
+    #lightbox img{max-width:100%;max-height:85vh;object-fit:contain;border-radius:8px}
+    #lightbox-close{position:absolute;top:20px;right:20px;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+    @keyframes pulseAudio { 0% {box-shadow: 0 0 0 0 rgba(226,75,74,0.4)} 70% {box-shadow: 0 0 0 8px rgba(226,75,74,0)} 100% {box-shadow: 0 0 0 0 rgba(226,75,74,0)} }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div id="login">
+    <h2>💬 Chatzão</h2>
+    <p>Nome ou Apelido</p>
+    <div class="login-row">
+      <div class="avatar-pick" id="avatar-pick"><i class="ti ti-camera av-icon"></i></div>
+      <div style="display:flex;flex-direction:column;gap:8px;flex:1">
+        <input id="name-input" type="text" placeholder="Seu nome..." maxlength="30"/>
+        <button id="enter-btn" style="width:100%">Entrar no chat</button>
+      </div>
+    </div>
+  </div>
+  
+  <div id="chat-area">
+    <div id="topbar">
+      <span class="title">Chatzão <button class="btn-lock-clear" id="lock-clear-btn"><i class="ti ti-lock"></i></button></span>
+      <div class="right"><button class="btn-logout" id="logout-btn">Sair</button></div>
+    </div>
+    <div id="messages"></div>
+    <div id="inputbar">
+      <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
+      <button id="send-btn"><i class="ti ti-send"></i></button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getFirestore, collection, addDoc, updateDoc, doc, query, orderBy, onSnapshot, writeBatch, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
+    authDomain: "chatzao-a27ed.firebaseapp.com",
+    projectId: "chatzao-a27ed",
+    storageBucket: "chatzao-a27ed.firebasestorage.app",
+    messagingSenderId: "923740068926",
+    appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  // ANCORAGEM GLOBAL PARA O SEU CÓDIGO ANTIGO FUNCIONAR
+  window.db = getFirestore(app);
+  window.collection = collection;
+  window.addDoc = addDoc;
+  window.updateDoc = updateDoc;
+  window.doc = doc;
+  window.query = query;
+  window.orderBy = orderBy;
+  window.onSnapshot = onSnapshot;
+  window.writeBatch = writeBatch;
+  window.getDocs = getDocs;
+</script>
+
+<script>
+  // AQUI VOCÊ COLA O SEU JAVASCRIPT ORIGINAL INTEIRO
+  // (As funções init, renderMsg, entrar, etc.)
+  
+  window.onload = () => {
+      if (typeof init === 'function') init();
+  };
+</script>
+
+</body>
+</html>
     :root{--font-sans:system-ui,-apple-system,sans-serif;--border-radius-md:8px;--theme-primary: #E24B4A;--theme-text: #ffffff;}
     html,body{height:100%;height:100dvh;background:#0e0e0e;overflow:hidden;}
     body{display:flex;flex-direction:column;}
