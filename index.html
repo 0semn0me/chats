@@ -1,337 +1,46 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-  <title>Chatzão - Geral</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --font-sans:system-ui,-apple-system,sans-serif;
-      --border-radius-md:8px;
-      --border-radius-lg:12px;
-      --theme-primary: #F4D03F; 
-      --theme-text: #000000;
-      --bg-dark: #0e0e0e;
-      --bg-panel: #161616;
-    }
-    html,body{height:100%;height:100dvh;background:var(--bg-dark);overflow:hidden;}
-    body{display:flex;flex-direction:column;}
-    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:var(--bg-dark);overflow:hidden;transition: background 0.3s ease;}
-    
-    /* Login */
-    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:var(--bg-dark)}
-    #login h2{font-size:22px;font-weight:600;color:#fff;text-align:center;letter-spacing:0.5px}
-    #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
-    #login input{width:260px;font-size:15px;padding:12px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
-    #login input:focus{box-shadow:0 0 0 2px rgba(244,208,63,0.33)}
-    #login button{width:260px;padding:12px;font-size:15px;font-weight:600;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
-    
-    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
-    .avatar-pick img{width:100%;height:100%;object-fit:cover}
-    .login-row{display:flex;align-items:center;gap:14px;width:260px}
-    
-    /* Chat Area */
-    #chat-area{display:none;flex-direction:column;height:100%;background:transparent}
-    
-    /* Topbar Premium */
-    #topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:0.5px solid #222;flex-shrink:0;background:var(--bg-panel)}
-    #topbar .left-actions{display:flex;align-items:center;gap:16px}
-    #topbar .btn-menu{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center}
-    #topbar .btn-lock-clear{background:none;border:none;color:#555;cursor:pointer;font-size:18px;display:inline-flex;align-items:center}
-    #topbar .right{display:flex;align-items:center}
-    #topbar .me{font-size:14px;color:#eee;display:flex;align-items:center;font-weight:600;text-align:right}
-    #topbar .sub-me{font-size:11px;color:#888;display:block;font-weight:400}
-    #topbar .online-dot{width:8px;height:8px;background:#1D9E75;border-radius:50%;margin-left:10px}
-    #topbar .btn-logout{background:none;border:0.5px solid #333;color:#aaa;cursor:pointer;font-size:13px;padding:6px 12px;border-radius:6px;margin-left:14px;font-weight:500}
-    
-    /* Stream de mensagens */
-    #messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;min-height:0}
-    #messages::-webkit-scrollbar{width:4px}
-    #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
-    
-    .msg{display:flex;flex-direction:column;max-width:75%}
-    .msg.mine{align-self:flex-end;align-items:flex-end}
-    .msg.theirs{align-self:flex-start;align-items:flex-start}
-    
-    .bubble{padding:10px 14px;border-radius:16px;font-size:15px;line-height:1.4;word-break:break-word;white-space:pre-wrap}
-    .mine .bubble{background:#262626;color:#fff;border-bottom-right-radius:4px}
-    .theirs .bubble{background:#1c1c1e;color:#fff;border-bottom-left-radius:4px}
-    
-    .senders{display:flex;align-items:center;gap:6px;margin-bottom:4px;font-size:12px;color:#888}
-    .meta{font-size:10px;color:#555;margin-top:4px;padding:0 4px}
-    
-    /* Barra de Digitação */
-    #inputbar{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--bg-panel);border-top:0.5px solid #222;flex-shrink:0}
-    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:24px;padding:10px 16px;font-size:15px;color:#fff;outline:none;resize:none;max-height:90px;font-family:var(--font-sans)}
-    
-    .btn-icon-yellow{background:none;border:none;color:var(--theme-primary);font-size:22px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;}
-    #send-btn-yellow{background:var(--theme-primary);border:none;color:var(--theme-text);width:40px;height:40px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;}
-    
-    /* Modal de Temas */
-    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(8px)}
-    #color-modal-overlay.open{display:flex}
-    #color-modal{background:#121212;border-radius:24px 24px 0 0;padding:24px;width:100%;max-width:480px;box-shadow:0 -10px 40px rgba(0,0,0,0.8);border-top:1px solid #222}
-    .cm-handle{width:36px;height:4px;background:#333;border-radius:2px;margin:0 auto 20px}
-    .cm-section-title{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:14px;margin-top:8px}
-    
-    .cm-hue-row{display:flex;align-items:center;gap:14px;margin-bottom:16px}
-    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:20px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
-    .cm-preview{width:32px;height:32px;border-radius:50%;border:2px solid #333;background:var(--theme-primary)}
-    .cm-btn-apply-color{width:100%;padding:14px;background:var(--theme-primary);color:var(--theme-text);border:none;border-radius:12px;font-weight:700;font-size:14px;cursor:pointer;margin-bottom:20px}
-    
-    .bg-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:12px}
-    .bg-card{background:#1a1a1c;border:2px solid transparent;border-radius:14px;padding:30px 8px;text-align:center;cursor:pointer;color:#777;font-size:13px;font-weight:600;transition:all 0.2s}
-    .bg-card.active{border-color:var(--theme-primary);color:#fff;background:#222}
-    .bg-card-icon{width:22px;height:22px;border-radius:6px;margin:0 auto 10px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chatzão V2</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <div id="app">
-    <div id="login">
-      <h2>💬 Chatzão</h2>
-      <p>Escolha seu Apelido para Entrar</p>
-      <div class="login-row">
-        <div class="avatar-pick" id="avatar-pick">
-          <img id="avatar-img" src="https://api.dicebear.com/7.x/adventurer/svg?seed=ChatzaoDefault" alt="Avatar">
+    <div id="login-screen">
+        <h2>💬 Chatzão V2</h2>
+        <div class="input-group">
+            <small>Nome real</small>
+            <input type="text" id="real-name" placeholder="Seu nome...">
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-          <input id="name-input" type="text" placeholder="Seu nome..." maxlength="25"/>
-          <div id="login-error" class="err" style="font-size:12px;color:#ff4a4a;display:none;">Insira um nome válido.</div>
-          <button id="enter-btn">Entrar no Chat</button>
+        <div class="input-group">
+            <small style="color: var(--theme-primary);">Apelido (Destaque)</small>
+            <input type="text" id="nickname" placeholder="Como te chamam?" style="font-weight:bold; border: 2px solid var(--theme-primary);">
         </div>
-      </div>
+        <button id="btn-enter">Entrar no Chat</button>
     </div>
-    
-    <div id="chat-area">
-      <div id="topbar">
-        <div class="left-actions">
-          <button class="btn-menu" id="open-menu-btn"><i class="ti ti-menu-2"></i></button>
-          <button class="btn-lock-clear" id="lock-clear-btn"><i class="ti ti-lock"></i></button>
+
+    <div id="chat-screen" style="display:none;">
+        <header>
+            <div id="connection-indicator" class="dot"></div>
+            <div id="user-info"></div>
+            <button id="btn-logout">Sair</button>
+        </header>
+
+        <div id="messages-container"></div>
+
+        <div id="input-area">
+            <button id="btn-audio" class="extra-btn"><i class="ti ti-microphone"></i></button>
+            <textarea id="msg-input" placeholder="Mensagem..."></textarea>
+            <button id="btn-emoji" class="extra-btn"><i class="ti ti-mood-smile"></i></button>
+            <button id="btn-camera" class="extra-btn"><i class="ti ti-camera"></i></button>
+            <button id="btn-send"><i class="ti ti-send"></i></button>
         </div>
-        <div class="right">
-          <div class="me">
-            <div>
-              <span id="my-name-display">Carregando...</span>
-              <span class="sub-me" id="my-sub-display">Online</span>
+
+        <div id="emoji-picker" class="hidden">
             </div>
-            <div style="width:34px; height:34px; border-radius:50%; overflow:hidden; background:#222; margin-left:10px; border: 1.5px solid var(--theme-primary);">
-              <img id="my-topbar-avatar" src="" style="width:100%; height:100%; object-fit:cover;">
-            </div>
-            <span class="online-dot"></span>
-          </div>
-          <button class="btn-logout" id="logout-btn">Sair</button>
-        </div>
-      </div>
-      
-      <div id="messages"></div>
-      
-      <div id="inputbar">
-        <button class="btn-icon-yellow" id="audio-btn"><i class="ti ti-microphone"></i></button>
-        <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
-        <button class="btn-icon-yellow" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
-        <button class="btn-icon-yellow" id="camera-btn"><i class="ti ti-camera"></i></button>
-        <button id="send-btn-yellow"><i class="ti ti-brand-telegram"></i></button>
-      </div>
     </div>
-  </div>
 
-  <div id="color-modal-overlay">
-    <div id="color-modal">
-      <div class="cm-handle"></div>
-      
-      <div class="cm-section-title">🎨 Cor do Tema</div>
-      <div class="cm-hue-row">
-        <input type="range" id="hue-slider" min="0" max="360" value="48">
-        <div class="cm-preview" id="color-preview"></div>
-      </div>
-      <button class="cm-btn-apply-color" id="apply-color-btn">✓ Aplicar Cor</button>
-      
-      <div class="cm-section-title">🖼️ Plano de Fundo</div>
-      <div class="bg-grid">
-        <div class="bg-card active" data-bg="padrao">
-          <div class="bg-card-icon" style="background: #0e0e0e;"></div>Padrão
-        </div>
-        <div class="bg-card" data-bg="patrick">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>Patrick
-        </div>
-        <div class="bg-card" data-bg="lula">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"></div>Lula
-        </div>
-        <div class="bg-card" data-bg="bugs">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);"></div>Bugs
-        </div>
-        <div class="bg-card" data-bg="homer">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);"></div>Homer
-        </div>
-        <div class="bg-card" data-bg="marge">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);"></div>Marge
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-      authDomain: "chatzao-a27ed.firebaseapp.com",
-      projectId: "chatzao-a27ed",
-      storageBucket: "chatzao-a27ed.firebasestorage.app",
-      messagingSenderId: "923740068926",
-      appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    window.db = getFirestore(app);
-    window.collection = collection;
-    window.addDoc = addDoc;
-    window.query = query;
-    window.orderBy = orderBy;
-    window.onSnapshot = onSnapshot;
-    window.FirebasePronto = true;
-
-    if (typeof window.rodarChatzão === 'function') {
-      window.rodarChatzão();
-    }
-  </script>
-
-  <script>
-    let usuarioAtual = "";
-    let seedAvatar = Math.random().toString(36).substring(7);
-
-    window.rodarChatzão = function() {
-      const loginDiv = document.getElementById('login');
-      const chatAreaDiv = document.getElementById('chat-area');
-      const enterBtn = document.getElementById('enter-btn');
-      const nameInput = document.getElementById('name-input');
-      const loginError = document.getElementById('login-error');
-      const sendBtn = document.getElementById('send-btn-yellow');
-      const msgInput = document.getElementById('msg-input');
-      const messagesContainer = document.getElementById('messages');
-      
-      const openMenuBtn = document.getElementById('open-menu-btn');
-      const colorModal = document.getElementById('color-modal-overlay');
-      const hueSlider = document.getElementById('hue-slider');
-      const colorPreview = document.getElementById('color-preview');
-      const applyColorBtn = document.getElementById('apply-color-btn');
-      const bgCards = document.querySelectorAll('.bg-card');
-
-      document.getElementById('avatar-img').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
-
-      enterBtn.addEventListener('click', () => {
-        const nome = nameInput.value.trim();
-        if (nome.length < 2) {
-          loginError.style.display = 'block';
-          return;
-        }
-        loginError.style.display = 'none';
-        usuarioAtual = nome;
-        
-        document.getElementById('my-name-display').textContent = nome;
-        document.getElementById('my-topbar-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
-        
-        loginDiv.style.display = 'none';
-        chatAreaDiv.style.display = 'flex';
-        
-        conectarChatRealtime();
-      });
-
-      // ENVIANDO NA COLEÇÃO "conversas" DO CHAT ANTIGO
-      async function enviarMensagem() {
-        const texto = msgInput.value.trim();
-        if (!texto) return;
-        msgInput.value = "";
-        
-        try {
-          if (window.FirebasePronto) {
-            await window.addDoc(window.collection(window.db, "conversas"), {
-              name: usuarioAtual,       // Nome para o chat antigo ler
-              usuario: usuarioAtual,    // Nome para o chat novo ler
-              text: texto,              // Texto para o chat antigo ler
-              texto: texto,             // Texto para o chat novo ler
-              seed: seedAvatar,
-              timestamp: Date.now()
-            });
-          }
-        } catch (e) { console.error(e); }
-      }
-
-      sendBtn.addEventListener('click', enviarMensagem);
-      msgInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          enviarMensagem();
-        }
-      });
-
-      // SINCRONIZANDO EM TEMPO REAL COM AMBOS OS APPS
-      function conectarChatRealtime() {
-        if (!window.FirebasePronto) return;
-        const q = window.query(window.collection(window.db, "conversas"), window.orderBy("timestamp", "asc"));
-
-        window.onSnapshot(q, (snapshot) => {
-          messagesContainer.innerHTML = "";
-          snapshot.forEach((docSnap) => {
-            const dados = docSnap.data();
-            
-            // Lê dinamicamente independente do modelo do chat antigo ou novo
-            const remetente = dados.usuario || dados.name || dados.user || "Usuário";
-            const textoMensagem = dados.texto || dados.text || dados.message || "";
-            const ehMinha = remetente === usuarioAtual;
-            
-            const msgSeed = dados.seed || remetente;
-            const hora = dados.timestamp ? new Date(dados.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-            
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `msg ${ehMinha ? 'mine' : 'theirs'}`;
-            msgDiv.innerHTML = `
-              ${!ehMinha ? `<div class="senders"><img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${msgSeed}" style="width:16px;height:16px;border-radius:50%;"><span>${remetente}</span></div>` : ''}
-              <div class="bubble">${textoMensagem}</div>
-              <div class="meta">${hora}</div>
-            `;
-            messagesContainer.appendChild(msgDiv);
-          });
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        });
-      }
-
-      openMenuBtn.addEventListener('click', () => colorModal.classList.add('open'));
-      colorModal.addEventListener('click', (e) => { if (e.target === colorModal) colorModal.classList.remove('open'); });
-      hueSlider.addEventListener('input', () => { colorPreview.style.backgroundColor = `hsl(${hueSlider.value}, 85%, 60%)`; });
-      
-      applyColorBtn.addEventListener('click', () => {
-        const chosenHsl = `hsl(${hueSlider.value}, 85%, 60%)`;
-        document.documentElement.style.setProperty('--theme-primary', chosenHsl);
-        colorModal.classList.remove('open');
-      });
-
-      bgCards.forEach(card => {
-        card.addEventListener('click', () => {
-          bgCards.forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          const bgKey = card.getAttribute('data-bg');
-          let finalBg = "#0e0e0e";
-          
-          if (bgKey === "patrick") finalBg = "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)";
-          else if (bgKey === "lula") finalBg = "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)";
-          else if (bgKey === "bugs") finalBg = "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)";
-          else if (bgKey === "homer") finalBg = "linear-gradient(135deg, #f6d365 0%, #fda085 100%)";
-          else if (bgKey === "marge") finalBg = "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)";
-          
-          document.getElementById('app').style.background = finalBg;
-        });
-      });
-
-      document.getElementById('logout-btn').addEventListener('click', () => {
-        chatAreaDiv.style.display = 'none';
-        loginDiv.style.display = 'flex';
-      });
-    };
-  </script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
