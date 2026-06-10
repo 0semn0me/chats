@@ -1,392 +1,286 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-  <title>Chatzão - Geral</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{
-      --font-sans:system-ui,-apple-system,sans-serif;
-      --border-radius-md:8px;
-      --border-radius-lg:12px;
-      --theme-primary: #F4D03F; /* Amarelo original do Chatzão */
-      --theme-text: #000000;
-      --bg-dark: #0e0e0e;
-      --bg-panel: #161616;
-    }
-    html,body{height:100%;height:100dvh;background:var(--bg-dark);overflow:hidden;}
-    body{display:flex;flex-direction:column;}
-    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:var(--bg-dark);overflow:hidden}
-    
-    /* Login Screen */
-    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:var(--bg-dark)}
-    #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
-    #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
-    #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none}
-    #login input:focus{box-shadow:0 0 0 2px rgba(244,208,63,0.33)}
-    #login button{width:260px;padding:10px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:var(--theme-primary);color:var(--theme-text);cursor:pointer}
-    #login button:hover{opacity:0.9}
-    #login .err{font-size:13px;color:#E24B4A;display:none}
-    
-    .avatar-pick{width:72px;height:72px;border-radius:50%;background:#1a1a1a;border:2px dashed #444;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;position:relative;transition:border-color 0.2s}
-    .avatar-pick:hover{border-color:var(--theme-primary)}
-    .avatar-pick img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-    .av-icon{font-size:24px;color:#555;pointer-events:none}
-    .login-row{display:flex;align-items:center;gap:14px;width:260px}
-    
-    /* Chat Main Area */
-    #chat-area{display:none;flex-direction:column;height:100%;background:var(--bg-dark)}
-    
-    /* Topbar Premium */
-    #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:var(--bg-panel)}
-    #topbar .left-actions{display:flex;align-items:center;gap:12px}
-    #topbar .btn-menu{background:none;border:none;color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center}
-    #topbar .btn-lock-clear{background:none;border:none;color:#aaa;cursor:pointer;font-size:16px;display:inline-flex;align-items:center}
-    #topbar .right{display:flex;align-items:center;gap:12px}
-    #topbar .me{font-size:13px;color:#eee;display:flex;align-items:center;gap:8px;font-weight:500}
-    #topbar .sub-me{font-size:11px;color:#888;display:block}
-    #topbar .online-dot{width:8px;height:8px;background:#1D9E75;border-radius:50%;display:inline-block}
-    #topbar .btn-logout{background:none;border:none;color:#aaa;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:4px;border:0.5px solid #333;padding:4px 10px;border-radius:6px}
-    #topbar .btn-logout:hover{color:#E24B4A}
-    
-    /* Messages Stream */
-    #messages{flex:1;overflow-y:auto;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
-    #messages::-webkit-scrollbar{width:4px}
-    #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
-    
-    .msg{display:flex;flex-direction:column;gap:2px;max-width:80%;position:relative}
-    .msg.mine{align-self:flex-end;align-items:flex-end}
-    .msg.theirs{align-self:flex-start;align-items:flex-start}
-    .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
-    .mine .bubble-wrapper{flex-direction:row-reverse}
-    
-    .bubble{padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.5;word-break:break-word;position:relative;white-space:pre-wrap}
-    .mine .bubble{background:#262626;color:#fff;border-bottom-right-radius:3px}
-    .theirs .bubble{background:#1c1c1e;color:#fff;border-bottom-left-radius:3px}
-    
-    .senders{display:flex;align-items:center;gap:5px;margin-bottom:2px;font-size:11px;color:#888}
-    .meta{font-size:10px;color:#555;padding:2px 4px}
-    
-    /* Input Control Bar */
-    #inputbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-panel);border-top:0.5px solid #222;flex-shrink:0}
-    #msg-input{flex:1;background:#222;border:0.5px solid #333;border-radius:20px;padding:9px 14px;font-size:14px;color:#fff;outline:none;resize:none;max-height:100px;font-family:var(--font-sans);line-height:1.4}
-    
-    .btn-icon{background:none;border:none;color:var(--theme-primary);font-size:20px;width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:background 0.1s;flex-shrink:0}
-    .btn-icon:hover{background:#2a2a2a}
-    
-    #send-btn{background:var(--theme-primary);border:none;color:var(--theme-text);width:38px;height:38px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;flex-shrink:0}
-    
-    /* Theme Modal Customizer Overlay */
-    #color-modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:1000;align-items:flex-end;justify-content:center;backdrop-filter:blur(6px)}
-    #color-modal-overlay.open{display:flex}
-    #color-modal{background:#111;border-radius:24px 24px 0 0;padding:20px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,0.7)}
-    .cm-handle{width:40px;height:4px;background:#333;border-radius:2px;margin:0 auto 16px}
-    .cm-section-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;margin-top:10px}
-    
-    /* Color Spectrum picker elements */
-    #color-canvas{width:100%;height:120px;border-radius:10px;cursor:crosshair;background:linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, #f00);display:none}
-    .cm-hue-row{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-    #hue-slider{flex:1;-webkit-appearance:none;appearance:none;height:24px;border-radius:99px;outline:none;cursor:pointer;background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)}
-    .cm-preview{width:36px;height:36px;border-radius:50%;border:2px solid #444;background:var(--theme-primary)}
-    .cm-btn-apply-color{width:100%;padding:12px;background:var(--theme-primary);color:var(--theme-text);border:none;border-radius:12px;font-weight:bold;font-size:14px;cursor:pointer;margin-bottom:24px}
-    
-    /* Background Grid Cards */
-    .bg-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px;margin-bottom:20px}
-    .bg-card{background:#1c1c1e;border:2px solid transparent;border-radius:12px;padding:35px 10px;text-align:center;cursor:pointer;color:#888;font-size:12px;font-weight:500;transition:all 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
-    .bg-card.active{border-color:var(--theme-primary);color:#fff;background:#262626}
-    .bg-card-icon{width:20px;height:20px;border-radius:4px;background:#333}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chatzão V2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-dark: #0e0e0e;
+            --bg-panel: #1a1a1a;
+            --primary-yellow: #fcd535; /* Essa cor agora muda dinamicamente! */
+            --text-light: #ffffff;
+            --text-muted: #888888;
+            --online-green: #00ff00;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+
+        body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        .screen { display: none; height: 100%; flex-direction: column; }
+        .screen.active { display: flex; }
+
+        /* --- LOGIN --- */
+        #login-screen { justify-content: center; align-items: center; padding: 20px; }
+        .login-box { width: 100%; max-width: 350px; background: var(--bg-panel); padding: 30px; border-radius: 15px; display: flex; flex-direction: column; gap: 15px; text-align: center; }
+        .login-box h1 { color: var(--primary-yellow); margin-bottom: 10px; }
+        .login-box input { width: 100%; padding: 15px; border: 1px solid #333; background: #222; color: white; border-radius: 8px; font-size: 16px; }
+        .login-box button { width: 100%; padding: 15px; background: var(--primary-yellow); color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+
+        /* --- CHAT --- */
+        .chat-header { background: var(--bg-panel); padding: 12px 15px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a2a2a; }
+        .header-left, .header-right { display: flex; align-items: center; gap: 15px; color: var(--text-muted); font-size: 20px; }
+        .header-center { display: flex; align-items: center; gap: 10px; flex: 1; justify-content: center; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary-yellow); background: #333; display: flex; align-items: center; justify-content: center; }
+        .user-titles { display: flex; flex-direction: column; }
+        .user-name { font-weight: bold; font-size: 14px; color: var(--text-light); }
+        .user-sub { font-size: 12px; color: var(--text-muted); }
+        .btn-sair { background: transparent; border: 1px solid #333; color: var(--text-muted); padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; gap: 5px; align-items: center;}
+        .online-indicator { width: 10px; height: 10px; background-color: var(--online-green); border-radius: 50%; }
+
+        #chat-window { flex: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background-size: cover; background-position: center; position: relative; }
+        
+        .message { max-width: 75%; padding: 10px 15px; border-radius: 15px; font-size: 15px; line-height: 1.4; word-wrap: break-word; min-width: 100px; }
+        .message.mine { background: var(--bg-panel); color: white; align-self: flex-end; border-bottom-right-radius: 4px; border: 1px solid #333; }
+        .message.other { background: #222; color: white; align-self: flex-start; border-bottom-left-radius: 4px; }
+        .msg-author { font-size: 11px; color: var(--primary-yellow); margin-bottom: 4px; font-weight: bold; }
+        .msg-time { font-size: 10px; color: #888; text-align: right; margin-top: 5px; display: block; }
+
+        .chat-footer { background: var(--bg-panel); padding: 10px 15px; display: flex; align-items: center; gap: 12px; border-top: 1px solid #2a2a2a; position: relative; }
+        .icon-btn { color: var(--primary-yellow); font-size: 22px; cursor: pointer; background: none; border: none; }
+        .input-wrapper { flex: 1; position: relative; display: flex; align-items: center; }
+        .input-wrapper input { width: 100%; background: #2a2a2a; border: none; border-radius: 20px; padding: 12px 15px; color: white; font-size: 15px; outline: none; }
+        .btn-send { background: var(--primary-yellow); color: black; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; flex-shrink: 0; }
+
+        /* --- EMOJI PICKER --- */
+        #emoji-picker { display: none; position: absolute; bottom: 60px; right: 50px; background: #222; border: 1px solid #444; border-radius: 10px; padding: 10px; max-width: 250px; flex-wrap: wrap; gap: 10px; box-shadow: 0 -5px 15px rgba(0,0,0,0.5); z-index: 100; }
+        #emoji-picker.active { display: flex; }
+        .emoji { font-size: 24px; cursor: pointer; transition: transform 0.1s; }
+        .emoji:hover { transform: scale(1.2); }
+
+        /* --- CONFIGURAÇÕES --- */
+        #config-screen { background: var(--bg-dark); overflow-y: auto; padding-bottom: 20px; }
+        .config-header { display: flex; align-items: center; padding: 20px; border-bottom: 1px solid #2a2a2a; gap: 15px; }
+        .btn-back { background: none; border: none; color: white; font-size: 20px; cursor: pointer; }
+        .config-section { padding: 20px; border-bottom: 1px solid #2a2a2a; }
+        .section-title { font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        
+        #theme-color { width: 100%; height: 50px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
+
+        .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .bg-card { background: #222; border-radius: 12px; height: 120px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px; font-size: 12px; font-weight: bold; cursor: pointer; border: 2px solid transparent; }
+        .bg-card.selected { border-color: var(--primary-yellow); }
+    </style>
 </head>
 <body>
 
-  <div id="app">
-    <div id="login">
-      <h2>💬 Chatzão</h2>
-      <p>Nome ou Apelido</p>
-      <div class="login-row">
-        <div class="avatar-pick" id="avatar-pick">
-          <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=Chatzao" alt="Avatar">
+    <div id="login-screen" class="screen active">
+        <div class="login-box">
+            <h1>Chatzão</h1>
+            <input type="text" id="login-name" placeholder="Seu Nome Real">
+            <input type="text" id="login-nick" placeholder="Apelido no Chat">
+            <button id="btn-entrar">Entrar</button>
         </div>
-        <div style="display:flex;flex-direction:column;gap:8px;flex:1">
-          <input id="name-input" type="text" placeholder="Seu nome..." maxlength="30"/>
-          <div id="login-error" class="err">Por favor, digite um nome válido.</div>
-          <button id="enter-btn">Entrar no chat</button>
-        </div>
-      </div>
     </div>
-    
-    <div id="chat-area">
-      <div id="topbar">
-        <div class="left-actions">
-          <button class="btn-menu" id="open-menu-btn"><i class="ti ti-menu-2"></i></button>
-          <button class="btn-lock-clear" id="lock-clear-btn" style="margin-left: 8px;"><i class="ti ti-lock"></i></button>
-        </div>
-        <div class="right">
-          <div class="me">
-            <div style="text-align: right;">
-              <span id="my-name-display">CRARO da OI</span>
-              <span class="sub-me" id="my-sub-display">Usuário</span>
+
+    <div id="chat-screen" class="screen">
+        <header class="chat-header">
+            <div class="header-left">
+                <i class="fa-solid fa-bars" id="btn-open-config" style="cursor:pointer;"></i>
             </div>
-            <div class="avatar" style="width:32px; height:32px; border-radius:50%; overflow:hidden; background:#222; margin-left:8px;">
-              <img id="my-topbar-avatar" src="https://api.dicebear.com/7.x/bottts/svg?seed=Chatzao" style="width:100%; height:100%; object-fit:cover;">
+            <div class="header-center">
+                <div class="user-avatar"><i class="fa-solid fa-user" style="color:#aaa;"></i></div>
+                <div class="user-titles">
+                    <span class="user-name" id="display-nick">Nome</span>
+                    <span class="user-sub" id="display-name">Subnome</span>
+                </div>
             </div>
-            <span class="online-dot" style="margin-left: 8px;"></span>
-          </div>
-          <button class="btn-logout" id="logout-btn" style="margin-left: 12px;">Sair</button>
+            <div class="header-right">
+                <button class="btn-sair" id="btn-sair"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sair</button>
+                <div class="online-indicator"></div>
+            </div>
+        </header>
+
+        <div id="chat-window"></div>
+
+        <div class="chat-footer">
+            <button class="icon-btn" onclick="alert('Áudio: Em breve implementaremos o gravador de voz!')"><i class="fa-solid fa-microphone"></i></button>
+            <div class="input-wrapper">
+                <input type="text" id="msg-input" placeholder="Mensagem..." autocomplete="off">
+            </div>
+            <button class="icon-btn" id="btn-emoji"><i class="fa-regular fa-face-smile"></i></button>
+            
+            <input type="file" id="camera-input" accept="image/*" style="display: none;">
+            <button class="icon-btn" onclick="document.getElementById('camera-input').click()"><i class="fa-solid fa-camera"></i></button>
+            
+            <button class="btn-send" id="btn-send"><i class="fa-solid fa-paper-plane"></i></button>
+
+            <div id="emoji-picker">
+                <span class="emoji">😀</span> <span class="emoji">😂</span> <span class="emoji">😍</span> 
+                <span class="emoji">😎</span> <span class="emoji">🤔</span> <span class="emoji">🔥</span>
+                <span class="emoji">👍</span> <span class="emoji">❤️</span> <span class="emoji">🎉</span>
+                <span class="emoji">👀</span> <span class="emoji">✅</span> <span class="emoji">❌</span>
+            </div>
         </div>
-      </div>
-      
-      <div id="messages"></div>
-      
-      <div id="inputbar">
-        <button class="btn-icon" id="audio-btn"><i class="ti ti-microphone"></i></button>
-        <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
-        <button class="btn-icon" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
-        <button class="btn-icon" id="camera-btn"><i class="ti ti-camera"></i></button>
-        <button id="send-btn"><i class="ti ti-brand-telegram"></i></button>
-      </div>
     </div>
-  </div>
 
-  <div id="color-modal-overlay">
-    <div id="color-modal">
-      <div class="cm-handle"></div>
-      
-      <div class="cm-section-title">🎨 Cor do Tema</div>
-      <div class="cm-hue-row">
-        <input type="range" id="hue-slider" min="0" max="360" value="48">
-        <div class="cm-preview" id="color-preview"></div>
-      </div>
-      <button class="cm-btn-apply-color" id="apply-color-btn">✓ Aplicar Cor</button>
-      
-      <div class="cm-section-title">🖼️ Plano de Fundo</div>
-      <div class="bg-grid">
-        <div class="bg-card active" data-bg="padrao">
-          <div class="bg-card-icon" style="background: #0e0e0e;"></div>
-          Padrão
+    <div id="config-screen" class="screen">
+        <div class="config-header">
+            <button class="btn-back" id="btn-back-chat"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2>Configurações</h2>
         </div>
-        <div class="bg-card" data-bg="patrick">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);"></div>
-          Patrick
+
+        <div class="config-section">
+            <div class="section-title"><i class="fa-solid fa-palette"></i> Cor do Tema Real</div>
+            <input type="color" id="theme-color" value="#fcd535">
         </div>
-        <div class="bg-card" data-bg="lula">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);"></div>
-          Lula Molusco
+
+        <div class="config-section">
+            <div class="section-title"><i class="fa-solid fa-image"></i> Plano de Fundo</div>
+            <div class="bg-grid">
+                <div class="bg-card selected" onclick="mudarFundo(this, 'none')">Padrão</div>
+                <div class="bg-card" onclick="mudarFundo(this, 'url(https://i.imgur.com/link_do_seu_fundo.jpg)')">Fundo 1</div>
+            </div>
         </div>
-        <div class="bg-card" data-bg="bugs">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);"></div>
-          Bugs Bunny
-        </div>
-        <div class="bg-card" data-bg="homer">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);"></div>
-          Homer
-        </div>
-        <div class="bg-card" data-bg="marge">
-          <div class="bg-card-icon" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);"></div>
-          Marge
-        </div>
-      </div>
     </div>
-  </div>
 
-  <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-      authDomain: "chatzao-a27ed.firebaseapp.com",
-      projectId: "chatzao-a27ed",
-      storageBucket: "chatzao-a27ed.firebasestorage.app",
-      messagingSenderId: "923740068926",
-      appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
-    };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
+            authDomain: "chatzao-a27ed.firebaseapp.com",
+            databaseURL: "https://chatzao-a27ed-default-rtdb.firebaseio.com",
+            projectId: "chatzao-a27ed",
+            storageBucket: "chatzao-a27ed.firebasestorage.app",
+            messagingSenderId: "923740068926",
+            appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
+        };
 
-    const app = initializeApp(firebaseConfig);
-    window.db = getFirestore(app);
-    window.collection = collection;
-    window.addDoc = addDoc;
-    window.query = query;
-    window.orderBy = orderBy;
-    window.onSnapshot = onSnapshot;
-    window.FirebasePronto = true;
-    console.log("Chatzão: Firebase Carregado com Sucesso.");
-  </script>
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-  <script src="bg.js"></script>
-
-  <script>
-    let usuarioAtual = "CRARO da OI";
-    let seedAvatar = Math.random().toString(36).substring(7);
-
-    function init() {
-      const loginDiv = document.getElementById('login');
-      const chatAreaDiv = document.getElementById('chat-area');
-      const enterBtn = document.getElementById('enter-btn');
-      const nameInput = document.getElementById('name-input');
-      const loginError = document.getElementById('login-error');
-      const sendBtn = document.getElementById('send-btn');
-      const msgInput = document.getElementById('msg-input');
-      const messagesContainer = document.getElementById('messages');
-      const myNameDisplay = document.getElementById('my-name-display');
-      const mySubDisplay = document.getElementById('my-sub-display');
-      const logoutBtn = document.getElementById('logout-btn');
-      
-      const openMenuBtn = document.getElementById('open-menu-btn');
-      const colorModal = document.getElementById('color-modal-overlay');
-      const hueSlider = document.getElementById('hue-slider');
-      const colorPreview = document.getElementById('color-preview');
-      const applyColorBtn = document.getElementById('apply-color-btn');
-      const bgCards = document.querySelectorAll('.bg-card');
-
-      // Randomize login avatar look
-      document.getElementById('avatar-img').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
-
-      // 1. Logic for handling Login
-      enterBtn.addEventListener('click', () => {
-        const nome = nameInput.value.trim();
-        if (nome.length < 2) {
-          loginError.style.display = 'block';
-          return;
-        }
-        loginError.style.display = 'none';
-        usuarioAtual = nome;
+        const telaLogin = document.getElementById('login-screen');
+        const telaChat = document.getElementById('chat-screen');
+        const telaConfig = document.getElementById('config-screen');
+        const chatWindow = document.getElementById('chat-window');
+        const inputMsg = document.getElementById('msg-input');
         
-        myNameDisplay.textContent = nome;
-        mySubDisplay.textContent = "Online";
-        document.getElementById('my-topbar-avatar').src = `https://api.dicebear.com/7.x/adventurer/svg?seed=${seedAvatar}`;
-        
-        loginDiv.style.display = 'none';
-        chatAreaDiv.style.display = 'flex';
-        
-        conectarChatRealtime();
-      });
+        let usuarioAtual = "";
 
-      nameInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') enterBtn.click();
-      });
+        // Navegação e Login
+        document.getElementById('btn-entrar').addEventListener('click', () => {
+            const nome = document.getElementById('login-name').value.trim();
+            const nick = document.getElementById('login-nick').value.trim();
+            if(nome && nick) {
+                usuarioAtual = nick;
+                document.getElementById('display-nick').innerText = nick;
+                document.getElementById('display-name').innerText = nome;
+                telaLogin.classList.remove('active');
+                telaChat.classList.add('active');
+                carregarMensagens();
+            } else {
+                alert("Preencha nome e apelido!");
+            }
+        });
 
-      // 2. Logic for sending Chat Text Messages
-      async function enviarMensagem() {
-        const texto = msgInput.value.trim();
-        if (!texto) return;
-        msgInput.value = "";
-        
-        try {
-          if (window.FirebasePronto) {
-            await window.addDoc(window.collection(window.db, "mensagens"), {
-              usuario: usuarioAtual,
-              texto: texto,
-              seed: seedAvatar,
-              timestamp: Date.now()
+        document.getElementById('btn-sair').addEventListener('click', () => {
+            telaChat.classList.remove('active');
+            telaLogin.classList.add('active');
+        });
+
+        document.getElementById('btn-open-config').addEventListener('click', () => {
+            telaChat.classList.remove('active');
+            telaConfig.classList.add('active');
+        });
+
+        document.getElementById('btn-back-chat').addEventListener('click', () => {
+            telaConfig.classList.remove('active');
+            telaChat.classList.add('active');
+        });
+
+        // 1. MUDANÇA DE COR REAL
+        document.getElementById('theme-color').addEventListener('input', (e) => {
+            document.documentElement.style.setProperty('--primary-yellow', e.target.value);
+        });
+
+        // Fundos (preparado para links reais)
+        window.mudarFundo = (elemento, imagemUrl) => {
+            document.querySelectorAll('.bg-card').forEach(c => c.classList.remove('selected'));
+            elemento.classList.add('selected');
+            document.getElementById('chat-window').style.backgroundImage = imagemUrl;
+        };
+
+        // 2. PAINEL DE EMOJIS
+        const emojiPicker = document.getElementById('emoji-picker');
+        document.getElementById('btn-emoji').addEventListener('click', () => {
+            emojiPicker.classList.toggle('active');
+        });
+
+        document.querySelectorAll('.emoji').forEach(emoji => {
+            emoji.addEventListener('click', (e) => {
+                inputMsg.value += e.target.innerText;
+                emojiPicker.classList.remove('active'); // Fecha após clicar
+                inputMsg.focus();
             });
-          }
-        } catch (erro) {
-          console.error("Erro ao enviar mensagem: ", erro);
-        }
-      }
-
-      sendBtn.addEventListener('click', enviarMensagem);
-      msgInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && !e.shiftKey) {
-          e.preventDefault();
-          enviarMensagem();
-        }
-      });
-
-      // 3. Realtime Messaging Listener from Firestore
-      function conectarChatRealtime() {
-        if (!window.FirebasePronto) return;
-
-        const q = window.query(
-          window.collection(window.db, "mensagens"),
-          window.orderBy("timestamp", "asc")
-        );
-
-        window.onSnapshot(q, (snapshot) => {
-          messagesContainer.innerHTML = "";
-          
-          snapshot.forEach((docSnap) => {
-            const dados = docSnap.data();
-            const ehMinha = dados.usuario === usuarioAtual;
-            const msgSeed = dados.seed || "default";
-            
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `msg ${ehMinha ? 'mine' : 'theirs'}`;
-            
-            const hora = dados.timestamp ? new Date(dados.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
-            
-            msgDiv.innerHTML = `
-              ${!ehMinha ? `
-                <div class="senders">
-                  <img src="https://api.dicebear.com/7.x/adventurer/svg?seed=${msgSeed}" style="width:16px;height:16px;border-radius:50%;">
-                  <span>${dados.usuario}</span>
-                </div>` : ''}
-              <div class="bubble-wrapper">
-                <div class="bubble">${dados.texto}</div>
-              </div>
-              <div class="meta">${hora}</div>
-            `;
-            
-            messagesContainer.appendChild(msgDiv);
-          });
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
         });
-      }
 
-      // 4. Modal Theme Picker Panel Triggers
-      openMenuBtn.addEventListener('click', () => {
-        colorModal.classList.add('open');
-      });
-
-      colorModal.addEventListener('click', (e) => {
-        if (e.target === colorModal) colorModal.classList.remove('open');
-      });
-
-      hueSlider.addEventListener('input', () => {
-        const hslColor = `hsl(${hueSlider.value}, 85%, 60%)`;
-        colorPreview.style.backgroundColor = hslColor;
-      });
-
-      applyColorBtn.addEventListener('click', () => {
-        const chosenHsl = `hsl(${hueSlider.value}, 85%, 60%)`;
-        document.documentElement.style.setProperty('--theme-primary', chosenHsl);
-        colorModal.classList.remove('open');
-      });
-
-      // Background Selector Control
-      bgCards.forEach(card => {
-        card.addEventListener('click', () => {
-          bgCards.forEach(c => c.classList.remove('active'));
-          card.classList.add('active');
-          
-          const bgKey = card.getAttribute('data-bg');
-          let finalBg = "#0e0e0e";
-          
-          if (bgKey === "patrick") finalBg = "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)";
-          else if (bgKey === "lula") finalBg = "linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)";
-          else if (bgKey === "bugs") finalBg = "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)";
-          else if (bgKey === "homer") finalBg = "linear-gradient(135deg, #f6d365 0%, #fda085 100%)";
-          else if (bgKey === "marge") finalBg = "linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%)";
-          
-          document.getElementById('app').style.background = finalBg;
-          loginDiv.style.background = "transparent";
-          chatAreaDiv.style.background = "transparent";
+        // Fechar emoji clicando fora
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#btn-emoji') && !e.target.closest('#emoji-picker')) {
+                emojiPicker.classList.remove('active');
+            }
         });
-      });
 
-      logoutBtn.addEventListener('click', () => {
-        chatAreaDiv.style.display = 'none';
-        loginDiv.style.display = 'flex';
-        nameInput.value = "";
-      });
-    }
+        // 3. ENVIO E HORA REAL
+        const enviarMensagem = async () => {
+            const texto = inputMsg.value.trim();
+            if (texto !== "") {
+                inputMsg.value = "";
+                emojiPicker.classList.remove('active');
+                await addDoc(collection(db, "mensagens"), {
+                    texto: texto,
+                    usuario: usuarioAtual,
+                    timestamp: serverTimestamp() // Pega a hora do servidor
+                });
+            }
+        };
 
-    window.addEventListener('load', () => {
-      setTimeout(init, 150);
-    });
-  </script>
+        document.getElementById('btn-send').addEventListener('click', enviarMensagem);
+        inputMsg.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') enviarMensagem();
+        });
+
+        function carregarMensagens() {
+            const q = query(collection(db, "mensagens"), orderBy("timestamp", "asc"));
+            onSnapshot(q, (snapshot) => {
+                chatWindow.innerHTML = ''; 
+                snapshot.forEach((doc) => {
+                    const msg = doc.data();
+                    const isMine = msg.usuario === usuarioAtual;
+                    
+                    // Formata a hora do Firebase (se já estiver processada)
+                    let horaFormatada = "";
+                    if (msg.timestamp) {
+                        const dataReal = msg.timestamp.toDate();
+                        horaFormatada = dataReal.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    }
+
+                    const div = document.createElement('div');
+                    div.className = `message ${isMine ? 'mine' : 'other'}`;
+                    
+                    const autorHTML = isMine ? '' : `<div class="msg-author">${msg.usuario}</div>`;
+                    const horaHTML = `<span class="msg-time">${horaFormatada}</span>`;
+                    
+                    div.innerHTML = `${autorHTML}${msg.texto}${horaHTML}`;
+                    chatWindow.appendChild(div);
+                });
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            });
+        }
+    </script>
 </body>
 </html>
