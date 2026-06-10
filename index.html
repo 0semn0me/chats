@@ -2,11 +2,11 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Chatzão V2 - Teste de Conexão</title>
+    <title>Chatzão V2 - Conexão</title>
 </head>
 <body>
     <h1>Chatzão V2</h1>
-    <p>Verifique o console do navegador (F12) para ver a conexão.</p>
+    <p>Verificando conexão com o Firebase...</p>
 
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -25,7 +25,7 @@
         try {
             const app = initializeApp(firebaseConfig);
             const db = getFirestore(app);
-            console.log("SUCESSO: Chatzão conectado ao Firebase!");
+            console.log("SUCESSO: Chatzão conectado!");
             alert("Chatzão conectado com sucesso!");
         } catch (error) {
             console.error("Erro na conexão:", error);
