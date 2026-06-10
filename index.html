@@ -1,58 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
-<title>Chatzão</title>
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, limit, deleteDoc, doc, writeBatch, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-    authDomain: "chatzao-a27ed.firebaseapp.com",
-    databaseURL: "https://chatzao-a27ed-default-rtdb.firebaseio.com",
-    projectId: "chatzao-a27ed",
-    storageBucket: "chatzao-a27ed.firebasestorage.app",
-    messagingSenderId: "923740068926",
-    appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
-  };
-  
-  const app = initializeApp(firebaseConfig);
-  // ANCORAGEM GLOBAL: Isso permite que seu código original acesse o Firebase
-  window.db = getFirestore(app);
-  window.collection = collection;
-  window.addDoc = addDoc;
-  window.getDocs = getDocs;
-  window.onSnapshot = onSnapshot;
-  window.query = query;
-  window.orderBy = orderBy;
-  window.limit = limit;
-  window.deleteDoc = deleteDoc;
-  window.doc = doc;
-  window.writeBatch = writeBatch;
-  window.updateDoc = updateDoc;
-  window.arrayUnion = arrayUnion;
-  console.log("Firebase Global Ancorado");
-</script>
-
-<style>
-/* Cole seu CSS aqui */
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+    <title>Chatzão</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    
+    <style>
+        *{box-sizing:border-box;margin:0;padding:0}
+        :root{--font:system-ui,-apple-system,sans-serif;--r:8px;--rl:14px;--p:#534AB7;--pt:#fff;--bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;--b1:#222;--b2:#333;--b3:#444;--t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;}
+        html,body{height:100dvh;background:var(--bg);overflow:hidden;font-family:var(--font)}
+        #app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
+    </style>
 </head>
 <body>
+
 <div id="app">
     </div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, limit, deleteDoc, doc, writeBatch, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
+        authDomain: "chatzao-a27ed.firebaseapp.com",
+        databaseURL: "https://chatzao-a27ed-default-rtdb.firebaseio.com",
+        projectId: "chatzao-a27ed",
+        storageBucket: "chatzao-a27ed.firebasestorage.app",
+        messagingSenderId: "923740068926",
+        appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    // IMPORTANTE: Criando as variáveis globais que seu script antigo usa
+    window.db = getFirestore(app);
+    window.collection = collection;
+    window.addDoc = addDoc;
+    window.getDocs = getDocs;
+    window.onSnapshot = onSnapshot;
+    window.query = query;
+    window.orderBy = orderBy;
+    window.limit = limit;
+    window.deleteDoc = deleteDoc;
+    window.doc = doc;
+    window.writeBatch = writeBatch;
+    window.updateDoc = updateDoc;
+    window.arrayUnion = arrayUnion;
+    
+    console.log("Chatzão: Firebase Ancorado no Window.");
+</script>
 
 <script src="bg.js"></script>
 
 <script>
-    // Cole TODO o seu JavaScript original aqui.
-    // Como window.db e window.collection já existem, 
-    // ele funcionará exatamente como antes.
+    // Cole TODO o seu script original aqui. 
+    // Como window.db e as funções já estão no 'window',
+    // seu script antigo vai rodar sem precisar de nenhuma alteração.
     
-    // IMPORTANTE: Se o seu init() estiver aqui, garanta que ele é chamado:
-    init();
+    // Certifique-se de que a função init() é chamada aqui:
+    window.onload = function() {
+        if(typeof init === 'function') {
+            init();
+        } else {
+            console.error("Função init() não encontrada. Verifique se colou o script original.");
+        }
+    };
 </script>
+
 </body>
 </html>
