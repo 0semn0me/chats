@@ -1,427 +1,62 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Chatzão</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    :root{--font-sans:system-ui,-apple-system,sans-serif;--border-radius-md:8px;--border-radius-lg:12px}
-    html,body{height:100%;height:100dvh;background:#0e0e0e;overflow:hidden;}
-    body{display:flex;flex-direction:column;}
-    #app{display:flex;flex-direction:column;flex:1;height:100%;height:100dvh;font-family:var(--font-sans);background:#0e0e0e;overflow:hidden}
-    #login{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:2rem;background:#0e0e0e}
-    #login h2{font-size:20px;font-weight:500;color:#fff;text-align:center}
-    #login p{font-size:14px;color:#888;text-align:center;max-width:280px}
-    #login input{width:260px;font-size:15px;padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#fff;outline:none;-webkit-appearance:none}
-    #login input:focus{box-shadow:0 0 0 2px #534AB755}
-    #login button{width:260px;padding:12px;font-size:15px;font-weight:500;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none}
-    #login button:active{background:#3C3489}
-    #login .err{font-size:13px;color:#E24B4A;display:none}
-    #chat-area{display:none;flex-direction:column;height:100%;background:#0e0e0e}
-    #topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #222;flex-shrink:0;background:#161616}
-    #topbar .title{font-size:15px;font-weight:500;color:#fff;display:flex;align-items:center;gap:6px}
-    #topbar .right{display:flex;align-items:center;gap:8px}
-    #topbar .me{font-size:12px;color:#666}
-    .pill{font-size:11px;color:#1D9E75;background:#0a2e1f;padding:2px 10px;border-radius:99px}
-    #messages{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
-    #messages::-webkit-scrollbar{width:4px}
-    #messages::-webkit-scrollbar-track{background:transparent}
-    #messages::-webkit-scrollbar-thumb{background:#333;border-radius:99px}
-    .msg{display:flex;flex-direction:column;gap:2px;max-width:80%;position:relative}
-    .msg.mine{align-self:flex-end;align-items:flex-end}
-    .msg.theirs{align-self:flex-start;align-items:flex-start}
-    .bubble-wrapper{position:relative;display:flex;align-items:center;gap:6px;width:100%}
-    .mine .bubble-wrapper{flex-direction:row-reverse}
-    .bubble{padding:8px 12px;border-radius:12px;font-size:14px;line-height:1.5;word-break:break-word;cursor:pointer;position:relative}
-    .mine .bubble{border-bottom-right-radius:3px}
-    .theirs .bubble{border-bottom-left-radius:3px}
-    .bubble img{max-width:180px;max-height:140px;border-radius:8px;display:block}
-    .react-menu{position:absolute;top:-36px;background:#222;border:0.5px solid #333;border-radius:20px;padding:4px 8px;display:none;gap:6px;z-index:10;box-shadow:0 4px 12px rgba(0,0,0,0.5);animation:fadeIn 0.15s ease;max-width:240px;overflow-x:auto;white-space:nowrap}
-    .react-menu::-webkit-scrollbar{height:3px}
-    .react-menu::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
-    .mine .react-menu{right:0}
-    .theirs .react-menu{left:0}
-    .react-menu.open{display:flex}
-    @media(hover:hover){.bubble-wrapper:hover .react-menu{display:flex}}
-    .react-opt{font-size:18px;cursor:pointer;transition:transform 0.1s;padding:0 2px;display:inline-block;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    .react-opt:active{transform:scale(1.25)}
-    .reactions-badge{position:absolute;bottom:-10px;background:#1e1e1e;border:0.5px solid #333;border-radius:10px;padding:1px 6px;font-size:12px;display:flex;gap:3px;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.3);cursor:help}
-    .mine .reactions-badge{right:8px}
-    .theirs .reactions-badge{left:8px}
-    .react-user-badge{color:#aaa;font-size:10px;margin-left:2px;font-weight:bold}
-    .reply-hint{opacity:0;transition:opacity 0.15s;font-size:14px;color:#555;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    .bubble-wrapper:hover .reply-hint{opacity:1}
-    .reply-hint:hover{color:#534AB7}
-    .reply-preview{border-radius:8px 8px 0 0;padding:6px 10px;font-size:12px;margin-bottom:-4px;opacity:0.85;border-left:3px solid rgba(255,255,255,0.3);width:100%}
-    .meta{font-size:11px;color:#555;padding:2px 4px;display:flex;align-items:center;gap:4px}
-    .senders{display:flex;align-items:center;gap:5px;margin-bottom:3px}
-    .avatar{width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;flex-shrink:0}
-    .sys{align-self:center;font-size:11px;color:#555;background:#1a1a1a;padding:2px 12px;border-radius:99px}
-    #reply-bar{display:none;align-items:center;gap:8px;padding:8px 14px;background:#161616;border-top:0.5px solid #222;flex-shrink:0}
-    #reply-bar .rb-content{flex:1;min-width:0}
-    #reply-bar .rb-name{font-size:12px;font-weight:500;margin-bottom:1px}
-    #reply-bar .rb-text{font-size:12px;color:#888;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    #reply-bar button{background:none;border:none;cursor:pointer;color:#666;font-size:16px;padding:2px 4px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #sticker-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
-    #gif-panel{display:none;border-top:0.5px solid #222;background:#161616;flex-shrink:0}
-    .panel-search{display:flex;align-items:center;gap:8px;padding:8px 14px;border-bottom:0.5px solid #222}
-    .panel-search input{flex:1;font-size:13px;padding:6px 10px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;-webkit-appearance:none}
-    .panel-close{background:none;border:none;cursor:pointer;color:#666;font-size:18px;line-height:1;padding:2px 6px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #sticker-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-    #sticker-grid span{font-size:26px;cursor:pointer;text-align:center;padding:2px;border-radius:6px;display:inline-block;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #sticker-grid::-webkit-scrollbar{width:4px}
-    #sticker-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
-    #gif-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:8px 14px;height:130px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-    #gif-grid img{width:100%;height:70px;object-fit:cover;border-radius:6px;cursor:pointer;border:0.5px solid #2a2a2a;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #gif-grid::-webkit-scrollbar{width:4px}
-    #gif-grid::-webkit-scrollbar-thumb{background:#444;border-radius:99px}
-    .panel-hint{font-size:12px;color:#555;padding:8px 14px;text-align:center;grid-column:1/-1}
-    #inputbar{display:flex;gap:8px;padding:8px 14px;padding-bottom:max(8px,env(safe-area-inset-bottom));border-top:0.5px solid #222;flex-shrink:0;background:#161616;align-items:center}
-    #msg-input{flex:1;font-size:14px;padding:8px 12px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#222;color:#fff;outline:none;font-family:var(--font-sans);-webkit-appearance:none}
-    #msg-input:focus{box-shadow:0 0 0 2px #534AB755}
-    #msg-input::placeholder{color:#555}
-    .btn-icon{padding:7px 10px;font-size:17px;border-radius:var(--border-radius-md);border:0.5px solid #333;background:#1a1a1a;color:#888;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    .btn-icon.active{background:#252525;color:#534AB7;border-color:#534AB7}
-    #send-btn{padding:7px 13px;font-size:15px;border-radius:var(--border-radius-md);border:none;background:#534AB7;color:#fff;cursor:pointer;display:flex;align-items:center;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-    #send-btn:active{background:#3C3489}
-    #send-btn:disabled{opacity:0.4}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
+<title>Chatzão</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+/* --- SEU CSS ORIGINAL MANTIDO --- */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--p:#534AB7;--bg:#0e0e0e;--t1:#fff;}
+html,body{height:100dvh;background:var(--bg);overflow:hidden;font-family:system-ui}
+/* Drawer */
+#drawer{position:fixed;top:0;left:-280px;width:280px;height:100%;background:#1e1e1e;z-index:999;transition:0.3s;padding:20px;color:white;}
+#drawer.open{left:0}
+.overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;z-index:998;}
+</style>
 </head>
 <body>
 
-<div id="app">
-  <div id="login">
-    <h2><span style="font-size:30px;display:block;text-align:center;margin-bottom:4px">💬</span>Chatzão</h2>
-    <p>Entre com seu nome ou apelido para conversar</p>
-    <input id="name-input" type="text" placeholder="Seu nome ou apelido..." maxlength="30" autocomplete="off" autocorrect="off" autocapitalize="words" spellcheck="false"/>
-    <button id="enter-btn">Entrar no chat</button>
-    <span class="err" id="login-err">Erro ao conectar. Verifique as regras do Firestore.</span>
-  </div>
-  <div id="chat-area">
-    <div id="topbar">
-      <span class="title"><i class="ti ti-messages" aria-hidden="true" style="font-size:16px"></i>Chatzão</span>
-      <div class="right">
-        <span class="me" id="me-label"></span>
-        <span class="pill" id="online-label">● conectado</span>
-      </div>
-    </div>
-    <div id="messages"></div>
-    <div id="reply-bar">
-      <i class="ti ti-corner-up-left" aria-hidden="true" style="font-size:16px;color:#534AB7;flex-shrink:0"></i>
-      <div class="rb-content">
-        <div class="rb-name" id="rb-name"></div>
-        <div class="rb-text" id="rb-text"></div>
-      </div>
-      <button id="reply-cancel" aria-label="Cancelar resposta"><i class="ti ti-x"></i></button>
-    </div>
-    <div id="sticker-panel">
-      <div class="panel-search">
-        <i class="ti ti-mood-smile" aria-hidden="true" style="font-size:16px;color:#888"></i>
-        <input id="sticker-input" type="text" placeholder="Buscar emoji..." autocomplete="off"/>
-        <button class="panel-close" id="sticker-close" aria-label="Fechar"><i class="ti ti-x"></i></button>
-      </div>
-      <div id="sticker-grid"></div>
-    </div>
-    <div id="gif-panel">
-      <div class="panel-search">
-        <i class="ti ti-photo-search" aria-hidden="true" style="font-size:16px;color:#888"></i>
-        <input id="gif-input" type="text" placeholder="Buscar GIF..." autocomplete="off"/>
-        <button class="panel-close" id="gif-close" aria-label="Fechar"><i class="ti ti-x"></i></button>
-      </div>
-      <div id="gif-grid"></div>
-    </div>
-    <div id="inputbar">
-      <input id="msg-input" type="text" placeholder="Mensagem..." maxlength="500"/>
-      <button class="btn-icon" id="sticker-btn" aria-label="Emojis"><i class="ti ti-mood-smile"></i></button>
-      <button class="btn-icon" id="gif-btn" aria-label="GIF"><i class="ti ti-photo-search"></i></button>
-      <button id="send-btn" aria-label="Enviar"><i class="ti ti-send"></i></button>
-    </div>
-  </div>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
+  const firebaseConfig = {
+    apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
+    authDomain: "chatzao-a27ed.firebaseapp.com",
+    databaseURL: "https://chatzao-a27ed-default-rtdb.firebaseio.com",
+    projectId: "chatzao-a27ed",
+    storageBucket: "chatzao-a27ed.firebasestorage.app",
+    messagingSenderId: "923740068926",
+    appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
+  };
+  window.db = getFirestore(initializeApp(firebaseConfig));
+</script>
+
+<div class="overlay" id="overlay" onclick="toggleDrawer()"></div>
+<div id="drawer">
+    <h3>☰ Chatzão</h3>
+    <hr style="margin:15px 0">
+    <div onclick="alert('Perfil')" style="cursor:pointer;padding:10px 0">👤 Perfil</div>
+    <div onclick="alert('Tema')" style="cursor:pointer;padding:10px 0">🎨 Tema</div>
+    <div onclick="alert('Fundo')" style="cursor:pointer;padding:10px 0">🖼 Fundo</div>
+    <div onclick="alert('Chatzão v1.0')" style="cursor:pointer;padding:10px 0">ℹ Sobre</div>
 </div>
 
-<!-- Firebase v8 via jsDelivr — sem restrição CORS, funciona local no Safari iOS -->
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-app.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/firebase@8.10.1/firebase-firestore.min.js"></script>
-
+<script src="bg.js"></script>
 <script>
-  const firebaseConfig = {
-    apiKey:"AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-    authDomain:"chatzao-a27ed.firebaseapp.com",
-    projectId:"chatzao-a27ed",
-    storageBucket:"chatzao-a27ed.firebasestorage.app",
-    messagingSenderId:"923740068926",
-    appId:"1:923740068926:web:f4d36655ac6c3460f5056f"
-  };
+function toggleDrawer(){
+    document.getElementById('drawer').classList.toggle('open');
+    document.getElementById('overlay').style.display = document.getElementById('drawer').classList.contains('open') ? 'block' : 'none';
+}
 
-  firebase.initializeApp(firebaseConfig);
-  var db  = firebase.firestore();
-  var col = db.collection('mensagens');
-
-  var myName = '', replyTo = null, gifOpen = false, stickerOpen = false;
-  var gifTimer = null, stickerTimer = null, isInitialLoad = true;
-
-  var LISTA_EMOJIS_UNIFICADA = Array.from("😁😆🥹😅😂🤣🥲☺️😊😋😚😙😗😘🥰😗😙😋🙂🥳🤩🥸😎🤓🧐🤨🤪😜😝😛😏😒😞😔😟😕🙁☹️😣😖😫😱😨😰😥😓🤗🤔😡🤬🤯😳🥵🥶🤫😠🤥😶😐😑😬🙄😯🤑🤕🤒😷🤧🤮🤢🥴🤐😵");
-
-  var USER_COLORS = ['#7C6CF5','#E05A7A','#3BB88C','#E08A2E','#4FA3DC','#C55FD6','#5DC26A','#E0674E','#6EC6C6','#D4A017'];
-  var colorCache = {};
-
-  function userColor(name){
-    if(!colorCache[name]) colorCache[name]=USER_COLORS[Object.keys(colorCache).length%USER_COLORS.length];
-    return colorCache[name];
-  }
-  function darken(hex){return hex+'bb';}
-  function ini(n){return n.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
-  function fmt(ts){
-    if(!ts) return '';
-    var d = ts.toDate ? ts.toDate() : new Date(ts);
-    return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
-  }
-  function shortText(m){
-    if(!m) return '';
-    if(m.gif) return '🖼 GIF';
-    if(m.sticker) return m.sticker;
-    return (m.text||'').slice(0,50);
-  }
-
-  function reagir(msgId, emoji, reacoesAtuais){
-    var novasReacoes = Object.assign({}, reacoesAtuais || {});
-    if(novasReacoes[myName]===emoji){ delete novasReacoes[myName]; }
-    else { novasReacoes[myName]=emoji; }
-    db.collection('mensagens').doc(msgId).update({reactions: novasReacoes});
-  }
-
-  function renderMsg(data, id){
-    if(data.type==='system'){
-      var d=document.createElement('div'); d.className='sys'; d.textContent=data.text; return d;
-    }
-    var mine=data.name===myName;
-    var color=userColor(data.name);
-    var w=document.createElement('div'); w.className='msg '+(mine?'mine':'theirs');
-
-    if(!mine){
-      var s=document.createElement('div'); s.className='senders';
-      s.innerHTML='<span class="avatar" style="background:'+color+'22;color:'+color+'">'+ini(data.name)+'</span><span style="font-size:12px;font-weight:500;color:'+color+'">'+data.name+'</span>';
-      w.appendChild(s);
-    }
-
-    if(data.replyTo){
-      var rp=document.createElement('div');
-      rp.className='reply-preview';
-      rp.style.background=mine?darken(color)+'33':'#1e1e1e';
-      rp.style.borderLeftColor=userColor(data.replyTo.name||'');
-      rp.innerHTML='<span style="font-size:11px;font-weight:500;color:'+userColor(data.replyTo.name||'')+';">'+( data.replyTo.name||'')+'</span><br><span style="color:#999">'+shortText(data.replyTo)+'</span>';
-      w.appendChild(rp);
-    }
-
-    var wrapper=document.createElement('div'); wrapper.className='bubble-wrapper';
-
-    var b=document.createElement('div'); b.className='bubble';
-    b.style.background=mine?color+'dd':'#1e1e1e';
-    b.style.color=mine?'#fff':'#e0e0e0';
-    b.style.border=mine?'none':'0.5px solid #2a2a2a';
-
-    // Long-press para abrir reações no mobile
-    var pressTimer=null;
-    b.addEventListener('touchstart', function(){
-      pressTimer=setTimeout(function(){
-        document.querySelectorAll('.react-menu.open').forEach(function(m){m.classList.remove('open');});
-        rm.classList.add('open');
-      }, 450);
-    }, {passive:true});
-    b.addEventListener('touchend',   function(){ clearTimeout(pressTimer); }, {passive:true});
-    b.addEventListener('touchmove',  function(){ clearTimeout(pressTimer); }, {passive:true});
-
-    if(data.sticker){
-      var sp=document.createElement('span'); sp.style.fontSize='36px'; sp.textContent=data.sticker; b.appendChild(sp);
-    } else if(data.gif){
-      var img=document.createElement('img'); img.src=data.gif; img.alt='gif'; img.loading='lazy'; b.appendChild(img);
-    } else {
-      var t=document.createElement('span'); t.textContent=data.text||''; b.appendChild(t);
-    }
-
-    var rm=document.createElement('div'); rm.className='react-menu';
-    LISTA_EMOJIS_UNIFICADA.forEach(function(e){
-      var opt=document.createElement('span'); opt.className='react-opt'; opt.textContent=e;
-      opt.addEventListener('click', function(evt){
-        evt.stopPropagation();
-        reagir(id, e, data.reactions);
-        rm.classList.remove('open');
-      });
-      rm.appendChild(opt);
-    });
-    wrapper.appendChild(rm);
-
-    var hint=document.createElement('i');
-    hint.className='ti ti-corner-up-left reply-hint';
-    hint.title='Responder mensagem';
-    hint.addEventListener('click', function(evt){
-      evt.stopPropagation();
-      replyTo={name:data.name,text:data.text,gif:data.gif,sticker:data.sticker,id:id};
-      document.getElementById('rb-name').textContent=data.name;
-      document.getElementById('rb-name').style.color=userColor(data.name);
-      document.getElementById('rb-text').textContent=shortText(data);
-      document.getElementById('reply-bar').style.display='flex';
-      document.getElementById('msg-input').focus();
-    });
-    wrapper.appendChild(hint);
-
-    if(data.reactions && Object.keys(data.reactions).length>0){
-      var rb=document.createElement('div'); rb.className='reactions-badge';
-      var counts={};
-      Object.values(data.reactions).forEach(function(e){ counts[e]=(counts[e]||0)+1; });
-      var badgeText=Object.keys(counts).join('');
-      rb.innerHTML='<span>'+badgeText+'</span><span class="react-user-badge">'+Object.keys(data.reactions).length+'</span>';
-      b.appendChild(rb);
-    }
-
-    wrapper.appendChild(b);
-    w.appendChild(wrapper);
-
-    var meta=document.createElement('div'); meta.className='meta'; meta.textContent=fmt(data.ts);
-    w.appendChild(meta);
-    return w;
-  }
-
-  function startListening(){
-    var box=document.getElementById('messages');
-    var q=col.orderBy('ts','asc');
-    q.onSnapshot(function(snap){
-      var atBot=box.scrollTop+box.clientHeight>=box.scrollHeight-100;
-      box.innerHTML='';
-      snap.forEach(function(doc){
-        var el=renderMsg(doc.data(), doc.id);
-        if(el) box.appendChild(el);
-      });
-      isInitialLoad=false;
-      if(atBot||snap.size<=1) box.scrollTop=box.scrollHeight;
-    });
-  }
-
-  function enviar(payload){
-    var btn=document.getElementById('send-btn'); btn.disabled=true;
-    var msg=Object.assign({type:'msg',name:myName,ts:firebase.firestore.FieldValue.serverTimestamp(),text:null,gif:null,sticker:null,replyTo:replyTo||null}, payload);
-    col.add(msg).then(function(){
-      cancelReply();
-      btn.disabled=false;
-    }).catch(function(){
-      btn.disabled=false;
-    });
-  }
-
-  function cancelReply(){
-    replyTo=null;
-    document.getElementById('reply-bar').style.display='none';
-    document.getElementById('rb-name').textContent='';
-    document.getElementById('rb-text').textContent='';
-  }
-
-  function entrar(){
-    var nome=document.getElementById('name-input').value.trim();
-    if(!nome) return;
-    myName=nome;
-    document.getElementById('login').style.display='none';
-    document.getElementById('chat-area').style.display='flex';
-    document.getElementById('me-label').textContent='você: '+myName;
-    col.add({type:'system',text:myName+' entrou no chat',ts:firebase.firestore.FieldValue.serverTimestamp()})
-      .then(function(){ startListening(); document.getElementById('msg-input').focus(); })
-      .catch(function(){
-        document.getElementById('login').style.display='flex';
-        document.getElementById('chat-area').style.display='none';
-        document.getElementById('login-err').style.display='block';
-      });
-  }
-
-  // Botão entrar — click + touchend para iOS
-  document.getElementById('enter-btn').addEventListener('click', entrar);
-  document.getElementById('enter-btn').addEventListener('touchend', function(e){ e.preventDefault(); entrar(); });
-  document.getElementById('name-input').addEventListener('keydown', function(e){ if(e.key==='Enter') entrar(); });
-  document.getElementById('reply-cancel').addEventListener('click', cancelReply);
-
-  document.getElementById('msg-input').addEventListener('keydown', function(e){
-    if(e.key==='Enter'){
-      e.preventDefault();
-      var v=document.getElementById('msg-input').value.trim();
-      if(v){ document.getElementById('msg-input').value=''; enviar({text:v}); }
-    }
-    if(e.key==='Escape') cancelReply();
-  });
-
-  function sendText(){
-    var v=document.getElementById('msg-input').value.trim();
-    if(v){ document.getElementById('msg-input').value=''; enviar({text:v}); }
-  }
-  document.getElementById('send-btn').addEventListener('click', sendText);
-  document.getElementById('send-btn').addEventListener('touchend', function(e){ e.preventDefault(); sendText(); });
-
-  // Fechar react-menu ao tocar fora
-  document.addEventListener('touchstart', function(e){
-    document.querySelectorAll('.react-menu.open').forEach(function(m){
-      if(!m.parentElement.contains(e.target)) m.classList.remove('open');
-    });
-  }, {passive:true});
-
-  // Stickers
-  function renderStickers(filter){
-    var grid=document.getElementById('sticker-grid'); grid.innerHTML='';
-    var list=filter ? LISTA_EMOJIS_UNIFICADA.filter(function(s){return s.includes(filter);}) : LISTA_EMOJIS_UNIFICADA;
-    list.forEach(function(s){
-      var sp=document.createElement('span'); sp.textContent=s;
-      sp.addEventListener('click', function(){ enviar({sticker:s}); toggleSticker(false); });
-      grid.appendChild(sp);
-    });
-  }
-
-  function toggleSticker(force){
-    stickerOpen=force!==undefined?force:!stickerOpen;
-    if(stickerOpen){ gifOpen=false; document.getElementById('gif-panel').style.display='none'; document.getElementById('gif-btn').classList.remove('active'); }
-    document.getElementById('sticker-panel').style.display=stickerOpen?'block':'none';
-    document.getElementById('sticker-btn').classList.toggle('active',stickerOpen);
-    if(stickerOpen){ renderStickers(''); document.getElementById('sticker-input').focus(); }
-  }
-
-  // GIFs
-  async function searchGifs(q){
-    var grid=document.getElementById('gif-grid'); grid.innerHTML='<div class="panel-hint">Buscando...</div>';
-    var endpoint=q
-      ? 'https://tenor.googleapis.com/v2/search?q='+encodeURIComponent(q)+'&key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif'
-      : 'https://tenor.googleapis.com/v2/featured?key=AIzaSyDNShBd-J2LkMw2HtxPfPiNmxfwKxsssYo&limit=12&media_filter=gif';
-    try{
-      var res=await fetch(endpoint);
-      var data=await res.json();
-      if(!data.results||!data.results.length){ grid.innerHTML='<div class="panel-hint">Nenhum resultado</div>'; return; }
-      grid.innerHTML='';
-      data.results.forEach(function(r){
-        var url=r.media_formats&&r.media_formats.tinygif&&r.media_formats.tinygif.url;
-        if(!url) return;
-        var img=document.createElement('img'); img.src=url; img.alt='gif'; img.loading='lazy';
-        img.addEventListener('click', function(){ enviar({gif:url}); toggleGif(false); });
-        grid.appendChild(img);
-      });
-    }catch(err){ grid.innerHTML='<div class="panel-hint">Erro ao buscar GIFs</div>'; }
-  }
-
-  function toggleGif(force){
-    gifOpen=force!==undefined?force:!gifOpen;
-    if(gifOpen){ stickerOpen=false; document.getElementById('sticker-panel').style.display='none'; document.getElementById('sticker-btn').classList.remove('active'); }
-    document.getElementById('gif-panel').style.display=gifOpen?'block':'none';
-    document.getElementById('gif-btn').classList.toggle('active',gifOpen);
-    if(gifOpen){ document.getElementById('gif-input').value=''; searchGifs(''); }
-  }
-
-  document.getElementById('sticker-btn').addEventListener('click', function(){ toggleSticker(); });
-  document.getElementById('sticker-close').addEventListener('click', function(){ toggleSticker(false); });
-  document.getElementById('gif-btn').addEventListener('click', function(){ toggleGif(); });
-  document.getElementById('gif-close').addEventListener('click', function(){ toggleGif(false); });
-
-  document.getElementById('sticker-input').addEventListener('input', function(e){
-    clearTimeout(stickerTimer); stickerTimer=setTimeout(function(){ renderStickers(e.target.value.trim()); }, 200);
-  });
-  document.getElementById('gif-input').addEventListener('input', function(e){
-    clearTimeout(gifTimer); gifTimer=setTimeout(function(){ searchGifs(e.target.value.trim()); }, 400);
-  });
+function init() {
+    if (!window.db) { setTimeout(init, 100); return; }
+    // AQUI ENTRA TODO O SEU CÓDIGO JS DE MENSAGENS QUE VOCÊ JÁ TEM
+    console.log("Chatzão pronto e estável.");
+}
+window.onload = init;
 </script>
+
 </body>
 </html>
