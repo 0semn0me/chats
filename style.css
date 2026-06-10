@@ -1,0 +1,45 @@
+:root {
+    --theme-primary: #F4D03F;
+    --bg-dark: #0e0e0e;
+    --bubble-mine: #262626;
+    --bubble-theirs: #1c1c1e;
+}
+
+body { background: var(--bg-dark); color: white; font-family: sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; }
+
+/* Animação Deletar (8 segundos) */
+.deleting-animation {
+    animation: cycleColors 8s linear forwards;
+}
+
+@keyframes cycleColors {
+    0%, 20% { background-color: blue; }
+    20%, 40% { background-color: red; }
+    40%, 60% { background-color: pink; }
+    60%, 80% { background-color: white; color: black; }
+    80%, 100% { background-color: green; }
+}
+
+#emoji-picker {
+    height: 300px; /* +2cm na altura */
+    background: #1a1a1a;
+    overflow-y: scroll;
+    padding: 10px;
+}
+
+#input-area {
+    display: flex;
+    padding: 10px;
+    background: var(--bg-dark);
+}
+
+#msg-input {
+    flex: 1;
+    min-height: 40px;
+    resize: none;
+    border-radius: 20px;
+    padding: 10px;
+}
+
+/* Ajuste do botão de áudio estendido */
+#btn-audio { width: 60px; }
