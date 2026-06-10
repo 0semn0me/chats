@@ -4,22 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,viewport-fit=cover">
 <title>Chatzão</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-<style>
-/* --- SEU CSS ORIGINAL --- */
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--font:system-ui,-apple-system,sans-serif;--r:8px;--rl:14px;--p:#534AB7;--pt:#fff;--bg:#0e0e0e;--s1:#141414;--s2:#1e1e1e;--s3:#2a2a2a;--b1:#222;--b2:#333;--b3:#444;--t1:#fff;--t2:#ccc;--t3:#888;--t4:#555;}
-html,body{height:100%;height:100dvh;background:var(--bg);overflow:hidden;font-family:var(--font)}
-body{display:flex;flex-direction:column}
-#app{display:flex;flex-direction:column;flex:1;height:100dvh;overflow:hidden;background:var(--bg)}
-/* Adicione aqui o restante do seu CSS original */
-</style>
-</head>
-<body>
-
-<div id="app">
-    </div>
-
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, limit, deleteDoc, doc, writeBatch, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
@@ -35,7 +19,7 @@ body{display:flex;flex-direction:column}
   };
   
   const app = initializeApp(firebaseConfig);
-  // Expondo variáveis para o escopo global (window)
+  // ANCORAGEM GLOBAL: Isso permite que seu código original acesse o Firebase
   window.db = getFirestore(app);
   window.collection = collection;
   window.addDoc = addDoc;
@@ -49,24 +33,26 @@ body{display:flex;flex-direction:column}
   window.writeBatch = writeBatch;
   window.updateDoc = updateDoc;
   window.arrayUnion = arrayUnion;
+  console.log("Firebase Global Ancorado");
 </script>
+
+<style>
+/* Cole seu CSS aqui */
+</style>
+</head>
+<body>
+<div id="app">
+    </div>
 
 <script src="bg.js"></script>
 
 <script>
-    // AQUI VOCÊ COLA O SEU JAVASCRIPT ORIGINAL COMPLETO.
-    // Como window.db já foi criado no script acima, 
-    // seu código vai enxergar o 'db' normalmente.
+    // Cole TODO o seu JavaScript original aqui.
+    // Como window.db e window.collection já existem, 
+    // ele funcionará exatamente como antes.
     
-    // Certifique-se de que o seu init() seja chamado aqui no final:
-    window.onload = function() {
-        if(typeof init === 'function') {
-            init();
-        } else {
-            console.error("A função init() não foi encontrada no seu código.");
-        }
-    };
+    // IMPORTANTE: Se o seu init() estiver aqui, garanta que ele é chamado:
+    init();
 </script>
-
 </body>
 </html>
