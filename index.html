@@ -6,61 +6,56 @@
     <title>Chatzão</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --bg: #0e0e0e; --panel: #1a1a1a; --primary: #fcd535; }
+        :root { --bg-dark: #0e0e0e; --theme-primary: #fcd535; --theme-text: #000; --border-radius-md: 8px; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { background: var(--bg); color: white; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+        body { background: var(--bg-dark); color: white; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
         .screen { display: none; height: 100%; flex-direction: column; }
         .active { display: flex; }
         
-        /* LOGIN */
-        #login-screen { justify-content: center; align-items: center; padding: 20px; }
-        .login-box { width: 100%; max-width: 320px; background: var(--panel); padding: 30px; border-radius: 15px; display: flex; flex-direction: column; gap: 15px; }
-        .avatar-area { display: flex; justify-content: center; align-items: center; gap: 20px; margin-bottom: 10px; }
-        .avatar-box { width: 70px; height: 70px; border: 2px solid #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; cursor: pointer; }
-        input { padding: 15px; border-radius: 8px; border: 1px solid #333; background: #222; color: white; }
-        button { padding: 15px; background: var(--primary); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        /* LOGIN REVISADO */
+        #login { flex: 1; align-items: center; justify-content: center; padding: 20px; }
+        .login-box { width: 100%; max-width: 300px; background: #1a1a1a; padding: 25px; border-radius: 15px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        .avatar-pick { width: 72px; height: 72px; border-radius: 50%; border: 2px solid #333; display: flex; align-items: center; justify-content: center; overflow: hidden; cursor: pointer; position: relative; }
+        .avatar-pick img { width: 100%; height: 100%; object-fit: cover; }
+        .login-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        .btn-icon { width: 40px; height: 40px; border-radius: 50%; border: none; background: #333; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        input { width: 100%; padding: 12px; border-radius: var(--border-radius-md); border: 1px solid #333; background: #222; color: white; }
+        button.main-btn { width: 100%; padding: 12px; background: var(--theme-primary); border: none; border-radius: var(--border-radius-md); font-weight: bold; cursor: pointer; }
 
-        /* CHAT */
-        header { padding: 10px 15px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; }
-        #chat-window { flex: 1; overflow-x: hidden; overflow-y: auto; padding: 10px; scroll-snap-type: y mandatory; }
-        .chat-footer { padding: 10px; background: var(--panel); display: flex; gap: 10px; }
-        .input-wrapper { flex: 1; }
-        
-        /* CONFIG/FUNDO */
-        #config-screen { padding: 20px; }
-        .bg-carousel { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 10px 0; }
-        .bg-card { min-width: 100px; height: 100px; background: #333; border: 2px solid #000; border-radius: 10px; scroll-snap-align: center; }
+        /* CHAT REVISADO */
+        header { padding: 15px; background: #1a1a1a; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        #chat-window { flex: 1; overflow-y: auto; padding: 10px; }
+        .chat-footer { padding: 10px; background: #1a1a1a; display: flex; gap: 10px; align-items: center; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen" class="screen active">
+    <div id="login" class="screen active">
         <div class="login-box">
-            <h1>Chatzão</h1>
-            <div class="avatar-area">
-                <div id="avatar-preview" class="avatar-box">👤</div>
-                <button onclick="sortearAvatar()">🔄</button>
+            <div class="avatar-pick" id="avatar-preview">👤</div>
+            <div class="login-row">
+                <button class="btn-icon" onclick="sortearAvatar()"><i class="fas fa-sync"></i></button>
                 <input type="file" id="upload-avatar" hidden onchange="uploadFoto(this)">
-                <button onclick="document.getElementById('upload-avatar').click()">📸</button>
+                <button class="btn-icon" onclick="document.getElementById('upload-avatar').click()"><i class="fas fa-camera"></i></button>
             </div>
             <input type="text" id="in-nome" placeholder="Nome Real">
             <input type="text" id="in-nick" placeholder="Apelido">
-            <button onclick="fazerLogin()">Entrar</button>
+            <button class="main-btn" onclick="fazerLogin()">Entrar</button>
         </div>
     </div>
 
     <div id="chat-screen" class="screen">
         <header>
-            <div id="user-info">
-                <span id="display-user"></span> 
-                <button onclick="senhaMestre()">🔒</button>
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span id="display-nick"></span>
+                <button class="btn-icon" style="width:30px; height:30px; font-size:12px" onclick="senhaMestre()"><i class="fas fa-lock"></i></button>
             </div>
-            <button onclick="sair()">Sair</button>
+            <button class="main-btn" style="width:auto; padding:5px 15px" onclick="sair()">Sair</button>
         </header>
         <div id="chat-window"></div>
         <div class="chat-footer">
-            <input type="text" id="msg-input" style="flex:1" placeholder="Mensagem...">
-            <button onclick="enviar()">➤</button>
+            <input type="text" id="msg-input" placeholder="Mensagem...">
+            <button class="btn-icon" style="background:var(--theme-primary); color:black" onclick="enviar()"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
@@ -68,31 +63,23 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, deleteDoc, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk",
-            authDomain: "chatzao-a27ed.firebaseapp.com",
-            databaseURL: "https://chatzao-a27ed-default-rtdb.firebaseio.com",
-            projectId: "chatzao-a27ed",
-            storageBucket: "chatzao-a27ed.firebasestorage.app",
-            messagingSenderId: "923740068926",
-            appId: "1:923740068926:web:f4d36655ac6c3460f5056f"
-        };
+        const firebaseConfig = { /* Sua config Firebase aqui */ };
         const db = getFirestore(initializeApp(firebaseConfig));
 
-        let avatarAtual = "👤";
+        let avatarData = "👤";
 
         window.sortearAvatar = () => {
-            const avatares = ["👽", "🤖", "🤡", "😎", "🦊"];
-            avatarAtual = avatares[Math.floor(Math.random() * avatares.length)];
-            document.getElementById('avatar-preview').innerText = avatarAtual;
+            const avatares = ["👽", "🤖", "🤡", "😎", "🦊", "🦁"];
+            avatarData = avatares[Math.floor(Math.random() * avatares.length)];
+            document.getElementById('avatar-preview').innerText = avatarData;
         };
 
         window.uploadFoto = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    avatarAtual = `<img src="${e.target.result}" style="width:100%;height:100%;border-radius:50%">`;
-                    document.getElementById('avatar-preview').innerHTML = avatarAtual;
+                    avatarData = e.target.result;
+                    document.getElementById('avatar-preview').innerHTML = `<img src="${avatarData}">`;
                 };
                 reader.readAsDataURL(input.files[0]);
             }
@@ -102,58 +89,26 @@
             const nome = document.getElementById('in-nome').value;
             const nick = document.getElementById('in-nick').value;
             if(nome && nick) {
-                localStorage.setItem('user', JSON.stringify({ nome, nick, avatar: avatarAtual }));
-                iniciarChat();
+                localStorage.setItem('user', JSON.stringify({ nome, nick, avatar: avatarData }));
+                location.reload();
             }
-        };
-
-        const iniciarChat = () => {
-            const user = JSON.parse(localStorage.getItem('user'));
-            if(!user) return;
-            document.getElementById('login-screen').classList.remove('active');
-            document.getElementById('chat-screen').classList.add('active');
-            document.getElementById('display-user').innerText = user.nick;
-            carregarMensagens();
-        };
-
-        window.sair = () => {
-            localStorage.clear();
-            location.reload();
         };
 
         window.senhaMestre = async () => {
-            const senha = prompt("Senha Mestre:");
-            if(senha === "220399") {
-                const snapshot = await getDocs(collection(db, "mensagens"));
-                snapshot.forEach(doc => deleteDoc(doc.ref));
-                alert("Chat limpo!");
-            } else {
-                alert("Senha incorreta!");
+            if(prompt("Senha Mestre:") === "220399") {
+                const snap = await getDocs(collection(db, "mensagens"));
+                snap.forEach(d => deleteDoc(d.ref));
             }
         };
 
-        window.enviar = async () => {
-            const texto = document.getElementById('msg-input').value;
+        window.sair = () => { localStorage.clear(); location.reload(); };
+
+        if(localStorage.getItem('user')) {
+            document.getElementById('login').classList.remove('active');
+            document.getElementById('chat-screen').classList.add('active');
             const user = JSON.parse(localStorage.getItem('user'));
-            if(texto) {
-                await addDoc(collection(db, "mensagens"), { texto, usuario: user.nick, timestamp: serverTimestamp() });
-                document.getElementById('msg-input').value = "";
-            }
-        };
-
-        const carregarMensagens = () => {
-            onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
-                const win = document.getElementById('chat-window');
-                win.innerHTML = "";
-                snap.forEach(doc => {
-                    const msg = doc.data();
-                    win.innerHTML += `<div style="padding:10px; border-bottom:1px solid #333">${msg.usuario}: ${msg.texto}</div>`;
-                });
-            });
-        };
-
-        // Login automático
-        if(localStorage.getItem('user')) iniciarChat();
+            document.getElementById('display-nick').innerText = user.nick;
+        }
     </script>
 </body>
 </html>
