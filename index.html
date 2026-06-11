@@ -1,88 +1,54 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão - Premium</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <style>
-        :root { --theme-primary: #F4D03F; --bg-dark: #0e0e0e; --bg-panel: #161616; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { height: 100dvh; background: var(--bg-dark); color: #fff; overflow: hidden; }
-        #app { height: 100dvh; display: flex; flex-direction: column; background-size: cover; background-position: center; }
-
-        /* Login Premium */
-        #login-screen { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; padding: 20px; }
-        .avatar-container { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #333; overflow: hidden; cursor: pointer; background: #222; position: relative; }
-        .avatar-container img { width: 100%; height: 100%; object-fit: cover; }
-        .login-inputs { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; }
-        .input-field { padding: 12px; border-radius: 10px; border: 1px solid #333; background: #1a1a1a; color: #fff; width: 100%; }
-        #btn-enter { padding: 14px; background: var(--theme-primary); color: #000; border: none; border-radius: 10px; font-weight: bold; cursor: pointer; }
-
-        /* Chat Layout (Fiel à Foto 1) */
-        #chat-screen { display: none; flex-direction: column; height: 100%; }
-        #topbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--bg-panel); border-bottom: 1px solid #333; }
-        #messages { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
-        .msg { max-width: 75%; padding: 10px 14px; border-radius: 16px; background: #262626; align-self: flex-start; font-size: 14px; }
-        .msg.mine { background: var(--theme-primary); color: #000; align-self: flex-end; }
-        
-        /* Menu Config */
-        #config-panel { position: fixed; bottom: 0; width: 100%; background: #111; padding: 20px; border-radius: 20px 20px 0 0; transform: translateY(100%); transition: 0.3s; }
-    </style>
-</head>
-<body>
-
-<div id="app">
-    <div id="login-screen">
-        <div class="avatar-container" onclick="sortearAvatar()">
-            <img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=1">
-        </div>
-        <div class="login-inputs">
-            <input class="input-field" id="real-name" placeholder="Nome Real">
-            <input class="input-field" id="nick-name" placeholder="Apelido">
-            <button id="btn-enter">Entrar</button>
-        </div>
-    </div>
-
-    <div id="chat-screen">
-        <div id="topbar">
-            <div><span id="my-nick"></span> <button onclick="senhaMestre()"><i class="ti ti-lock"></i></button></div>
-            <button onclick="sair()">Sair</button>
-        </div>
-        <div id="messages"></div>
-        <div style="padding:10px; background:var(--bg-panel); display:flex; gap:8px;">
-            <input id="msg-input" class="input-field" placeholder="Mensagem...">
-            <button onclick="enviar()"><i class="ti ti-send"></i></button>
-        </div>
-    </div>
-</div>
-
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     const db = getFirestore(initializeApp({ apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk", projectId: "chatzao-a27ed" }));
 
-    // Persistência e Lógica
-    let userData = JSON.parse(localStorage.getItem('user')) || {};
-    
-    window.sortearAvatar = () => {
-        const seed = Math.random().toString(36).substring(7);
-        userData.avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
-        document.getElementById('avatar-img').src = userData.avatar;
-    };
+    // 1. CARREGAMENTO INICIAL
+    const user = JSON.parse(localStorage.getItem('user'));
 
-    document.getElementById('btn-enter').onclick = () => {
-        userData.nome = document.getElementById('real-name').value;
-        userData.nick = document.getElementById('nick-name').value;
-        if(userData.nome && userData.nick) {
-            localStorage.setItem('user', JSON.stringify(userData));
-            location.reload();
+    // Verifica se já existe login e força a transição visual
+    if(user) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.getElementById('my-nick').innerText = user.nick;
+        carregarChat();
+    }
+
+    // 2. FUNÇÃO DE LOGIN (Sem recarregar a página)
+    window.fazerLogin = () => {
+        const nome = document.getElementById('in-real').value;
+        const nick = document.getElementById('in-nick').value;
+        const avatar = document.getElementById('avatar-img').src;
+        
+        if(!nome || !nick) {
+            alert("Preencha ambos os campos!");
+            return;
         }
+
+        // Salva e transiciona manualmente
+        localStorage.setItem('user', JSON.stringify({nome, nick, avatar}));
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('chat-screen').style.display = 'flex';
+        document.getElementById('my-nick').innerText = nick;
+        carregarChat();
     };
 
-    // A lógica de renderização, Senha Mestre e Firebase segue o padrão robusto que construímos.
-    // O sistema de background e cores pode ser injetado via CSS dinâmico.
+    // 3. VINCULA O BOTÃO
+    document.getElementById('btn-enter').addEventListener('click', fazerLogin);
+
+    // 4. FUNÇÃO DE CHAT (Isolada para não conflitar)
+    function carregarChat() {
+        onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
+            const container = document.getElementById('messages');
+            container.innerHTML = "";
+            snap.forEach(d => {
+                const m = d.data();
+                container.innerHTML += `<div class="msg ${m.usuario === JSON.parse(localStorage.getItem('user')).nick ? 'mine' : ''}">${m.texto}</div>`;
+            });
+            container.scrollTop = container.scrollHeight;
+        });
+    }
+
+    // ... (restante das suas funções de sortearAvatar, enviar, etc)
 </script>
-</body>
-</html>
