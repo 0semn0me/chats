@@ -1,95 +1,19 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão</title>
-    <style>
-        :root { --theme-primary: #F4D03F; --bg-dark: #0e0e0e; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
-        body { height: 100dvh; background: var(--bg-dark); color: #fff; overflow: hidden; }
-        
-        /* Telas */
-        #login-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 15px; }
-        #chat-screen { display: none; flex-direction: column; height: 100%; }
+// --- MOTOR DE AVATAR REFORÇADO ---
+const avatarImg = document.getElementById('avatar-img');
 
-        /* Estilos */
-        .avatar-box { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #333; overflow: hidden; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        input { width: 250px; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: white; }
-        button { padding: 12px 20px; background: var(--theme-primary); border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-    </style>
-</head>
-<body>
+window.sortearAvatar = () => {
+    // Adicionamos um timestamp (Date.now()) para forçar o navegador a buscar uma nova imagem
+    const seed = Math.random().toString(36).substring(7);
+    const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}&t=${Date.now()}`;
+    
+    avatarImg.src = url;
+    localStorage.setItem('avatarUrl', url);
+    console.log("Avatar atualizado para:", url);
+};
 
-    <div id="login-screen">
-        <div class="avatar-box"><img id="avatar-img" src="https://api.dicebear.com/7.x/bottts/svg?seed=123"></div>
-        <input id="in-real" placeholder="Nome Real">
-        <input id="in-nick" placeholder="Apelido">
-        <button id="btn-enter" type="button">Entrar no Chat</button>
-    </div>
-
-    <div id="chat-screen">
-        <div style="padding:15px; background:#161616; display:flex; justify-content:space-between;">
-            <span id="my-nick"></span>
-            <button onclick="localStorage.clear(); location.reload();" style="background:none; color:white;">Sair</button>
-        </div>
-        <div id="messages" style="flex:1; overflow-y:auto; padding:15px;"></div>
-        <div style="padding:10px; background:#161616; display:flex; gap:5px;">
-            <input id="msg-input" style="flex:1;" placeholder="Mensagem...">
-            <button onclick="enviar()">Enviar</button>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-        const db = getFirestore(initializeApp({ apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk", projectId: "chatzao-a27ed" }));
-
-        // Lógica de transição (Sem recarregar)
-        const entrar = () => {
-            const nome = document.getElementById('in-real').value;
-            const nick = document.getElementById('in-nick').value;
-            if(!nome || !nick) return alert("Preencha tudo!");
-            
-            localStorage.setItem('user', JSON.stringify({nome, nick}));
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('chat-screen').style.display = 'flex';
-            document.getElementById('my-nick').innerText = nick;
-            carregarChat(nick);
-        };
-
-        // Eventos
-        document.getElementById('btn-enter').addEventListener('click', entrar);
-
-        // Checar persistência
-        const userSalvo = JSON.parse(localStorage.getItem('user'));
-        if(userSalvo) {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('chat-screen').style.display = 'flex';
-            document.getElementById('my-nick').innerText = userSalvo.nick;
-            carregarChat(userSalvo.nick);
-        }
-
-        function carregarChat(nick) {
-            onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
-                const msgs = document.getElementById('messages');
-                msgs.innerHTML = "";
-                snap.forEach(d => {
-                    const m = d.data();
-                    msgs.innerHTML += `<div style="padding:8px; margin:5px; background:${m.usuario === nick ? '#fcd535' : '#333'}; border-radius:10px; align-self:${m.usuario === nick ? 'flex-end' : 'flex-start'}">${m.texto}</div>`;
-                });
-                msgs.scrollTop = msgs.scrollHeight;
-            });
-        }
-
-        window.enviar = async () => {
-            const input = document.getElementById('msg-input');
-            const user = JSON.parse(localStorage.getItem('user'));
-            await addDoc(collection(db, "mensagens"), { usuario: user.nick, texto: input.value, timestamp: Date.now() });
-            input.value = "";
-        };
-    </script>
-</body>
-</html>
+// Ao carregar a página, se não houver um avatar, sorteia um automaticamente
+if (!localStorage.getItem('avatarUrl')) {
+    sortearAvatar();
+} else {
+    avatarImg.src = localStorage.getItem('avatarUrl');
+}
