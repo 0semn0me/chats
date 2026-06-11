@@ -1,77 +1,63 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Chatzão Oficial</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
-        :root { --primary: #F4D03F; --bg: #0e0e0e; --panel: #161616; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* Top Bar */
-        #topbar { padding: 15px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        /* Trava de Layout: garante que o app ocupe exatamente a área visível */
+        * { box-sizing: border-box; touch-action: manipulation; }
+        html, body { height: 100dvh; margin: 0; overflow: hidden; background: #0e0e0e; font-family: sans-serif; }
         
-        /* Menu Lateral (Hamburguer) */
-        #menu { position: fixed; left: -250px; top: 0; width: 250px; height: 100%; background: #222; transition: 0.3s; padding: 20px; z-index: 1000; }
-        #menu.open { left: 0; }
+        .screen { display: none; height: 100dvh; flex-direction: column; }
+        .screen.active { display: flex; }
 
-        /* Chat Area */
-        #chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        /* Login */
+        #login-screen { justify-content: center; align-items: center; gap: 20px; }
         
-        /* Input Area (Onde o layout brilha) */
-        #footer { padding: 10px; background: var(--panel); display: flex; align-items: center; gap: 8px; }
-        .input-wrapper { flex: 1; display: flex; align-items: center; background: #222; border-radius: 20px; padding: 5px 10px; }
-        input { flex: 1; background: transparent; border: none; color: #fff; padding: 8px; }
+        /* Chat */
+        #chat-screen { background: #0e0e0e; }
+        
+        /* Logout e Logout-Fix */
+        .btn-logout { background: #ff4d4d; color: white; padding: 10px; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
 
-<div id="menu">
-    <i class="ti ti-lock" onclick="senhaMestre()"></i>
-    <h3>Configurações</h3>
-    <input type="color" onchange="document.documentElement.style.setProperty('--primary', this.value)">
+    <div id="login-screen" class="screen active">
+        <h1>Bem-vindo</h1>
+        <button onclick="entrar()">Entrar no Chat</button>
     </div>
 
-<div id="topbar">
-    <i class="ti ti-menu-2" onclick="document.getElementById('menu').classList.toggle('open')"></i>
-    <div id="profile-pic" style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;">
-        <img id="avatar" src="" style="width:100%; height:100%; object-fit:cover;">
+    <div id="chat-screen" class="screen">
+        <div id="topbar" style="background:#161616; padding:15px; display:flex; justify-content:space-between;">
+            <span>Chat Amigos</span>
+            <div class="btn-logout" onclick="fazerLogout()">Sair</div>
+        </div>
+        <div id="chat-window" style="flex:1; overflow-y:auto; padding:15px;"></div>
     </div>
-</div>
 
-<div id="chat"></div>
+    <script>
+        // Lógica de Estado (Login/Logout)
+        window.entrar = () => {
+            localStorage.setItem('logado', 'true');
+            mudarTela('chat-screen');
+        };
 
-<div id="footer">
-    <i class="ti ti-microphone"></i>
-    <i class="ti ti-mood-smile" onclick="toggleEmojis()"></i>
-    <div class="input-wrapper">
-        <input id="msg-input" placeholder="Mensagem...">
-        <i class="ti ti-camera" onclick="document.getElementById('file-input').click()"></i>
-        <input type="file" id="file-input" style="display:none">
-    </div>
-    <i class="ti ti-send" onclick="enviar()"></i>
-</div>
+        window.fazerLogout = () => {
+            localStorage.removeItem('logado');
+            location.reload(); // Recarrega para limpar o estado
+        };
 
-<script type="module">
-    // Firebase e lógica de estado
-    // Aqui entra sua integração Firebase (Firestore)
-    
-    // 1. Perfil Foto Aleatória
-    const avatar = document.getElementById('avatar');
-    avatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`;
-    
-    // 2. Lógica de Upload (Galeria)
-    document.getElementById('file-input').onchange = (e) => {
-        const reader = new FileReader();
-        reader.onload = (event) => avatar.src = event.target.result;
-        reader.readAsDataURL(e.target.files[0]);
-    };
-    
-    // 3. Senha Mestre (Fica no menu)
-    window.senhaMestre = () => {
-        if(prompt("Senha:") === "220399") { /* Lógica de delete massivo */ }
-    };
-</script>
+        window.mudarTela = (telaId) => {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(telaId).classList.add('active');
+        };
+
+        // Verifica ao carregar se já está logado
+        if (localStorage.getItem('logado')) {
+            mudarTela('chat-screen');
+        }
+    </script>
 </body>
 </html>
