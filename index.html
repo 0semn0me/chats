@@ -1,54 +1,70 @@
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     const db = getFirestore(initializeApp({ apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk", projectId: "chatzao-a27ed" }));
 
-    // 1. CARREGAMENTO INICIAL
-    const user = JSON.parse(localStorage.getItem('user'));
+    // Elementos da interface
+    const loginScreen = document.getElementById('login-screen');
+    const chatScreen = document.getElementById('chat-screen');
+    const myNick = document.getElementById('my-nick');
 
-    // Verifica se já existe login e força a transição visual
-    if(user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('my-nick').innerText = user.nick;
-        carregarChat();
+    // 1. CHECAGEM INSTANTÂNEA
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Esconde tudo no início para evitar o "flash" da tela branca
+    if (user) {
+        exibirChat(user);
+    } else {
+        loginScreen.style.display = 'flex';
     }
 
-    // 2. FUNÇÃO DE LOGIN (Sem recarregar a página)
+    function exibirChat(user) {
+        loginScreen.style.display = 'none';
+        chatScreen.style.display = 'flex';
+        myNick.innerText = user.nick;
+        carregarMensagens(user.nick);
+    }
+
+    // 2. LOGIC DE LOGIN (Sem recarregar)
     window.fazerLogin = () => {
         const nome = document.getElementById('in-real').value;
         const nick = document.getElementById('in-nick').value;
         const avatar = document.getElementById('avatar-img').src;
         
-        if(!nome || !nick) {
-            alert("Preencha ambos os campos!");
-            return;
-        }
-
-        // Salva e transiciona manualmente
-        localStorage.setItem('user', JSON.stringify({nome, nick, avatar}));
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('my-nick').innerText = nick;
-        carregarChat();
+        if(!nome || !nick) return alert("Preencha tudo!");
+        
+        const userData = { nome, nick, avatar };
+        localStorage.setItem('user', JSON.stringify(userData));
+        exibirChat(userData);
     };
 
-    // 3. VINCULA O BOTÃO
-    document.getElementById('btn-enter').addEventListener('click', fazerLogin);
+    document.getElementById('btn-enter').onclick = fazerLogin;
 
-    // 4. FUNÇÃO DE CHAT (Isolada para não conflitar)
-    function carregarChat() {
-        onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
+    // 3. CARREGAMENTO DE MENSAGENS
+    function carregarMensagens(meuNick) {
+        const q = query(collection(db, "mensagens"), orderBy("timestamp", "asc"));
+        onSnapshot(q, (snap) => {
             const container = document.getElementById('messages');
             container.innerHTML = "";
             snap.forEach(d => {
                 const m = d.data();
-                container.innerHTML += `<div class="msg ${m.usuario === JSON.parse(localStorage.getItem('user')).nick ? 'mine' : ''}">${m.texto}</div>`;
+                container.innerHTML += `
+                    <div class="msg ${m.usuario === meuNick ? 'mine' : ''}">
+                        ${m.texto}
+                    </div>`;
             });
             container.scrollTop = container.scrollHeight;
         });
     }
 
-    // ... (restante das suas funções de sortearAvatar, enviar, etc)
+    // Funções de apoio
+    window.sair = () => { localStorage.clear(); location.reload(); };
+    window.enviar = async () => {
+        const input = document.getElementById('msg-input');
+        const user = JSON.parse(localStorage.getItem('user'));
+        if(!input.value) return;
+        await addDoc(collection(db, "mensagens"), { usuario: user.nick, texto: input.value, timestamp: Date.now() });
+        input.value = "";
+    };
 </script>
