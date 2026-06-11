@@ -3,88 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão Final</title>
+    <title>Chatzão Oficial</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
         :root { --primary: #F4D03F; --bg: #0e0e0e; --panel: #161616; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: sans-serif; height: 100dvh; display: flex; flex-direction: column; }
+        body { margin: 0; background: var(--bg); color: #fff; font-family: sans-serif; height: 100dvh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* Top Bar */
+        #topbar { padding: 15px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
         
-        #topbar { padding: 15px; background: var(--panel); display: flex; justify-content: space-between; align-items: center; }
+        /* Menu Lateral (Hamburguer) */
+        #menu { position: fixed; left: -250px; top: 0; width: 250px; height: 100%; background: #222; transition: 0.3s; padding: 20px; z-index: 1000; }
+        #menu.open { left: 0; }
+
+        /* Chat Area */
         #chat { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
         
-        .msg { padding: 12px; border-radius: 15px; background: #262626; max-width: 80%; cursor: pointer; transition: 0.3s; }
-        .msg.mine { background: var(--primary); color: #000; align-self: flex-end; }
-        
-        /* Efeito de deleção (as 5 cores) */
-        @keyframes pulse {
-            0% { background: blue; } 20% { background: red; } 40% { background: deeppink; } 60% { background: #fff; color:#000; } 80% { background: green; } 100% { background: #262626; }
-        }
-        .deleting { animation: pulse 8s linear; }
-
-        #footer { padding: 10px; background: var(--panel); display: flex; gap: 10px; }
-        input { flex: 1; padding: 12px; border-radius: 20px; border: none; background: #222; color: #fff; }
+        /* Input Area (Onde o layout brilha) */
+        #footer { padding: 10px; background: var(--panel); display: flex; align-items: center; gap: 8px; }
+        .input-wrapper { flex: 1; display: flex; align-items: center; background: #222; border-radius: 20px; padding: 5px 10px; }
+        input { flex: 1; background: transparent; border: none; color: #fff; padding: 8px; }
     </style>
 </head>
 <body>
 
-<div id="topbar">
-    <div>Chat Amigos <i class="ti ti-lock" onclick="senhaMestre()"></i></div>
+<div id="menu">
+    <i class="ti ti-lock" onclick="senhaMestre()"></i>
+    <h3>Configurações</h3>
     <input type="color" onchange="document.documentElement.style.setProperty('--primary', this.value)">
+    </div>
+
+<div id="topbar">
+    <i class="ti ti-menu-2" onclick="document.getElementById('menu').classList.toggle('open')"></i>
+    <div id="profile-pic" style="width:40px; height:40px; border-radius:50%; background:#333; overflow:hidden;">
+        <img id="avatar" src="" style="width:100%; height:100%; object-fit:cover;">
+    </div>
 </div>
 
 <div id="chat"></div>
 
 <div id="footer">
-    <input id="msg-input" placeholder="Mensagem...">
-    <button onclick="enviar()">Enviar</button>
+    <i class="ti ti-microphone"></i>
+    <i class="ti ti-mood-smile" onclick="toggleEmojis()"></i>
+    <div class="input-wrapper">
+        <input id="msg-input" placeholder="Mensagem...">
+        <i class="ti ti-camera" onclick="document.getElementById('file-input').click()"></i>
+        <input type="file" id="file-input" style="display:none">
+    </div>
+    <i class="ti ti-send" onclick="enviar()"></i>
 </div>
 
 <script type="module">
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, writeBatch, doc, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-
-    const db = getFirestore(initializeApp({ apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk", projectId: "chatzao-a27ed" }));
-
-    // 1. Deleção com Animação (8 segundos)
-    window.apagarMsg = async (msgId) => {
-        const el = document.getElementById(msgId);
-        el.className = 'msg deleting';
-        setTimeout(async () => {
-            await deleteDoc(doc(db, "mensagens", msgId));
-        }, 8000);
+    // Firebase e lógica de estado
+    // Aqui entra sua integração Firebase (Firestore)
+    
+    // 1. Perfil Foto Aleatória
+    const avatar = document.getElementById('avatar');
+    avatar.src = `https://api.dicebear.com/7.x/bottts/svg?seed=${Math.random()}`;
+    
+    // 2. Lógica de Upload (Galeria)
+    document.getElementById('file-input').onchange = (e) => {
+        const reader = new FileReader();
+        reader.onload = (event) => avatar.src = event.target.result;
+        reader.readAsDataURL(e.target.files[0]);
     };
-
-    // 2. Limpeza Total (Garantida com Batch)
-    window.senhaMestre = async () => {
-        if(prompt("Senha:") === "220399") {
-            const snap = await getDocs(collection(db, "mensagens"));
-            const batch = writeBatch(db);
-            snap.forEach(d => batch.delete(d.ref));
-            await batch.commit();
-            location.reload();
-        }
-    };
-
-    // 3. Renderização
-    onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
-        const chat = document.getElementById('chat');
-        chat.innerHTML = "";
-        snap.forEach(d => {
-            const m = d.data();
-            const div = document.createElement('div');
-            div.id = d.id;
-            div.className = `msg ${m.usuario === 'Eu' ? 'mine' : ''}`;
-            div.innerText = m.texto;
-            div.onclick = () => apagarMsg(d.id); // Ao clicar, inicia a deleção
-            chat.appendChild(div);
-        });
-    });
-
-    window.enviar = async () => {
-        const input = document.getElementById('msg-input');
-        if(!input.value) return;
-        await addDoc(collection(db, "mensagens"), { usuario: 'Eu', texto: input.value, timestamp: Date.now() });
-        input.value = "";
+    
+    // 3. Senha Mestre (Fica no menu)
+    window.senhaMestre = () => {
+        if(prompt("Senha:") === "220399") { /* Lógica de delete massivo */ }
     };
 </script>
 </body>
