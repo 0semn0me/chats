@@ -156,42 +156,81 @@
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
 
-    /* Caixa de mensagem compacta inteligente */
-    .msg { display: flex; flex-direction: column; max-width: 80%; gap: 3px; position: relative; }
-    .msg.mine { align-self: flex-end; align-items: flex-end; }
-    .msg.theirs { align-self: flex-start; align-items: flex-start; padding-left: 42px; }
-    
-    /* Foto do amigo com o nome EXATAMENTE embaixo */
-    .msg-sender-block {
-      position: absolute; left: 0; top: 0;
-      display: flex; flex-direction: column; align-items: center;
-      width: 36px; text-align: center; gap: 2px;
+    /* ── CAIXA DE MENSAGEM ULTRA PROPORCIONAL & VERTICAL ── */
+    .msg { 
+      display: flex; 
+      flex-direction: column; 
+      max-width: 75%; 
+      gap: 4px; 
+      position: relative; 
     }
-    .msg-sender-block img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 1px solid var(--border); }
-    .msg-sender-name { font-size: 9px; color: var(--muted); max-width: 45px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+    .msg.mine { align-self: flex-end; align-items: flex-end; }
+    .msg.theirs { align-self: flex-start; align-items: flex-start; }
     
-    .bubble-wrapper { display: flex; align-items: center; gap: 6px; position: relative; width: 100%; }
+    /* Bloco de perfil ACIMA da mensagem */
+    .msg-sender-block {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+    .mine .msg-sender-block { flex-direction: row-reverse; }
+
+    .msg-sender-block img { 
+      width: 28px; 
+      height: 28px; 
+      border-radius: 50%; 
+      object-fit: cover; 
+      cursor: pointer; 
+      border: 1px solid var(--border); 
+    }
+    .msg-sender-name { 
+      font-size: 12px; 
+      color: var(--tp); 
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    
+    .bubble-wrapper { 
+      display: flex; 
+      align-items: center; 
+      gap: 6px; 
+      position: relative; 
+      width: 100%;
+    }
     .mine .bubble-wrapper { flex-direction: row-reverse; }
 
+    /* Bolha responsiva ao tamanho do texto */
     .bubble {
-      padding: 8px 12px; border-radius: 14px;
-      font-size: 14px; line-height: 1.4;
-      word-break: break-word; white-space: pre-wrap;
-      position: relative; transition: background 0.15s;
-      width: max-content; max-width: 100%; min-width: 40px;
+      padding: 8px 12px; 
+      border-radius: 14px;
+      font-size: 14px; 
+      line-height: 1.4;
+      word-break: break-word; 
+      white-space: pre-wrap;
+      position: relative; 
+      transition: background 0.15s;
+      display: inline-block;
+      width: auto;
+      max-width: 100%;
     }
     .mine .bubble {
-      background: var(--bg3); color: var(--text);
-      border-bottom-right-radius: 3px;
+      background: var(--bg3); 
+      color: var(--text);
+      border-top-right-radius: 3px;
       border: 1px solid var(--border);
     }
     .theirs .bubble {
-      background: var(--bg2); color: var(--text);
-      border-bottom-left-radius: 3px;
+      background: var(--bg2); 
+      color: var(--text);
+      border-top-left-radius: 3px;
     }
     .bubble img { max-width: 100%; max-height: 200px; border-radius: 8px; display: block; margin: 4px 0; }
     .bubble audio { width: 100%; max-width: 210px; display: block; margin: 4px 0; }
-    .msg-meta { font-size: 10px; color: var(--muted); margin-top: 1px; align-self: flex-end; }
+    
+    .msg-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .mine .msg-meta { align-self: flex-end; }
+    .theirs .msg-meta { align-self: flex-start; }
     .msg-edited { font-size: 10px; color: var(--muted); font-style: italic; }
 
     /* Ícone de Resposta Sutil ao lado da mensagem */
@@ -704,7 +743,6 @@
 
     document.getElementById('bg-grid').addEventListener('click', e => { const card = e.target.closest('.bg-card'); if (card) applyBg(card.dataset.bg); });
 
-    // Correção de Senha Mestre Segura: 220399
     document.getElementById('btn-lock-clear').addEventListener('click', () => {
       const pw = prompt('Senha para limpar o histórico:');
       if (pw === '220399') { if (confirm('Limpar todo o histórico de mensagens salvas?')) clearHistory(); }
@@ -733,7 +771,6 @@
     document.getElementById('preview-3x4-overlay').addEventListener('click', () => document.getElementById('preview-3x4-overlay').style.display = 'none');
     document.getElementById('cancel-reply-btn').addEventListener('click', () => { state.replyingToDocId = null; document.getElementById('reply-preview').style.display = 'none'; });
 
-    // Delegador central de eventos reestruturado para cliques nas bolhas
     document.getElementById('messages').addEventListener('click', async e => {
       const avatar = e.target.closest('.msg-sender-block img');
       if (avatar) { document.getElementById('preview-3x4-img').src = avatar.src; document.getElementById('preview-3x4-overlay').style.display = 'flex'; return; }
@@ -789,10 +826,8 @@
     document.getElementById('messages').innerHTML = '';
   }
 
-  /* ── PERSISTÊNCIA INCONDICIONAL DAS MENSAGENS SALVAS NO FIREBASE ── */
   function startChat() {
     const fe = window.FirebaseEngine; if (!fe) return;
-    // Removido qualquer limitador de tempo ou sessão ativa para garantir carregamento total histórico
     const q = fe.query(fe.collection(fe.db, 'mensagens'), fe.orderBy('timestamp', 'asc'));
     
     state.unsubChat = fe.onSnapshot(q, snap => {
@@ -821,7 +856,6 @@
 
   function renderMsg(docSnap, container) {
     const d = docSnap.data();
-    // Proteção rigorosa contra bolhas gigantes vazias se o timestamp falhar temporariamente no handshake
     const tsKey = d.timestamp ? `${d.timestamp.seconds}_${d.timestamp.nanoseconds}` : `${Date.now()}_0`;
 
     const wrap = document.createElement('div');
@@ -840,21 +874,20 @@
 
     let replyHtml = d.replyToId ? `<div class="reply-box-bubble"><strong>@${escHtml(d.replyToUser || '')}</strong>: ${escHtml(d.replyToText || '')}</div>` : '';
 
-    // Evita tamanhos exagerados renderizando conteúdo cirúrgico reduzido nas caixas
     let contentHtml = '';
     if (d.image) contentHtml = `<img src="${d.image}" alt="Img">`;
     else if (d.audio) contentHtml = `<audio controls src="${d.audio}"></audio>`;
     else if (d.texto) contentHtml = `<span>${escHtml(d.texto)}</span>`;
-    else return; // Aborta renderizações nulas e vazias invisíveis
+    else return;
 
     if (d.edited) contentHtml += ` <span class="msg-edited">(editado)</span>`;
 
-    // Bloco de Remetente Amigo: Foto em cima, NOME/APELIDO logo embaixo alinhados
-    const senderBlockHtml = !isMine ? `
+    // Bloco Superior: Foto e Apelido por COMPLETO acima do texto
+    const senderBlockHtml = `
       <div class="msg-sender-block">
         <img src="${d.avatar || dicebear(d.seed || 'x')}" alt="avatar">
         <div class="msg-sender-name">${escHtml(d.usuario)}</div>
-      </div>` : '';
+      </div>`;
 
     let reactionsHtml = '';
     if (d.reactions) {
@@ -886,7 +919,6 @@
     container.appendChild(wrap);
   }
 
-  /* ── CONTROLES DISCRETOS COM MINI-ÍCONES EM MENSAGENS PRÓPRIAS ── */
   function openMiniMenu(e, bubble) {
     closeMiniMenu();
     const docId = bubble.dataset.doc;
@@ -913,7 +945,6 @@
 
   function closeMiniMenu() { if (state.activeMiniMenu) { state.activeMiniMenu.remove(); state.activeMiniMenu = null; } }
 
-  /* ── SELETOR DE REAÇÕES CORRIGIDO (APENAS EMOJIS EM BOLHAS ALHEIAS) ── */
   function openReactionsPicker(bubble) {
     if (state.activeReactionPicker) state.activeReactionPicker.remove();
     const docId = bubble.dataset.doc;
