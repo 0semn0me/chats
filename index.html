@@ -2,116 +2,92 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Chatzão Oficial</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatzão Premium</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
-        :root { --theme-primary: #F4D03F; --bg-dark: #0e0e0e; --bg-panel: #161616; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, sans-serif; }
-        body { height: 100dvh; background: var(--bg-dark); color: #fff; overflow: hidden; }
+        :root { --theme-primary: #F4D03F; --bg-dark: #0e0e0e; }
+        body { background: var(--bg-dark); color: #fff; margin: 0; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; }
         
-        /* Layout Login */
-        #login-screen { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; }
-        .avatar-box { width: 90px; height: 90px; border-radius: 50%; border: 3px solid #333; overflow: hidden; cursor: pointer; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        .inputs { display: flex; flex-direction: column; gap: 8px; }
-        input { padding: 12px; border-radius: 10px; border: 1px solid #333; background: #1a1a1a; color: #fff; width: 260px; }
-        .real-name { font-size: 12px; color: #888; }
-        .nick-name { font-size: 16px; font-weight: bold; }
+        /* Topbar com Configuração de Cor */
+        #topbar { padding: 15px; background: #161616; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
+        .config-area { display: flex; align-items: center; gap: 10px; }
         
-        /* Layout Chat */
-        #chat-screen { display: none; height: 100%; flex-direction: column; }
-        #topbar { padding: 10px 15px; background: var(--bg-panel); display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; }
-        #messages { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px; border-radius: 15px; background: #262626; align-self: flex-start; }
-        .msg.mine { background: var(--theme-primary); color: #000; align-self: flex-end; }
-        
-        /* Configs */
-        #config-panel { padding: 10px; background: #222; display: flex; gap: 10px; align-items: center; justify-content: center; }
+        #messages { flex: 1; overflow-y: auto; padding: 15px; }
+        .msg { padding: 10px; margin-bottom: 8px; border-radius: 12px; background: #262626; cursor: pointer; max-width: 80%; }
+        .msg.mine { background: var(--theme-primary); color: #000; align-self: flex-end; margin-left: auto; }
+
+        /* Tabela de Emojis (Oculta até seleção) */
+        #emoji-menu { display: none; position: fixed; bottom: 80px; background: #222; padding: 10px; border-radius: 15px; border: 1px solid var(--theme-primary); }
     </style>
 </head>
 <body>
 
-<div id="login-screen">
-    <div class="avatar-box" onclick="sortearAvatar()"><img id="avatar-img" src=""></div>
-    <div class="inputs">
-        <input id="in-real" class="real-name" placeholder="Nome Real">
-        <input id="in-nick" class="nick-name" placeholder="Apelido no Chat">
-        <button id="btn-enter" style="padding:12px; background:var(--theme-primary); border:none; border-radius:10px; font-weight:bold; cursor:pointer;">Entrar</button>
+<div id="topbar">
+    <div id="user-info">DeMenor <i class="ti ti-lock" onclick="limparTudo()"></i></div>
+    <div class="config-area">
+        Cor: <input type="color" onchange="document.documentElement.style.setProperty('--theme-primary', this.value)">
+        <span onclick="sair()" style="cursor:pointer">Sair</span>
     </div>
 </div>
 
-<div id="chat-screen">
-    <div id="topbar">
-        <div><span id="my-nick"></span> <i class="ti ti-lock" onclick="senhaMestre()"></i></div>
-        <button onclick="localStorage.clear(); location.reload();" style="background:none; border:none; color:#fff;">Sair</button>
-    </div>
-    <div id="config-panel">
-        Cor: <input type="color" onchange="document.documentElement.style.setProperty('--theme-primary', this.value)">
-    </div>
-    <div id="messages"></div>
-    <div style="padding:10px; display:flex; gap:8px;">
-        <input id="msg-input" style="flex:1; background:#222; border:none; color:#fff; padding:10px; border-radius:20px;" placeholder="Mensagem...">
-        <button onclick="enviar()" style="background:none; border:none; color:var(--theme-primary); font-size:24px;"><i class="ti ti-send"></i></button>
-    </div>
+<div id="messages"></div>
+
+<div id="emoji-menu"> 🍎 🎈 ⚡ 🚀 🤖 💎 </div>
+
+<div style="padding:10px; display:flex; gap:10px;">
+    <input id="msg-input" style="flex:1; padding:10px; border-radius:20px; border:none;" placeholder="Mensagem...">
+    <button onclick="enviar()" style="background:var(--theme-primary); border:none; padding:10px 20px; border-radius:20px;">Enviar</button>
 </div>
 
 <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, deleteDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, getDocs, writeBatch, doc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
     const db = getFirestore(initializeApp({ apiKey: "AIzaSyBT2oZvEf2UNRPn6auwYwpjGIsHSa5oOYk", projectId: "chatzao-a27ed" }));
 
-    // Avatar Logic
-    const avatarImg = document.getElementById('avatar-img');
-    window.sortearAvatar = () => {
-        const seed = Math.random().toString(36).substring(7);
-        const url = `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`;
-        avatarImg.src = url;
-        localStorage.setItem('avatarUrl', url);
-    };
-    avatarImg.src = localStorage.getItem('avatarUrl') || `https://api.dicebear.com/7.x/bottts/svg?seed=123`;
-
-    // Login Logic
-    document.getElementById('btn-enter').onclick = () => {
-        const nick = document.getElementById('in-nick').value;
-        if(!nick) return alert("Apelido é obrigatório!");
-        localStorage.setItem('user', JSON.stringify({nick, avatar: avatarImg.src}));
-        location.reload();
+    // 1. Limpeza TOTAL (Usando Batch para garantir que nada fique para trás)
+    window.limparTudo = async () => {
+        if(prompt("Senha Mestre:") === "220399") {
+            const snap = await getDocs(collection(db, "mensagens"));
+            const batch = writeBatch(db);
+            snap.forEach(d => batch.delete(d.ref));
+            await batch.commit();
+            location.reload();
+        }
     };
 
-    // Chat Logic
-    const user = JSON.parse(localStorage.getItem('user'));
-    if(user) {
-        document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('chat-screen').style.display = 'flex';
-        document.getElementById('my-nick').innerText = user.nick;
-        
-        onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
-            const msgBox = document.getElementById('messages');
-            msgBox.innerHTML = "";
-            snap.forEach(d => {
-                const m = d.data();
-                msgBox.innerHTML += `<div class="msg ${m.usuario === user.nick ? 'mine' : ''}">${m.texto}</div>`;
-            });
-            msgBox.scrollTop = msgBox.scrollHeight;
+    // 2. Seleção de Mensagem (Para abrir emojis)
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('emoji-menu');
+        if(e.target.classList.contains('msg')) {
+            menu.style.display = 'block'; // Aqui você vai integrar sua lista de emojis
+        } else {
+            menu.style.display = 'none';
+        }
+    });
+
+    // 3. Renderização (Lógica de mensagens)
+    onSnapshot(query(collection(db, "mensagens"), orderBy("timestamp", "asc")), (snap) => {
+        const container = document.getElementById('messages');
+        container.innerHTML = "";
+        snap.forEach(d => {
+            const m = d.data();
+            const div = document.createElement('div');
+            div.className = `msg ${m.usuario === 'DeMenor' ? 'mine' : ''}`;
+            div.innerText = m.texto;
+            container.appendChild(div);
         });
-    }
+    });
 
     window.enviar = async () => {
         const input = document.getElementById('msg-input');
         if(!input.value) return;
-        await addDoc(collection(db, "mensagens"), { usuario: user.nick, texto: input.value, timestamp: Date.now() });
+        await addDoc(collection(db, "mensagens"), { usuario: 'DeMenor', texto: input.value, timestamp: Date.now() });
         input.value = "";
     };
 
-    window.senhaMestre = async () => {
-        if(prompt("Senha Mestre:") === "220399") {
-            const snap = await getDocs(collection(db, "mensagens"));
-            snap.forEach(d => deleteDoc(d.ref));
-            location.reload();
-        }
-    };
+    window.sair = () => { localStorage.clear(); location.reload(); };
 </script>
 </body>
 </html>
