@@ -267,15 +267,15 @@
       border: none; padding: 4px 4px; position: absolute; bottom: calc(100% + 4px);
       left: 0; z-index: 150; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
     }
-    .reactions-picker span { cursor: pointer; font-size: 18px; transition: transform 0.1s; }
+    .reactions-picker span { cursor: pointer; font-size: 24px; transition: transform 0.1s; }
     .reactions-picker span:hover { transform: scale(1.3); }
     
     .reactions-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; width: 100%; }
     .reaction-badge {
       background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 6px; padding: 1px 6px; font-size: 12px;
+      border-radius: 6px; padding: 2px 8px; font-size: 14px;
       color: var(--text); cursor: pointer; display: flex;
-      align-items: center; gap: 3px; width: max-content;
+      align-items: center; gap: 4px; width: max-content;
     }
     
     .reply-box-bubble {
@@ -839,19 +839,15 @@
         return; 
       }
 
-      const sutilBtn = e.target.closest('.sutil-reply-btn');
-      if (sutilBtn) {
-        e.stopPropagation();
-        const b = sutilBtn.closest('.bubble-wrapper').querySelector('.bubble');
-        setupReply(b.dataset.doc, b.dataset.text, b.dataset.user);
-        return;
-      }
-
       const bubble = e.target.closest('.bubble');
       if (bubble) {
         e.stopPropagation();
-        if (bubble.dataset.mine === "true") openMiniMenu(e, bubble);
-        else openReactionsPicker(bubble);
+        if (bubble.dataset.mine === "true") {
+          openMiniMenu(e, bubble);
+        } else {
+          // Se clicar na mensagem dos outros, abre reactions picker
+          openReactionsPicker(bubble);
+        }
         return;
       }
 
@@ -967,10 +963,10 @@
       if (Object.keys(counts).length > 0) {
         reactionsHtml = `<div class="reactions-container">`;
         // Tamanho do emoji do contador aumentado diretamente no badge
-        Object.entries(counts).forEach(([emo, count]) => { reactionsHtml += `<div class="reaction-badge" data-doc="${docSnap.id}"><span style="font-size:15px;line-height:1;">${emo}</span> ${count}</div>`; });
+        Object.entries(counts).forEach(([emo, count]) => { reactionsHtml += `<div class="reaction-badge" data-doc="${docSnap.id}"><span style="font-size:20px;line-height:1;">${emo}</span> ${count}</div>`; });
         reactionsHtml += `</div>`;
       }
-      if (d.reactions[state.myApelido]) wrap.dataset.userReaction = d.reactions[state.myApelido];
+      if (d.reactions[state.mySeed]) wrap.dataset.userReaction = d.reactions[state.mySeed];
     }
 
     const hora = d.timestamp ? d.timestamp.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
@@ -981,7 +977,6 @@
     wrap.innerHTML = `
       ${senderBlockHtml}
       <div class="bubble-wrapper">
-        <button class="sutil-reply-btn" title="Responder sutilmente"><i class="ti ti-arrow-back-up"></i></button>
         <div class="bubble" data-doc="${docSnap.id}" data-text="${escAttr(d.texto || '')}" data-user="${escAttr(d.usuario || '')}" data-mine="${isMine}" style="background: ${bubbleBg}; color: ${bubbleTextColor};">
           ${replyHtml}
           ${contentHtml}
@@ -1054,7 +1049,7 @@
     const newReact = currentReact === emoji ? '' : emoji;
     
     const payload = {};
-    payload[`reactions.${state.myApelido}`] = newReact ? newReact : null;
+    payload[`reactions.${state.mySeed}`] = newReact ? newReact : null;
     await fe.updateDoc(fe.doc(fe.db, 'mensagens', docId), payload);
     wrap.dataset.userReaction = newReact;
   }
