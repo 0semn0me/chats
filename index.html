@@ -528,9 +528,6 @@
     <div id="emoji-panel">
       <div class="ep-tabs">
         <button class="ep-tab active" data-cat="faces">😀</button>
-        <button class="ep-tab" data-cat="hearts">💋</button>
-        <button class="ep-tab" data-cat="symbols">🗣️</button>
-        <button class="ep-tab" data-cat="places">🏔️</button>
         <button class="ep-tab" data-cat="hands">👋</button>
         <button class="ep-tab" data-cat="people">🙍</button>
       </div>
@@ -661,18 +658,12 @@
     currentSkinTone: '',
     replyingToDocId: null,
     activeReactionPicker: null,
-    activeMiniMenu: null,
-    currentReactionDocId: null,
-    activeReactionBubble: null
+    activeMiniMenu: null
   };
 
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
-  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨','🙂‍↔️','🙂‍↕️','😌','😔','😪','🤤','😴','🫩','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊'];
-  const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
-  const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
-  const EMOJI_PLACES = ['🏔️','⛰️','🌋','🗻','🏕️','🏖️','🏜️','🏝️','🏞️','🏟️','🏛️','🏗️','🧱','🪨','🪵','🛖','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🏯','🏰','💒','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🕋','⛲','⛺','🌁','🌃','🏙️','🌄','🌅','🌆','🌇','🌉','♨️','🎠','🛝','🎡','🎢','💈','🎪','🚂','🚃','🚄','🚅','🚆','🚇','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍','🚎','🚐','🚑','🚒','🚓','🚔','🚕','🚖','🚗','🚘','🚙','🛻','🚚','🚛','🚜','🏎️','🏍️','🛵','🦽','🦼','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','🛢️','⛽','🛞','🚨','🚥','🚦','🛑','🚧','⚓','🛟','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🛎️','🧳','⌛','⏳','⌚','⏰','⏱️','⏲️','🕰️','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕡','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌡️','☀️','🌝','🌞','🪐','⭐','🌟','🌠','🌌','☁️','⛅','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌀','🌈','🌂','☂️','☔','⛱️','⚡','❄️','☃️','⛄','☄️','🔥','💧','🌊','🎃','🎄','🎆','🎇','🧨','✨','🎈','🎉','🎊','🎋','🎍','🎎','🎏','🎐','🎑','🧧','🎀','🎁','🎗️','🎟️','🎫','🎖️','🏆','🏅','🥇','🥈','🥉','⚽','⚾','🥎','🏀','🏐','🏈','🏉','🎾','🥏','🎳','🏏','🏑','🏒','🥍','🏓','🏸','🥊','🥋','🥅','⛳','⛸️','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🪀','🪁','🔫','🎱','🔮','🪄','🎮','🕹️','🎰','🎲','🧩','🧸','🪅','🪩','🪆','♠️','♥️','♦️','♣️','♟️','🃏','🀄','🎴','🎭','🖼️','🎨','🧵','🪡','🧶'];
-
+  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','😋','😛','😜','🤪','😝','🤗','🤭','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'];
   const HANDS_BASE = ['👋','🤚','🖐️','✋','🖖','🫱','🫲','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏'];
   const PEOPLE_BASE = ['🙍','🙍‍♂️','🙍‍♀️','🙎','🙎‍♂️','🙎‍♀️','🙅','🙅‍♂️','🙅‍♀️','🙆','🙆‍♂️','🙆‍♀️','💁','💁‍♂️','💁‍♀️','🙋','🙋‍♂️','🙋‍♀️','🧏','🧏‍♂️','🧏‍♀️','🙇','🙇‍♂️','🙇‍♀️','🤦','🤦‍♂️','🤦‍♀️','🤷','🤷‍♂️','🤷‍♀️'];
   const SKIN_TONES = ['','🏻','🏼','🏽','🏾','🏿'];
@@ -782,27 +773,7 @@
 
     document.getElementById('messages').addEventListener('click', async e => {
       const avatar = e.target.closest('.msg-sender-block img');
-      if (avatar) { 
-        // Buscar o nome completo da mensagem
-        const wrap = avatar.closest('.msg');
-        const nomeBubble = wrap.querySelector('.bubble').dataset.user || '';
-        const nomeCompleto = wrap.querySelector('.msg-sender-name')?.textContent || 'Usuário';
-        
-        document.getElementById('preview-3x4-img').src = avatar.src;
-        
-        // Adicionar nome embaixo
-        const nameLabel = document.querySelector('.preview-name-label') || (() => {
-          const label = document.createElement('div');
-          label.className = 'preview-name-label';
-          label.style.cssText = 'text-align:center; margin-top:10px; font-size:14px; color:var(--text); font-weight:600;';
-          document.getElementById('preview-3x4-overlay').appendChild(label);
-          return label;
-        })();
-        nameLabel.textContent = nomeCompleto;
-        
-        document.getElementById('preview-3x4-overlay').style.display = 'flex'; 
-        return; 
-      }
+      if (avatar) { document.getElementById('preview-3x4-img').src = avatar.src; document.getElementById('preview-3x4-overlay').style.display = 'flex'; return; }
 
       const sutilBtn = e.target.closest('.sutil-reply-btn');
       if (sutilBtn) {
@@ -825,12 +796,6 @@
     });
 
     const msgInput = document.getElementById('msg-input');
-    msgInput.addEventListener('focus', () => {
-      // Quando o input ganha foco (teclado abre), scroll pro topo das mensagens
-      setTimeout(() => {
-        document.getElementById('messages').scrollTop = 0;
-      }, 300);
-    });
     msgInput.addEventListener('input', () => {
       const text = msgInput.value; const caretPos = msgInput.selectionStart; const lastAt = text.lastIndexOf('@', caretPos - 1);
       if (lastAt !== -1 && !text.slice(lastAt, caretPos).includes(' ')) showMentionMenu(text.slice(lastAt + 1, caretPos).toLowerCase(), lastAt);
@@ -938,12 +903,10 @@
 
     const hora = d.timestamp ? d.timestamp.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
 
-    const replyBtnHtml = !isMine ? `<button class="sutil-reply-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>` : '';
-    
     wrap.innerHTML = `
       ${senderBlockHtml}
       <div class="bubble-wrapper">
-        ${replyBtnHtml}
+        <button class="sutil-reply-btn" title="Responder sutilmente"><i class="ti ti-arrow-back-up"></i></button>
         <div class="bubble" data-doc="${docSnap.id}" data-text="${escAttr(d.texto || '')}" data-user="${escAttr(d.usuario || '')}" data-mine="${isMine}">
           ${replyHtml}
           ${contentHtml}
@@ -960,14 +923,11 @@
     closeMiniMenu();
     const docId = bubble.dataset.doc;
     const currentText = bubble.dataset.text;
-    const isMine = bubble.dataset.mine === 'true';
-    
-    // Só abre menu pra próprias mensagens
-    if (!isMine) return;
     
     const menu = document.createElement('div');
     menu.className = 'msg-menu-mini';
     menu.innerHTML = `
+      <button class="rep-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>
       <button class="edt-btn" title="Editar"><i class="ti ti-pencil"></i></button>
       <button class="del-btn" title="Apagar"><i class="ti ti-trash"></i></button>
     `;
@@ -975,6 +935,7 @@
     bubble.parentElement.appendChild(menu);
     state.activeMiniMenu = menu;
 
+    menu.querySelector('.rep-btn').addEventListener('click', (ev) => { ev.stopPropagation(); setupReply(docId, currentText, state.myApelido); closeMiniMenu(); });
     menu.querySelector('.edt-btn').addEventListener('click', (ev) => { ev.stopPropagation(); openEdit(docId, currentText); closeMiniMenu(); });
     menu.querySelector('.del-btn').addEventListener('click', async (ev) => {
       ev.stopPropagation(); closeMiniMenu();
@@ -985,19 +946,29 @@
   function closeMiniMenu() { if (state.activeMiniMenu) { state.activeMiniMenu.remove(); state.activeMiniMenu = null; } }
 
   function openReactionsPicker(bubble) {
-    // Abre o painel de emojis e guarda referência pra qual bubble está reagindo
-    state.activeReactionBubble = bubble;
-    state.currentReactionDocId = bubble.dataset.doc;
+    if (state.activeReactionPicker) state.activeReactionPicker.remove();
+    const docId = bubble.dataset.doc;
     
-    // Mostra o painel de emojis
-    const emojiPanel = document.getElementById('emoji-panel');
-    emojiPanel.classList.add('open');
+    const picker = document.createElement('div');
+    picker.className = 'reactions-picker';
+    picker.innerHTML = `
+      <span data-emoji="👍">👍</span>
+      <span data-emoji="❤️">❤️</span>
+      <span data-emoji="😂">😂</span>
+      <span data-emoji="😮">😮</span>
+      <span data-emoji="🙏">🙏</span>
+    `;
     
-    // Força renderizar a aba de faces
-    renderEmojiCat('faces');
+    bubble.appendChild(picker);
+    state.activeReactionPicker = picker;
     
-    // Foca no painel (importante pra mobile)
-    emojiPanel.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    picker.querySelectorAll('span[data-emoji]').forEach(el => {
+      el.addEventListener('click', async ev => {
+        ev.stopPropagation();
+        await toggleReaction(docId, el.dataset.emoji);
+        picker.remove(); state.activeReactionPicker = null;
+      });
+    });
   }
 
   async function toggleReaction(docId, emoji) {
@@ -1065,45 +1036,14 @@
 
   async function startRecording() {
     if (audioState.recorder && audioState.recorder.state !== 'inactive') { stopAndSendRecording(); return; }
-    try { 
-      audioState.stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 48000 } 
-      }); 
-    } catch { 
-      alert('Microfone indisponível.'); 
-      return; 
-    }
-    
-    audioState.chunks = []; 
-    audioState.seconds = 0; 
-    audioState.paused = false;
-    
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/mp4';
-    audioState.recorder = new MediaRecorder(audioState.stream, { mimeType, audioBitsPerSecond: 192000 });
-    
-    audioState.recorder.ondataavailable = e => { 
-      if (e.data && e.data.size > 0) audioState.chunks.push(e.data); 
-    };
-    
-    audioState.recorder.onstop = () => { 
-      const blob = new Blob(audioState.chunks, { type: mimeType });
-      const reader = new FileReader();
-      reader.onload = () => { sendAudio(blob); cleanRecordingUI(); };
-      reader.readAsDataURL(blob);
-    };
-    
+    try { audioState.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { alert('Microfone indisponível.'); return; }
+    audioState.chunks = []; audioState.seconds = 0; audioState.paused = false;
+    audioState.recorder = new MediaRecorder(audioState.stream);
+    audioState.recorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioState.chunks.push(e.data); };
+    audioState.recorder.onstop = () => { sendAudio(new Blob(audioState.chunks, { type: 'audio/webm' })); };
     audioState.recorder.start(200);
-    document.getElementById('msg-input').style.display = 'none'; 
-    document.getElementById('audio-recorder').classList.add('active');
-    
-    audioState.timer = setInterval(() => { 
-      if (!audioState.paused) { 
-        audioState.seconds++; 
-        const m = Math.floor(audioState.seconds / 60); 
-        const s = audioState.seconds % 60; 
-        document.getElementById('rec-time').textContent = `${m}:${s.toString().padStart(2,'0')}`; 
-      } 
-    }, 1000);
+    document.getElementById('msg-input').style.display = 'none'; document.getElementById('audio-recorder').classList.add('active');
+    audioState.timer = setInterval(() => { if (!audioState.paused) { audioState.seconds++; const m = Math.floor(audioState.seconds / 60); const s = audioState.seconds % 60; document.getElementById('rec-time').textContent = `${m}:${s.toString().padStart(2,'0')}`; } }, 1000);
   }
   function stopAndSendRecording() { if (!audioState.recorder || audioState.recorder.state === 'inactive') return; audioState.recorder.stop(); audioState.stream.getTracks().forEach(t => t.stop()); cleanRecordingUI(); }
   function togglePause() { if (!audioState.recorder) return; if (audioState.recorder.state === 'recording') { audioState.recorder.pause(); audioState.paused = true; } else { audioState.recorder.resume(); audioState.paused = false; } }
@@ -1112,73 +1052,22 @@
 
   function buildEmojiPanel() { renderEmojiCat('faces'); }
   function renderEmojiCat(cat) {
-    const body = document.getElementById('ep-body'); 
-    body.innerHTML = '';
-    
-    // Categorias sem tons de pele
-    const simpleCategories = ['faces', 'hearts', 'symbols', 'places'];
-    
-    if (simpleCategories.includes(cat)) {
-      const grid = document.createElement('div'); 
-      grid.className = 'ep-grid';
-      
-      let emojiArray = [];
-      if (cat === 'faces') emojiArray = EMOJI_FACES;
-      else if (cat === 'hearts') emojiArray = EMOJI_HEARTS;
-      else if (cat === 'symbols') emojiArray = EMOJI_SYMBOLS;
-      else if (cat === 'places') emojiArray = EMOJI_PLACES;
-      
-      emojiArray.forEach(em => { 
-        const span = document.createElement('span'); 
-        span.className = 'ep-emoji'; 
-        span.textContent = em; 
-        span.addEventListener('click', () => insertEmoji(em)); 
-        grid.appendChild(span); 
-      });
+    const body = document.getElementById('ep-body'); body.innerHTML = '';
+    if (cat === 'faces') {
+      const grid = document.createElement('div'); grid.className = 'ep-grid';
+      EMOJI_FACES.forEach(em => { const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em; span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span); });
       body.appendChild(grid);
     } else {
-      // Categorias com tons de pele (hands, people)
       const base = cat === 'hands' ? HANDS_BASE : PEOPLE_BASE;
-      const skinRow = document.createElement('div'); 
-      skinRow.className = 'ep-skin-row';
-      SKIN_TONES.forEach((tone, i) => { 
-        const btn = document.createElement('span'); 
-        btn.className = 'skin-btn'; 
-        btn.textContent = i === 0 ? '✋' : `✋${tone}`; 
-        btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); 
-        skinRow.appendChild(btn); 
-      });
+      const skinRow = document.createElement('div'); skinRow.className = 'ep-skin-row';
+      SKIN_TONES.forEach((tone, i) => { const btn = document.createElement('span'); btn.className = 'skin-btn'; btn.textContent = i === 0 ? '✋' : `✋${tone}`; btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); skinRow.appendChild(btn); });
       body.appendChild(skinRow);
-      
-      const grid = document.createElement('div'); 
-      grid.className = 'ep-grid';
-      base.forEach(em => { 
-        const final = applyTone(em, state.currentSkinTone); 
-        const span = document.createElement('span'); 
-        span.className = 'ep-emoji'; 
-        span.textContent = final; 
-        span.addEventListener('click', () => insertEmoji(final)); 
-        grid.appendChild(span); 
-      });
+      const grid = document.createElement('div'); grid.className = 'ep-grid';
+      base.forEach(em => { const final = applyTone(em, state.currentSkinTone); const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = final; span.addEventListener('click', () => insertEmoji(final)); grid.appendChild(span); });
       body.appendChild(grid);
     }
   }
-  function insertEmoji(em) { 
-    // Se está em modo de reação
-    if (state.currentReactionDocId) {
-      toggleReaction(state.currentReactionDocId, em);
-      document.getElementById('emoji-panel').classList.remove('open');
-      state.currentReactionDocId = null;
-      state.activeReactionBubble = null;
-      return;
-    }
-    
-    // Senão, insere normalmente na mensagem
-    const inp = document.getElementById('msg-input'); 
-    const pos = inp.selectionStart || inp.value.length; 
-    inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos); 
-    inp.focus(); 
-  }
+  function insertEmoji(em) { const inp = document.getElementById('msg-input'); const pos = inp.selectionStart || inp.value.length; inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos); inp.focus(); }
 
   function buildSwatches() { const grid = document.getElementById('cp-swatches'); SWATCHES.forEach(c => { const sw = document.createElement('div'); sw.className = 'swatch'; sw.dataset.color = c; sw.style.background = c; sw.addEventListener('click', () => { document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected')); sw.classList.add('selected'); }); grid.appendChild(sw); }); }
   function applyColor(color, save) { state.myColor = color; document.documentElement.style.setProperty('--tp', color); const lum = getLum(color); document.documentElement.style.setProperty('--tp-text', lum > 0.4 ? '#000' : '#fff'); if (save) localStorage.setItem('cz_color', color); }
