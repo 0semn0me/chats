@@ -244,6 +244,8 @@
     }
     .sutil-reply-btn:hover { color: var(--tp); }
     .bubble-wrapper:hover .sutil-reply-btn { opacity: 1; pointer-events: auto; }
+    /* Mobile: mostrar sempre nas minhas mensagens */
+    .mine .sutil-reply-btn { opacity: 0.6; pointer-events: auto; }
 
     /* Menu de contexto compacto (Removido botão de responder duplicado) */
     .msg-menu-mini {
@@ -685,6 +687,9 @@
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
   const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','😋','😛','😜','🤪','😝','🤗','🤭','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'];
+  const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
+  const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
+  const EMOJI_PLACES = ['🏔️','⛰️','🌋','🗻','🏕️','🏖️','🏜️','🏝️','🏞️','🏟️','🏛️','🏗️','🧱','🪨','🪵','🛖','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🏯','🏰','💒','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🕋','⛲','⛺','🌁','🌃','🏙️','🌄','🌅','🌆','🌇','🌉','♨️','🎠','🛝','🎡','🎢','💈','🎪','🚂','🚃','🚄','🚅','🚆','🚇','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍','🚎','🚐','🚑','🚒','🚓','🚔','🚕','🚖','🚗','🚘','🚙','🛻','🚚','🚛','🚜','🏎️','🏍️','🛵','🦽','🦼','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','🛢️','⛽','🛞','🚨','🚥','🚦','🛑','🚧','⚓','🛟','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🛎️','🧳','⌛','⏳','⌚','⏰','⏱️','⏲️','🕰️','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕡','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌡️','☀️','🌝','🌞','🪐','⭐','🌟','🌠','🌌','☁️','⛅','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌀','🌈','🌂','☂️','☔','⛱️','⚡','❄️','☃️','⛄','☄️','🔥','💧','🌊','🎃','🎄','🎆','🎇','🧨','✨','🎈','🎉','🎊','🎋','🎍','🎎','🎏','🎐','🎑','🧧','🎀','🎁','🎗️','🎟️','🎫','🎖️','🏆','🏅','🥇','🥈','🥉','⚽','⚾','🥎','🏀','🏐','🏈','🏉','🎾','🥏','🎳','🏏','🏑','🏒','🥍','🏓','🏸','🥊','🥋','🥅','⛳','⛸️','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🪀','🪁','🔫','🎱','🔮','🪄','🎮','🕹️','🎰','🎲','🧩','🧸','🪅','🪩','🪆','♠️','♥️','♦️','♣️','♟️','🃏','🀄','🎴','🎭','🖼️','🎨','🧵','🪡','🧶'];
   const HANDS_BASE = ['👋','🤚','🖐️','✋','🖖','🫱','🫲','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏'];
   const PEOPLE_BASE = ['🙍','🙍‍♂️','🙍‍♀️','🙎','🙎‍♂️','🙎‍♀️','🙅','🙅‍♂️','🙅‍♀️','🙆','🙆‍♂️','🙆‍♀️','💁','💁‍♂️','💁‍♀️','🙋','🙋‍♂️','🙋‍♀️','🧏','🧏‍♂️','🧏‍♀️','🙇','🙇‍♂️','🙇‍♀️','🤦','🤦‍♂️','🤦‍♀️','🤷','🤷‍♂️','🤷‍♀️'];
   const SKIN_TONES = ['','🏻','🏼','🏽','🏾','🏿'];
@@ -827,6 +832,14 @@
     document.getElementById('cancel-reply-btn').addEventListener('click', () => { state.replyingToDocId = null; document.getElementById('reply-preview').style.display = 'none'; });
 
     document.getElementById('messages').addEventListener('click', async e => {
+      const sutilBtn = e.target.closest('.sutil-reply-btn');
+      if (sutilBtn) {
+        e.stopPropagation();
+        const b = sutilBtn.closest('.bubble-wrapper').querySelector('.bubble');
+        setupReply(b.dataset.doc, b.dataset.text, b.dataset.user);
+        return;
+      }
+
       const avatar = e.target.closest('.msg-sender-block img');
       if (avatar) { 
         const bubble = avatar.closest('.msg').querySelector('.bubble');
@@ -977,6 +990,7 @@
     wrap.innerHTML = `
       ${senderBlockHtml}
       <div class="bubble-wrapper">
+        <button class="sutil-reply-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>
         <div class="bubble" data-doc="${docSnap.id}" data-text="${escAttr(d.texto || '')}" data-user="${escAttr(d.usuario || '')}" data-mine="${isMine}" style="background: ${bubbleBg}; color: ${bubbleTextColor};">
           ${replyHtml}
           ${contentHtml}
@@ -1148,11 +1162,21 @@
   function buildEmojiPanel() { renderEmojiCat('faces'); }
   function renderEmojiCat(cat) {
     const body = document.getElementById('ep-body'); body.innerHTML = '';
-    if (cat === 'faces') {
+    
+    // Categorias simples (sem tons de pele)
+    const simpleCategories = {
+      'faces': EMOJI_FACES,
+      'hearts': EMOJI_HEARTS,
+      'symbols': EMOJI_SYMBOLS,
+      'places': EMOJI_PLACES
+    };
+    
+    if (simpleCategories[cat]) {
       const grid = document.createElement('div'); grid.className = 'ep-grid';
-      EMOJI_FACES.forEach(em => { const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em; span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span); });
+      simpleCategories[cat].forEach(em => { const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em; span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span); });
       body.appendChild(grid);
     } else {
+      // Categorias com tons de pele (hands, people)
       const base = cat === 'hands' ? HANDS_BASE : PEOPLE_BASE;
       const skinRow = document.createElement('div'); skinRow.className = 'ep-skin-row';
       SKIN_TONES.forEach((tone, i) => { const btn = document.createElement('span'); btn.className = 'skin-btn'; btn.textContent = i === 0 ? '✋' : `✋${tone}`; btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); skinRow.appendChild(btn); });
