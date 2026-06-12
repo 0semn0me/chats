@@ -528,6 +528,9 @@
     <div id="emoji-panel">
       <div class="ep-tabs">
         <button class="ep-tab active" data-cat="faces">😀</button>
+        <button class="ep-tab" data-cat="hearts">💋</button>
+        <button class="ep-tab" data-cat="symbols">🗣️</button>
+        <button class="ep-tab" data-cat="places">🏔️</button>
         <button class="ep-tab" data-cat="hands">👋</button>
         <button class="ep-tab" data-cat="people">🙍</button>
       </div>
@@ -665,7 +668,11 @@
 
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
-  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','😋','😛','😜','🤪','😝','🤗','🤭','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'];
+  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨','🙂‍↔️','🙂‍↕️','😌','😔','😪','🤤','😴','🫩','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊'];
+  const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
+  const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
+  const EMOJI_PLACES = ['🏔️','⛰️','🌋','🗻','🏕️','🏖️','🏜️','🏝️','🏞️','🏟️','🏛️','🏗️','🧱','🪨','🪵','🛖','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🏯','🏰','💒','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🕋','⛲','⛺','🌁','🌃','🏙️','🌄','🌅','🌆','🌇','🌉','♨️','🎠','🛝','🎡','🎢','💈','🎪','🚂','🚃','🚄','🚅','🚆','🚇','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍','🚎','🚐','🚑','🚒','🚓','🚔','🚕','🚖','🚗','🚘','🚙','🛻','🚚','🚛','🚜','🏎️','🏍️','🛵','🦽','🦼','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','🛢️','⛽','🛞','🚨','🚥','🚦','🛑','🚧','⚓','🛟','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🛎️','🧳','⌛','⏳','⌚','⏰','⏱️','⏲️','🕰️','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕡','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌡️','☀️','🌝','🌞','🪐','⭐','🌟','🌠','🌌','☁️','⛅','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌀','🌈','🌂','☂️','☔','⛱️','⚡','❄️','☃️','⛄','☄️','🔥','💧','🌊','🎃','🎄','🎆','🎇','🧨','✨','🎈','🎉','🎊','🎋','🎍','🎎','🎏','🎐','🎑','🧧','🎀','🎁','🎗️','🎟️','🎫','🎖️','🏆','🏅','🥇','🥈','🥉','⚽','⚾','🥎','🏀','🏐','🏈','🏉','🎾','🥏','🎳','🏏','🏑','🏒','🥍','🏓','🏸','🥊','🥋','🥅','⛳','⛸️','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🪀','🪁','🔫','🎱','🔮','🪄','🎮','🕹️','🎰','🎲','🧩','🧸','🪅','🪩','🪆','♠️','♥️','♦️','♣️','♟️','🃏','🀄','🎴','🎭','🖼️','🎨','🧵','🪡','🧶'];
+
   const HANDS_BASE = ['👋','🤚','🖐️','✋','🖖','🫱','🫲','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏'];
   const PEOPLE_BASE = ['🙍','🙍‍♂️','🙍‍♀️','🙎','🙎‍♂️','🙎‍♀️','🙅','🙅‍♂️','🙅‍♀️','🙆','🙆‍♂️','🙆‍♀️','💁','💁‍♂️','💁‍♀️','🙋','🙋‍♂️','🙋‍♀️','🧏','🧏‍♂️','🧏‍♀️','🙇','🙇‍♂️','🙇‍♀️','🤦','🤦‍♂️','🤦‍♀️','🤷','🤷‍♂️','🤷‍♀️'];
   const SKIN_TONES = ['','🏻','🏼','🏽','🏾','🏿'];
@@ -1105,18 +1112,54 @@
 
   function buildEmojiPanel() { renderEmojiCat('faces'); }
   function renderEmojiCat(cat) {
-    const body = document.getElementById('ep-body'); body.innerHTML = '';
-    if (cat === 'faces') {
-      const grid = document.createElement('div'); grid.className = 'ep-grid';
-      EMOJI_FACES.forEach(em => { const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em; span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span); });
+    const body = document.getElementById('ep-body'); 
+    body.innerHTML = '';
+    
+    // Categorias sem tons de pele
+    const simpleCategories = ['faces', 'hearts', 'symbols', 'places'];
+    
+    if (simpleCategories.includes(cat)) {
+      const grid = document.createElement('div'); 
+      grid.className = 'ep-grid';
+      
+      let emojiArray = [];
+      if (cat === 'faces') emojiArray = EMOJI_FACES;
+      else if (cat === 'hearts') emojiArray = EMOJI_HEARTS;
+      else if (cat === 'symbols') emojiArray = EMOJI_SYMBOLS;
+      else if (cat === 'places') emojiArray = EMOJI_PLACES;
+      
+      emojiArray.forEach(em => { 
+        const span = document.createElement('span'); 
+        span.className = 'ep-emoji'; 
+        span.textContent = em; 
+        span.addEventListener('click', () => insertEmoji(em)); 
+        grid.appendChild(span); 
+      });
       body.appendChild(grid);
     } else {
+      // Categorias com tons de pele (hands, people)
       const base = cat === 'hands' ? HANDS_BASE : PEOPLE_BASE;
-      const skinRow = document.createElement('div'); skinRow.className = 'ep-skin-row';
-      SKIN_TONES.forEach((tone, i) => { const btn = document.createElement('span'); btn.className = 'skin-btn'; btn.textContent = i === 0 ? '✋' : `✋${tone}`; btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); skinRow.appendChild(btn); });
+      const skinRow = document.createElement('div'); 
+      skinRow.className = 'ep-skin-row';
+      SKIN_TONES.forEach((tone, i) => { 
+        const btn = document.createElement('span'); 
+        btn.className = 'skin-btn'; 
+        btn.textContent = i === 0 ? '✋' : `✋${tone}`; 
+        btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); 
+        skinRow.appendChild(btn); 
+      });
       body.appendChild(skinRow);
-      const grid = document.createElement('div'); grid.className = 'ep-grid';
-      base.forEach(em => { const final = applyTone(em, state.currentSkinTone); const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = final; span.addEventListener('click', () => insertEmoji(final)); grid.appendChild(span); });
+      
+      const grid = document.createElement('div'); 
+      grid.className = 'ep-grid';
+      base.forEach(em => { 
+        const final = applyTone(em, state.currentSkinTone); 
+        const span = document.createElement('span'); 
+        span.className = 'ep-emoji'; 
+        span.textContent = final; 
+        span.addEventListener('click', () => insertEmoji(final)); 
+        grid.appendChild(span); 
+      });
       body.appendChild(grid);
     }
   }
