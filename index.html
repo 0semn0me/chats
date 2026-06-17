@@ -143,43 +143,40 @@
     }
     .btn-sair:hover { color: #E24B4A; }
 
-    /* Messages & Bubbles */
+    /* Messages Container */
     #messages {
       flex: 1; overflow-y: auto; overflow-x: hidden;
       padding: 16px 14px;
-      display: flex; flex-direction: column; gap: 14px;
+      display: flex; flex-direction: column; gap: 10px;
       min-height: 0;
       background-size: cover;
       background-position: center;
-      background-repeat: no-repeat;
+      background-attachment: local;
     }
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
 
-    /* ── CAIXA DE MENSAGEM ULTRA PROPORCIONAL & VERTICAL ── */
+    /* NOVO LAYOUT DE BOLHAS */
     .msg { 
       display: flex; 
       flex-direction: column; 
-      max-width: 65%; 
-      gap: 4px; 
-      position: relative; 
+      max-width: 75%; 
+      position: relative;
     }
     .msg.mine { align-self: flex-end; align-items: flex-end; }
-    @media (max-width:600px) { .msg { max-width: 78%; } }
     .msg.theirs { align-self: flex-start; align-items: flex-start; }
     
-    /* Bloco de perfil ACIMA da mensagem */
     .msg-sender-block {
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
     }
     .mine .msg-sender-block { flex-direction: row-reverse; }
 
     .msg-sender-block img { 
-      width: 28px; 
-      height: 28px; 
+      width: 24px; 
+      height: 24px; 
       border-radius: 50%; 
       object-fit: cover; 
       cursor: pointer; 
@@ -187,54 +184,57 @@
     }
     .msg-sender-name { 
       font-size: 12px; 
-      color: var(--tp); 
+      color: var(--text); 
       font-weight: 600;
-      white-space: nowrap;
+      opacity: 0.8;
     }
     
     .bubble-wrapper { 
       display: flex; 
       align-items: center; 
-      gap: 6px; 
-      position: relative; 
-      width: 100%;
+      gap: 8px; 
+      position: relative;
+      max-width: 100%;
     }
     .mine .bubble-wrapper { flex-direction: row-reverse; }
 
-    /* Bolha responsiva ao tamanho do texto */
     .bubble {
       padding: 8px 12px; 
-      border-radius: 14px;
+      border-radius: 16px;
       font-size: 14px; 
       line-height: 1.4;
       word-break: break-word; 
       white-space: pre-wrap;
-      position: relative; 
-      transition: background 0.15s;
-      display: inline-block;
-      width: auto;
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      width: fit-content;
+      min-width: 40px;
       max-width: 100%;
     }
     .mine .bubble {
-      background: var(--bg3); 
-      color: var(--text);
-      border-top-right-radius: 3px;
-      border: 1px solid var(--border);
+      border-top-right-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
     .theirs .bubble {
-      background: var(--bg2); 
-      color: var(--text);
-      border-top-left-radius: 3px;
+      border-top-left-radius: 4px;
+      border: 1px solid rgba(255,255,255,0.05);
     }
-    .bubble img { max-width: 100%; max-height: 200px; border-radius: 8px; display: block; margin: 4px 0; }
-    .bubble audio { width: 100%; max-width: 210px; display: block; margin: 4px 0; }
-    
-    .msg-meta { font-size: 10px; color: var(--muted); margin-top: 2px; }
-    .mine .msg-meta { align-self: flex-end; }
-    .theirs .msg-meta { align-self: flex-start; }
-    .msg-edited { font-size: 10px; color: var(--muted); font-style: italic; }
 
-    /* Ícone de Resposta Sutil ao lado da mensagem */
+    .bubble img { 
+      max-width: 100%; 
+      max-height: 220px; 
+      border-radius: 10px; 
+      display: block; 
+      margin: 4px 0; 
+      object-fit: cover;
+    }
+    .bubble audio { width: 100%; max-width: 220px; display: block; margin: 4px 0; }
+    
+    .msg-meta { font-size: 10px; color: var(--muted); margin-top: 3px; padding: 0 4px; }
+    .msg-edited { font-size: 10px; opacity: 0.6; font-style: italic; margin-left: 4px; }
+
+    /* Botão Único e Discreto de Resposta */
     .sutil-reply-btn {
       opacity: 0; pointer-events: none;
       background: none; border: none; color: var(--muted);
@@ -244,8 +244,10 @@
     }
     .sutil-reply-btn:hover { color: var(--tp); }
     .bubble-wrapper:hover .sutil-reply-btn { opacity: 1; pointer-events: auto; }
+    /* Mobile: mostrar sempre nas minhas mensagens */
+    .mine .sutil-reply-btn { opacity: 0.6; pointer-events: auto; }
 
-    /* Menu compacto horizontal com ÍCONES */
+    /* Menu de contexto compacto (Removido botão de responder duplicado) */
     .msg-menu-mini {
       position: absolute; bottom: 100%; right: 0; z-index: 200;
       background: var(--bg2); border: 1px solid var(--border);
@@ -261,28 +263,27 @@
     .msg-menu-mini button:hover { background: var(--bg3); color: var(--tp); }
     .msg-menu-mini button.del-btn:hover { color: #E24B4A; }
 
-    /* Reações Organizadas e Alinhadas */
+    /* Reações Organizadas (Sem caixas cinzas ao redor) */
     .reactions-picker {
-      display: flex; gap: 6px; background: var(--bg2);
-      border: 1px solid var(--border); border-radius: 20px;
-      padding: 4px 8px; position: absolute; bottom: calc(100% + 4px);
-      left: 0; z-index: 150; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      display: flex; gap: 8px; background: transparent;
+      border: none; padding: 4px 4px; position: absolute; bottom: calc(100% + 4px);
+      left: 0; z-index: 150; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
     }
-    .reactions-picker span { cursor: pointer; font-size: 16px; transition: transform 0.1s; }
-    .reactions-picker span:hover { transform: scale(1.2); }
+    .reactions-picker span { cursor: pointer; font-size: 24px; transition: transform 0.1s; }
+    .reactions-picker span:hover { transform: scale(1.3); }
     
-    .reactions-container { display: flex; flex-wrap: wrap; gap: 3px; margin-top: 3px; width: 100%; }
+    .reactions-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 3px; width: 100%; }
     .reaction-badge {
       background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 6px; padding: 1px 5px; font-size: 10px;
+      border-radius: 6px; padding: 2px 8px; font-size: 14px;
       color: var(--text); cursor: pointer; display: flex;
-      align-items: center; gap: 3px; width: max-content;
+      align-items: center; gap: 4px; width: max-content;
     }
     
     .reply-box-bubble {
-      background: rgba(0,0,0,0.3); border-left: 2px solid var(--tp);
+      background: rgba(0,0,0,0.25); border-left: 2px solid var(--tp);
       padding: 4px 8px; font-size: 11px; border-radius: 4px;
-      margin-bottom: 5px; color: var(--muted); max-width: 180px;
+      margin-bottom: 5px; color: var(--muted); max-width: 100%;
       overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
     }
     
@@ -314,6 +315,11 @@
       transition: background 0.1s;
     }
     .btn-icon:hover { background: var(--bg3); }
+    
+    .btn-icon#audio-btn.recording { color: #E24B4A; background: rgba(226, 75, 74, 0.15); animation: pulse-rec 1.5s infinite; }
+    .btn-icon#audio-btn.paused { color: #FFCA28; background: rgba(255, 202, 40, 0.15); }
+    @keyframes pulse-rec { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
     #msg-input {
       flex: 1; background: var(--bg2);
       border: 1px solid var(--border);
@@ -351,6 +357,7 @@
     .rec-btn.danger { color: #E24B4A; }
 
     #camera-input { display: none; }
+    #gallery-input { display: none; }
 
     /* ── EMOJI PICKER ── */
     #emoji-panel {
@@ -456,21 +463,18 @@
     .edit-actions { display: flex; gap: 10px; }
     .btn-cancel-edit { flex: 1; padding: 11px; background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; color: var(--muted); cursor: pointer; }
     .btn-save-edit { flex: 1; padding: 11px; background: var(--tp); border: none; border-radius: 10px; color: var(--tp-text); font-weight: 700; cursor: pointer; }
-  
-    /* ── CAMERA CHOICE MODAL ── */
-    #cam-choice-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.65); z-index:800; align-items:flex-end; justify-content:center; backdrop-filter:blur(4px); }
-    #cam-choice-overlay.open { display:flex; }
-    #cam-choice-modal { background:var(--bg1); border-radius:20px 20px 0 0; width:100%; max-width:480px; padding:20px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px; }
-    #cam-choice-modal h3 { font-size:13px; color:var(--muted); text-align:center; margin-bottom:4px; }
-    .cam-opt { width:100%; padding:14px; background:var(--bg2); border:1px solid var(--border); border-radius:12px; color:var(--text); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; transition:background 0.15s; }
-    .cam-opt:hover { background:var(--bg3); }
-    .cam-opt.cancel { color:var(--muted); font-size:14px; }
 
+    #media-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1500; align-items: flex-end; justify-content: center; backdrop-filter: blur(4px); }
+    #media-overlay.open { display: flex; }
+    #media-modal { background: var(--bg1); border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; padding: 24px 20px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 12px; }
+    .media-title { font-size: 15px; font-weight: 600; color: var(--muted); text-align: center; margin-bottom: 6px; }
+    .btn-media-opt { width: 100%; padding: 14px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; color: var(--text); font-size: 15px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: background 0.15s; }
+    .btn-media-opt:hover { background: var(--bg3); }
+    .btn-media-cancel { width: 100%; padding: 14px; background: transparent; border: none; color: #E24B4A; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 4px; }
   </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ══ -->
 <div id="login-screen" class="screen active">
   <div class="login-card">
     <div class="login-title">💬 Chatzão</div>
@@ -490,7 +494,6 @@
   </div>
 </div>
 
-<!-- ══ CHAT ══ -->
 <div id="chat-screen" class="screen">
   <div id="topbar">
     <div class="topbar-left">
@@ -511,7 +514,6 @@
 
   <div id="messages"></div>
 
-  <!-- Preview de Resposta (Reply Box) -->
   <div id="reply-preview" style="display:none; background:var(--bg1); border-left:4px solid var(--tp); padding: 6px 14px; font-size: 12px; position:relative; border-top:1px solid var(--border); flex-shrink:0;">
     <div id="reply-preview-user" style="font-weight:700; color:var(--tp); font-size:11px;"></div>
     <div id="reply-preview-text" style="color:var(--text); max-height:34px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:2px;"></div>
@@ -533,25 +535,23 @@
     <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
     <button class="btn-icon" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
     <button class="btn-icon" id="camera-btn"><i class="ti ti-camera"></i></button>
+    
     <input type="file" id="camera-input" accept="image/*" capture="environment">
+    <input type="file" id="gallery-input" accept="image/*">
+    
     <button id="send-btn"><i class="ti ti-brand-telegram"></i></button>
 
     <div id="emoji-panel">
       <div class="ep-tabs">
-        <button class="ep-tab active" data-cat="reacts">😂</button>
+        <button class="ep-tab active" data-cat="faces">😀</button>
         <button class="ep-tab" data-cat="hands">👋</button>
         <button class="ep-tab" data-cat="people">🙍</button>
-        <button class="ep-tab" data-cat="faces">😀</button>
-        <button class="ep-tab" data-cat="hearts">💋</button>
-        <button class="ep-tab" data-cat="symbols">🗣️</button>
-        <button class="ep-tab" data-cat="places">🏔️</button>
       </div>
       <div class="ep-body" id="ep-body"></div>
     </div>
   </div>
 </div>
 
-<!-- ══ DRAWER ══ -->
 <div id="drawer-overlay"></div>
 <div id="drawer">
   <div class="drawer-header">
@@ -609,7 +609,6 @@
   </div>
 </div>
 
-<!-- ══ EDIT MODAL ══ -->
 <div id="edit-overlay">
   <div id="edit-modal">
     <textarea id="edit-input" rows="3"></textarea>
@@ -620,14 +619,25 @@
   </div>
 </div>
 
-<!-- ══ MODAL FLUTUANTE FOTO CORPORATIVA 3X4 ══ -->
-<div id="preview-3x4-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; align-items:center; justify-content:center;">
-  <div style="width:240px; height:320px; border:3px solid var(--tp); border-radius:12px; overflow:hidden; background:var(--bg2); box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
-    <img id="preview-3x4-img" style="width:100%; height:100%; object-fit:cover;" src="" alt="Foto">
+<div id="media-overlay">
+  <div id="media-modal">
+    <div class="media-title">Selecione uma Imagem</div>
+    <button class="btn-media-opt" id="btn-opt-camera"><i class="ti ti-camera"></i> Tirar Foto (Câmera)</button>
+    <button class="btn-media-opt" id="btn-opt-gallery"><i class="ti ti-photo"></i> Escolher da Galeria</button>
+    <button class="btn-media-cancel" id="btn-opt-cancel">Cancelar</button>
   </div>
 </div>
 
-<!-- ══ FIREBASE ENGINE ══ -->
+<!-- Modal com borda e nome corporativo estritamente abaixo da foto -->
+<div id="preview-3x4-overlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; align-items:center; justify-content:center; flex-direction: column; gap: 16px;">
+  <div style="width:240px; height:320px; border:3px solid #E24B4A; border-radius:12px; overflow:hidden; background:var(--bg2); box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+    <img id="preview-3x4-img" style="width:100%; height:100%; object-fit:cover;" src="" alt="Foto">
+  </div>
+  <div id="preview-3x4-name" style="color: #ffffff; font-size: 16px; font-weight: 700; text-align: center; letter-spacing: 0.5px; background: rgba(0,0,0,0.5); padding: 6px 16px; border-radius: 20px;"></div>
+</div>
+
+<script src="bg.js"></script>
+
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
   import {
@@ -655,9 +665,6 @@
   window.dispatchEvent(new CustomEvent('firebase-ready'));
 </script>
 
-<script src="bg.js"></script>
-
-<!-- ══ CORE APPLICATION ══ -->
 <script>
 (() => {
   const state = {
@@ -674,26 +681,24 @@
     replyingToDocId: null,
     activeReactionPicker: null,
     activeMiniMenu: null,
-    currentReactionDocId: null,
-    activeReactionBubble: null
+    knownUserNames: {} // Mapeamento dinâmico persistente de apelido -> nome corporativo real
   };
 
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
-  const EMOJI_REACTS = ['🙃','🫠','😉','😊','🥰','😍','😘','☺️','🥲','🤗','🤭','🫣','🤔','🫡','🤨','😶‍🌫️','🙄','😮‍💨','🙂‍↔️','🙂‍↕️','🫩','🥵','🤓','🫤','🙁','🥺','🥹','😭','😈','💖','❣️','❤️‍🔥','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🖤','🤍','💬','🙏','👀','🫦','🏋️‍♀️','🫂','🐾','🥀','🚨','⭐','🔥','🎄','✨','🎀','🏆','🎯','🎮','🎭','💍','🔔','📚','📍','⚖️','🧿','🗿'];
-  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨','🙂‍↔️','🙂‍↕️','😌','😔','😪','🤤','😴','🫩','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊'];
+  const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','😋','😛','😜','🤪','😝','🤗','🤭','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖'];
   const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
   const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
   const EMOJI_PLACES = ['🏔️','⛰️','🌋','🗻','🏕️','🏖️','🏜️','🏝️','🏞️','🏟️','🏛️','🏗️','🧱','🪨','🪵','🛖','🏘️','🏚️','🏠','🏡','🏢','🏣','🏤','🏥','🏦','🏨','🏩','🏪','🏫','🏬','🏭','🏯','🏰','💒','🗼','🗽','⛪','🕌','🛕','🕍','⛩️','🕋','⛲','⛺','🌁','🌃','🏙️','🌄','🌅','🌆','🌇','🌉','♨️','🎠','🛝','🎡','🎢','💈','🎪','🚂','🚃','🚄','🚅','🚆','🚇','🚈','🚉','🚊','🚝','🚞','🚋','🚌','🚍','🚎','🚐','🚑','🚒','🚓','🚔','🚕','🚖','🚗','🚘','🚙','🛻','🚚','🚛','🚜','🏎️','🏍️','🛵','🦽','🦼','🛺','🚲','🛴','🛹','🛼','🚏','🛣️','🛤️','🛢️','⛽','🛞','🚨','🚥','🚦','🛑','🚧','⚓','🛟','⛵','🛶','🚤','🛳️','⛴️','🛥️','🚢','✈️','🛩️','🛫','🛬','🪂','💺','🚁','🚟','🚠','🚡','🛰️','🚀','🛸','🛎️','🧳','⌛','⏳','⌚','⏰','⏱️','⏲️','🕰️','🕛','🕧','🕐','🕜','🕑','🕝','🕒','🕞','🕓','🕟','🕔','🕠','🕕','🕡','🕖','🕢','🕗','🕣','🕘','🕤','🕙','🕥','🕚','🕦','🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘','🌙','🌚','🌛','🌜','🌡️','☀️','🌝','🌞','🪐','⭐','🌟','🌠','🌌','☁️','⛅','⛈️','🌤️','🌥️','🌦️','🌧️','🌨️','🌩️','🌪️','🌫️','🌬️','🌀','🌈','🌂','☂️','☔','⛱️','⚡','❄️','☃️','⛄','☄️','🔥','💧','🌊','🎃','🎄','🎆','🎇','🧨','✨','🎈','🎉','🎊','🎋','🎍','🎎','🎏','🎐','🎑','🧧','🎀','🎁','🎗️','🎟️','🎫','🎖️','🏆','🏅','🥇','🥈','🥉','⚽','⚾','🥎','🏀','🏐','🏈','🏉','🎾','🥏','🎳','🏏','🏑','🏒','🥍','🏓','🏸','🥊','🥋','🥅','⛳','⛸️','🎣','🤿','🎽','🎿','🛷','🥌','🎯','🪀','🪁','🔫','🎱','🔮','🪄','🎮','🕹️','🎰','🎲','🧩','🧸','🪅','🪩','🪆','♠️','♥️','♦️','♣️','♟️','🃏','🀄','🎴','🎭','🖼️','🎨','🧵','🪡','🧶'];
-
-  const EMOJI_HANDS_BASE = ['🤌','🤏','🫰','👉','👇','🫵','👍','👏','🙌','🫶','🤝','👋','🤚','🖐️','✋','🖖','🫱','🫲','🫳','🫴','🫷','🫸','👌','✌️','🤞','🤟','🤘','🤙','👈','👆','🖕','☝️','👎','✊','👊','🤛','🤜','👐','🤲','🙏','✍️','💅','🤳'];
-  const EMOJI_PEOPLE_BASE = ['🙍','🙎','🙅','🙆','💁','🙋','🧏','🙇','🤦','🤷'];
+  const HANDS_BASE = ['👋','🤚','🖐️','✋','🖖','🫱','🫲','👌','🤌','🤏','✌️','🤞','🫰','🤟','🤘','🤙','👈','👉','👆','🖕','👇','☝️','🫵','👍','👎','✊','👊','🤛','🤜','👏','🙌','👐','🤲','🤝','🙏'];
+  const PEOPLE_BASE = ['🙍','🙍‍♂️','🙍‍♀️','🙎','🙎‍♂️','🙎‍♀️','🙅','🙅‍♂️','🙅‍♀️','🙆','🙆‍♂️','🙆‍♀️','💁','💁‍♂️','💁‍♀️','🙋','🙋‍♂️','🙋‍♀️','🧏','🧏‍♂️','🧏‍♀️','🙇','🙇‍♂️','🙇‍♀️','🤦','🤦‍♂️','🤦‍♀️','🤷','🤷‍♂️','🤷‍♀️'];
   const SKIN_TONES = ['','🏻','🏼','🏽','🏾','🏿'];
   const SWATCHES = ['#F4D03F','#FF6B35','#E24B4A','#E91E8C','#AB47BC','#5C6BC0','#29B6F6','#26A69A','#66BB6A','#D4E157','#FFCA28','#FF7043','#EF5350','#EC407A','#7E57C2','#42A5F5','#26C6DA','#2ECC71','#F1C40F','#ffffff','#aaaaaa','#555555','#222222','#000000'];
 
   const dicebear = (seed) => `https://api.dicebear.com/7.x/adventurer/svg?seed=${seed}`;
   function applyTone(emoji, tone) { if (!tone) return emoji; return emoji.replace(/[\u{1F3FB}-\u{1F3FF}]/gu, '') + tone; }
   function getLum(color) { try { const c = document.createElement('canvas'); c.width = 1; c.height = 1; const ctx = c.getContext('2d'); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); const d = ctx.getImageData(0, 0, 1, 1).data; return (0.299 * d[0] + 0.587 * d[1] + 0.114 * d[2]) / 255; } catch { return 0.5; } }
+  function getTextColor(bg) { return getLum(bg) > 0.45 ? '#000000' : '#ffffff'; }
   function escHtml(s) { if (!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function escAttr(s) { if (!s) return ''; return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
@@ -755,6 +760,23 @@
       });
     });
 
+    document.getElementById('hue-slider').addEventListener('input', e => {
+      const c = `hsl(${e.target.value}, 85%, 55%)`;
+      document.getElementById('cp-preview-hue').style.background = c;
+    });
+    
+    ['rgb-r', 'rgb-g', 'rgb-b'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        const r = document.getElementById('rgb-r').value;
+        const g = document.getElementById('rgb-g').value;
+        const b = document.getElementById('rgb-b').value;
+        document.getElementById('rgb-r-val').textContent = r;
+        document.getElementById('rgb-g-val').textContent = g;
+        document.getElementById('rgb-b-val').textContent = b;
+        document.getElementById('cp-preview-rgb').style.background = `rgb(${r},${g},${b})`;
+      });
+    });
+
     document.getElementById('btn-apply-color').addEventListener('click', () => {
       const activeTab = document.querySelector('.cp-tab.active').dataset.panel; let color;
       if (activeTab === 'grade') { const sel = document.querySelector('.swatch.selected'); color = sel ? sel.dataset.color : state.myColor; }
@@ -773,33 +795,24 @@
 
     document.getElementById('send-btn').addEventListener('click', () => { if (audioState.recorder && audioState.recorder.state !== 'inactive') stopAndSendRecording(); else sendMessage(); });
     document.getElementById('msg-input').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); } });
+
     document.getElementById('camera-btn').addEventListener('click', () => {
-      document.getElementById('cam-choice-overlay').classList.add('open');
+      document.getElementById('media-overlay').classList.add('open');
     });
-    document.getElementById('cam-opt-camera').addEventListener('click', () => {
-      document.getElementById('cam-choice-overlay').classList.remove('open');
-      document.getElementById('camera-input-cam').click();
+    document.getElementById('btn-opt-camera').addEventListener('click', () => {
+      document.getElementById('media-overlay').classList.remove('open');
+      document.getElementById('camera-input').click();
     });
-    document.getElementById('cam-opt-gallery').addEventListener('click', () => {
-      document.getElementById('cam-choice-overlay').classList.remove('open');
-      document.getElementById('camera-input-gal').click();
+    document.getElementById('btn-opt-gallery').addEventListener('click', () => {
+      document.getElementById('media-overlay').classList.remove('open');
+      document.getElementById('gallery-input').click();
     });
-    document.getElementById('cam-opt-cancel').addEventListener('click', () => {
-      document.getElementById('cam-choice-overlay').classList.remove('open');
+    document.getElementById('btn-opt-cancel').addEventListener('click', () => {
+      document.getElementById('media-overlay').classList.remove('open');
     });
-    document.getElementById('cam-choice-overlay').addEventListener('click', e => {
-      if (e.target === document.getElementById('cam-choice-overlay')) document.getElementById('cam-choice-overlay').classList.remove('open');
-    });
-    ['camera-input-cam','camera-input-gal'].forEach(id => {
-      document.getElementById(id).addEventListener('change', e => {
-        const file = e.target.files[0]; if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => sendImage(ev.target.result);
-        reader.readAsDataURL(file);
-        e.target.value = '';
-      });
-    });
+
     document.getElementById('camera-input').addEventListener('change', e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => sendImage(ev.target.result); reader.readAsDataURL(file); e.target.value = ''; });
+    document.getElementById('gallery-input').addEventListener('change', e => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => sendImage(ev.target.result); reader.readAsDataURL(file); e.target.value = ''; });
 
     document.getElementById('emoji-btn').addEventListener('click', e => { e.stopPropagation(); document.getElementById('emoji-panel').classList.toggle('open'); });
     document.addEventListener('click', e => { 
@@ -819,29 +832,6 @@
     document.getElementById('cancel-reply-btn').addEventListener('click', () => { state.replyingToDocId = null; document.getElementById('reply-preview').style.display = 'none'; });
 
     document.getElementById('messages').addEventListener('click', async e => {
-      const avatar = e.target.closest('.msg-sender-block img');
-      if (avatar) { 
-        // Buscar o nome completo da mensagem
-        const wrap = avatar.closest('.msg');
-        const nomeBubble = wrap.querySelector('.bubble').dataset.user || '';
-        const nomeCompleto = wrap.querySelector('.msg-sender-name')?.textContent || 'Usuário';
-        
-        document.getElementById('preview-3x4-img').src = avatar.src;
-        
-        // Adicionar nome embaixo
-        const nameLabel = document.querySelector('.preview-name-label') || (() => {
-          const label = document.createElement('div');
-          label.className = 'preview-name-label';
-          label.style.cssText = 'text-align:center; margin-top:10px; font-size:14px; color:var(--text); font-weight:600;';
-          document.getElementById('preview-3x4-overlay').appendChild(label);
-          return label;
-        })();
-        nameLabel.textContent = nomeCompleto;
-        
-        document.getElementById('preview-3x4-overlay').style.display = 'flex'; 
-        return; 
-      }
-
       const sutilBtn = e.target.closest('.sutil-reply-btn');
       if (sutilBtn) {
         e.stopPropagation();
@@ -850,11 +840,27 @@
         return;
       }
 
+      const avatar = e.target.closest('.msg-sender-block img');
+      if (avatar) { 
+        const bubble = avatar.closest('.msg').querySelector('.bubble');
+        const userNick = bubble ? bubble.dataset.user : '';
+        const realName = state.knownUserNames[userNick] || userNick;
+        
+        document.getElementById('preview-3x4-img').src = avatar.src; 
+        document.getElementById('preview-3x4-name').textContent = realName; // Injeta o nome corporativo real embaixo da foto
+        document.getElementById('preview-3x4-overlay').style.display = 'flex'; 
+        return; 
+      }
+
       const bubble = e.target.closest('.bubble');
       if (bubble) {
         e.stopPropagation();
-        if (bubble.dataset.mine === "true") openMiniMenu(e, bubble);
-        else openReactionsPicker(bubble);
+        if (bubble.dataset.mine === "true") {
+          openMiniMenu(e, bubble);
+        } else {
+          // Se clicar na mensagem dos outros, abre reactions picker
+          openReactionsPicker(bubble);
+        }
         return;
       }
 
@@ -863,12 +869,6 @@
     });
 
     const msgInput = document.getElementById('msg-input');
-    msgInput.addEventListener('focus', () => {
-      setTimeout(() => {
-        const m = document.getElementById('messages');
-        m.scrollTop = m.scrollHeight;
-      }, 300);
-    });
     msgInput.addEventListener('input', () => {
       const text = msgInput.value; const caretPos = msgInput.selectionStart; const lastAt = text.lastIndexOf('@', caretPos - 1);
       if (lastAt !== -1 && !text.slice(lastAt, caretPos).includes(' ')) showMentionMenu(text.slice(lastAt + 1, caretPos).toLowerCase(), lastAt);
@@ -910,7 +910,13 @@
       snap.docChanges().forEach(change => {
         const id = change.doc.id;
         const oldNode = container.querySelector(`[data-id="${id}"]`);
+        
+        // Alimenta o mapeamento de identidade a cada mensagem processada
         if (change.type === 'added' || change.type === 'modified') {
+          const d = change.doc.data();
+          if (d.usuario && d.nome) {
+            state.knownUserNames[d.usuario] = d.nome;
+          }
           if (oldNode) oldNode.remove();
           renderMsg(change.doc, container);
         } else if (change.type === 'removed') {
@@ -923,7 +929,9 @@
       nodes.sort((a, b) => a.dataset.ts.localeCompare(b.dataset.ts));
       nodes.forEach(n => container.appendChild(n));
 
-      if (wasAtBottom) container.scrollTop = container.scrollHeight;
+      if (wasAtBottom) {
+        container.scrollTo({ top: container.scrollHeight, behavior: 'auto' });
+      }
     });
   }
 
@@ -955,7 +963,6 @@
 
     if (d.edited) contentHtml += ` <span class="msg-edited">(editado)</span>`;
 
-    // Bloco Superior: Foto e Apelido por COMPLETO acima do texto
     const senderBlockHtml = `
       <div class="msg-sender-block">
         <img src="${d.avatar || dicebear(d.seed || 'x')}" alt="avatar">
@@ -968,21 +975,23 @@
       Object.entries(d.reactions).forEach(([user, emo]) => { if (emo) counts[emo] = (counts[emo] || 0) + 1; });
       if (Object.keys(counts).length > 0) {
         reactionsHtml = `<div class="reactions-container">`;
-        Object.entries(counts).forEach(([emo, count]) => { reactionsHtml += `<div class="reaction-badge" data-doc="${docSnap.id}">${emo} ${count}</div>`; });
+        // Tamanho do emoji do contador aumentado diretamente no badge
+        Object.entries(counts).forEach(([emo, count]) => { reactionsHtml += `<div class="reaction-badge" data-doc="${docSnap.id}"><span style="font-size:20px;line-height:1;">${emo}</span> ${count}</div>`; });
         reactionsHtml += `</div>`;
       }
-      if (d.reactions[state.myApelido]) wrap.dataset.userReaction = d.reactions[state.myApelido];
+      if (d.reactions[state.mySeed]) wrap.dataset.userReaction = d.reactions[state.mySeed];
     }
 
     const hora = d.timestamp ? d.timestamp.toDate().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '--:--';
 
-    const replyBtnHtml = !isMine ? `<button class="sutil-reply-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>` : '';
-    
+    const bubbleBg = d.color || (isMine ? 'var(--bg3)' : 'var(--bg2)');
+    const bubbleTextColor = getTextColor(bubbleBg);
+
     wrap.innerHTML = `
       ${senderBlockHtml}
       <div class="bubble-wrapper">
-        ${replyBtnHtml}
-        <div class="bubble" data-doc="${docSnap.id}" data-text="${escAttr(d.texto || '')}" data-user="${escAttr(d.usuario || '')}" data-mine="${isMine}">
+        <button class="sutil-reply-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>
+        <div class="bubble" data-doc="${docSnap.id}" data-text="${escAttr(d.texto || '')}" data-user="${escAttr(d.usuario || '')}" data-mine="${isMine}" style="background: ${bubbleBg}; color: ${bubbleTextColor};">
           ${replyHtml}
           ${contentHtml}
         </div>
@@ -998,13 +1007,10 @@
     closeMiniMenu();
     const docId = bubble.dataset.doc;
     const currentText = bubble.dataset.text;
-    const isMine = bubble.dataset.mine === 'true';
-    
-    // Só abre menu pra próprias mensagens
-    if (!isMine) return;
     
     const menu = document.createElement('div');
     menu.className = 'msg-menu-mini';
+    // Removido botão de Responder daqui, unificando apenas na opção sutil lateral
     menu.innerHTML = `
       <button class="edt-btn" title="Editar"><i class="ti ti-pencil"></i></button>
       <button class="del-btn" title="Apagar"><i class="ti ti-trash"></i></button>
@@ -1022,53 +1028,30 @@
 
   function closeMiniMenu() { if (state.activeMiniMenu) { state.activeMiniMenu.remove(); state.activeMiniMenu = null; } }
 
-  const REACTION_QUICK = ['😂','🙃','🥰','😭','😎','🤯','😤','🔥','💀','👍','👎','❤️','🤣','😮','🥹','🤬','😈','☠️','💩','🤡','👻','🙏','👀','💬','⭐','🏆'];
-
   function openReactionsPicker(bubble) {
-    closeReactionPicker();
-    state.activeReactionBubble = bubble;
-    state.currentReactionDocId = bubble.dataset.doc;
-
+    if (state.activeReactionPicker) state.activeReactionPicker.remove();
+    const docId = bubble.dataset.doc;
+    
     const picker = document.createElement('div');
-    picker.id = 'reaction-picker-popup';
-    picker.style.cssText = 'position:fixed;z-index:600;background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:7px 10px;display:flex;flex-wrap:wrap;gap:2px;max-width:290px;box-shadow:0 4px 24px rgba(0,0,0,0.7);';
-
-    REACTION_QUICK.forEach(em => {
-      const span = document.createElement('span');
-      span.textContent = em;
-      span.style.cssText = 'font-size:24px;cursor:pointer;padding:4px;border-radius:8px;line-height:1;transition:transform 0.1s;';
-      span.addEventListener('mouseenter', () => span.style.transform = 'scale(1.3)');
-      span.addEventListener('mouseleave', () => span.style.transform = '');
-      span.addEventListener('click', async e => {
-        e.stopPropagation();
-        await toggleReaction(state.currentReactionDocId, em);
-        closeReactionPicker();
-      });
-      picker.appendChild(span);
-    });
-
-    document.body.appendChild(picker);
+    picker.className = 'reactions-picker';
+    picker.innerHTML = `
+      <span data-emoji="👍">👍</span>
+      <span data-emoji="❤️">❤️</span>
+      <span data-emoji="😂">😂</span>
+      <span data-emoji="😮">😮</span>
+      <span data-emoji="🙏">🙏</span>
+    `;
+    
+    bubble.appendChild(picker);
     state.activeReactionPicker = picker;
-
-    const rect = bubble.getBoundingClientRect();
-    const pw = 290, ph = 100;
-    let top = rect.top - ph - 10;
-    let left = rect.left;
-    if (top < 8) top = rect.bottom + 8;
-    if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
-    if (left < 8) left = 8;
-    picker.style.top = top + 'px';
-    picker.style.left = left + 'px';
-
-    setTimeout(() => document.addEventListener('click', closeReactionPicker, { once: true }), 50);
-  }
-
-  function closeReactionPicker() {
-    const existing = document.getElementById('reaction-picker-popup');
-    if (existing) existing.remove();
-    state.activeReactionPicker = null;
-    state.currentReactionDocId = null;
-    state.activeReactionBubble = null;
+    
+    picker.querySelectorAll('span[data-emoji]').forEach(el => {
+      el.addEventListener('click', async ev => {
+        ev.stopPropagation();
+        await toggleReaction(docId, el.dataset.emoji);
+        picker.remove(); state.activeReactionPicker = null;
+      });
+    });
   }
 
   async function toggleReaction(docId, emoji) {
@@ -1080,7 +1063,7 @@
     const newReact = currentReact === emoji ? '' : emoji;
     
     const payload = {};
-    payload[`reactions.${state.myApelido}`] = newReact ? newReact : null;
+    payload[`reactions.${state.mySeed}`] = newReact ? newReact : null;
     await fe.updateDoc(fe.doc(fe.db, 'mensagens', docId), payload);
     wrap.dataset.userReaction = newReact;
   }
@@ -1112,8 +1095,8 @@
     await fe.addDoc(fe.collection(fe.db, 'mensagens'), payload);
   }
 
-  async function sendImage(dataUrl) { const fe = window.FirebaseEngine; if (!fe) return; await fe.addDoc(fe.collection(fe.db, 'mensagens'), { usuario: state.myApelido, nome: state.myNome, image: dataUrl, seed: state.mySeed, avatar: state.myAvatar || dicebear(state.mySeed), timestamp: fe.serverTimestamp() }); }
-  async function sendAudio(blob) { const fe = window.FirebaseEngine; if (!fe) return; const reader = new FileReader(); reader.onload = async ev => { await fe.addDoc(fe.collection(fe.db, 'mensagens'), { usuario: state.myApelido, nome: state.myNome, audio: ev.target.result, seed: state.mySeed, avatar: state.myAvatar || dicebear(state.mySeed), timestamp: fe.serverTimestamp() }); }; reader.readAsDataURL(blob); }
+  async function sendImage(dataUrl) { const fe = window.FirebaseEngine; if (!fe) return; await fe.addDoc(fe.collection(fe.db, 'mensagens'), { usuario: state.myApelido, nome: state.myNome, image: dataUrl, seed: state.mySeed, color: state.myColor, avatar: state.myAvatar || dicebear(state.mySeed), timestamp: fe.serverTimestamp() }); }
+  async function sendAudio(blob) { const fe = window.FirebaseEngine; if (!fe) return; const reader = new FileReader(); reader.onload = async ev => { await fe.addDoc(fe.collection(fe.db, 'mensagens'), { usuario: state.myApelido, nome: state.myNome, audio: ev.target.result, seed: state.mySeed, color: state.myColor, avatar: state.myAvatar || dicebear(state.mySeed), timestamp: fe.serverTimestamp() }); }; reader.readAsDataURL(blob); }
 
   function showDeletedFlash(container, id) {
     const flash = document.createElement('div'); flash.className = 'msg'; flash.style.alignSelf = 'center';
@@ -1136,133 +1119,113 @@
 
   async function startRecording() {
     if (audioState.recorder && audioState.recorder.state !== 'inactive') { stopAndSendRecording(); return; }
-    try { 
-      audioState.stream = await navigator.mediaDevices.getUserMedia({ 
-        audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 48000 } 
-      }); 
-    } catch { 
-      alert('Microfone indisponível.'); 
-      return; 
-    }
-    
-    audioState.chunks = []; 
-    audioState.seconds = 0; 
-    audioState.paused = false;
-    
-    const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/mp4';
-    audioState.recorder = new MediaRecorder(audioState.stream, { mimeType, audioBitsPerSecond: 192000 });
-    
-    audioState.recorder.ondataavailable = e => { 
-      if (e.data && e.data.size > 0) audioState.chunks.push(e.data); 
-    };
-    
-    audioState.recorder.onstop = () => { 
-      const blob = new Blob(audioState.chunks, { type: mimeType });
-      const reader = new FileReader();
-      reader.onload = () => { sendAudio(blob); cleanRecordingUI(); };
-      reader.readAsDataURL(blob);
-    };
-    
+    try { audioState.stream = await navigator.mediaDevices.getUserMedia({ audio: true }); } catch { alert('Microfone indisponível.'); return; }
+    audioState.chunks = []; audioState.seconds = 0; audioState.paused = false;
+    audioState.recorder = new MediaRecorder(audioState.stream);
+    audioState.recorder.ondataavailable = e => { if (e.data && e.data.size > 0) audioState.chunks.push(e.data); };
+    audioState.recorder.onstop = () => { sendAudio(new Blob(audioState.chunks, { type: 'audio/webm' })); };
     audioState.recorder.start(200);
-    document.getElementById('msg-input').style.display = 'none'; 
-    document.getElementById('audio-recorder').classList.add('active');
-    
-    audioState.timer = setInterval(() => { 
-      if (!audioState.paused) { 
-        audioState.seconds++; 
-        const m = Math.floor(audioState.seconds / 60); 
-        const s = audioState.seconds % 60; 
-        document.getElementById('rec-time').textContent = `${m}:${s.toString().padStart(2,'0')}`; 
-      } 
-    }, 1000);
+
+    document.getElementById('audio-btn').classList.remove('paused');
+    document.getElementById('audio-btn').classList.add('recording');
+
+    document.getElementById('msg-input').style.display = 'none'; document.getElementById('audio-recorder').classList.add('active');
+    audioState.timer = setInterval(() => { if (!audioState.paused) { audioState.seconds++; const m = Math.floor(audioState.seconds / 60); const s = audioState.seconds % 60; document.getElementById('rec-time').textContent = `${m}:${s.toString().padStart(2,'0')}`; } }, 1000);
   }
   function stopAndSendRecording() { if (!audioState.recorder || audioState.recorder.state === 'inactive') return; audioState.recorder.stop(); audioState.stream.getTracks().forEach(t => t.stop()); cleanRecordingUI(); }
-  function togglePause() {
-    if (!audioState.recorder) return;
-    const btn = document.getElementById('rec-pause-btn');
-    if (audioState.recorder.state === 'recording') {
-      audioState.recorder.pause(); audioState.paused = true;
-      btn.innerHTML = '<i class="ti ti-player-play"></i>';
-      btn.style.color = 'var(--tp)';
-      document.querySelector('.rec-dot').style.animationPlayState = 'paused';
-    } else if (audioState.recorder.state === 'paused') {
-      audioState.recorder.resume(); audioState.paused = false;
-      btn.innerHTML = '<i class="ti ti-player-pause"></i>';
-      btn.style.color = '';
-      document.querySelector('.rec-dot').style.animationPlayState = 'running';
-    }
+  
+  function togglePause() { 
+    if (!audioState.recorder) return; 
+    const ab = document.getElementById('audio-btn');
+    if (audioState.recorder.state === 'recording') { 
+      audioState.recorder.pause(); 
+      audioState.paused = true; 
+      ab.classList.remove('recording');
+      ab.classList.add('paused');
+    } else { 
+      audioState.recorder.resume(); 
+      audioState.paused = false; 
+      ab.classList.remove('paused');
+      ab.classList.add('recording');
+    } 
   }
   function cancelRecording() { if (audioState.recorder && audioState.recorder.state !== 'inactive') { audioState.recorder.ondataavailable = null; audioState.recorder.onstop = null; audioState.recorder.stop(); } if (audioState.stream) audioState.stream.getTracks().forEach(t => t.stop()); cleanRecordingUI(); }
-  function cleanRecordingUI() { clearInterval(audioState.timer); document.getElementById('audio-recorder').classList.remove('active'); document.getElementById('msg-input').style.display = ''; audioState.recorder = null; }
+  function cleanRecordingUI() { 
+    clearInterval(audioState.timer); 
+    document.getElementById('audio-recorder').classList.remove('active'); 
+    document.getElementById('msg-input').style.display = ''; 
+    const ab = document.getElementById('audio-btn');
+    ab.classList.remove('recording', 'paused');
+    audioState.recorder = null; 
+  }
 
-  function buildEmojiPanel() { renderEmojiCat('reacts'); }
+  function buildEmojiPanel() { renderEmojiCat('faces'); }
   function renderEmojiCat(cat) {
-    const body = document.getElementById('ep-body');
-    body.innerHTML = '';
-    const simpleMap = { reacts: EMOJI_REACTS, faces: EMOJI_FACES, hearts: EMOJI_HEARTS, symbols: EMOJI_SYMBOLS, places: EMOJI_PLACES };
-    if (simpleMap[cat]) {
+    const body = document.getElementById('ep-body'); body.innerHTML = '';
+    
+    // Categorias simples (sem tons de pele)
+    const simpleCategories = {
+      'faces': EMOJI_FACES,
+      'hearts': EMOJI_HEARTS,
+      'symbols': EMOJI_SYMBOLS,
+      'places': EMOJI_PLACES
+    };
+    
+    if (simpleCategories[cat]) {
       const grid = document.createElement('div'); grid.className = 'ep-grid';
-      simpleMap[cat].forEach(em => {
-        const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em;
-        span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span);
-      });
+      simpleCategories[cat].forEach(em => { const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = em; span.addEventListener('click', () => insertEmoji(em)); grid.appendChild(span); });
       body.appendChild(grid);
     } else {
-      const base = cat === 'hands' ? EMOJI_HANDS_BASE : EMOJI_PEOPLE_BASE;
-      // Skin tone row
-      const skinRow = document.createElement('div');
-      skinRow.style.cssText = 'display:flex;gap:4px;padding:8px 4px;border-bottom:1px solid var(--border);margin-bottom:8px;flex-wrap:wrap;';
-      SKIN_TONES.forEach((tone, i) => {
-        const btn = document.createElement('button');
-        btn.style.cssText = `padding:5px 10px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:12px;font-weight:600;transition:all 0.15s;background:${tone===state.currentSkinTone?'var(--tp)':'var(--bg2)'};color:${tone===state.currentSkinTone?'var(--tp-text)':'var(--text)'};`;
-        btn.textContent = i === 0 ? 'Padrão' : ['','🏻','🏼','🏽','🏾','🏿'][i] + ' Tom '+i;
-        btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); });
-        skinRow.appendChild(btn);
-      });
+      // Categorias com tons de pele (hands, people)
+      const base = cat === 'hands' ? HANDS_BASE : PEOPLE_BASE;
+      const skinRow = document.createElement('div'); skinRow.className = 'ep-skin-row';
+      SKIN_TONES.forEach((tone, i) => { const btn = document.createElement('span'); btn.className = 'skin-btn'; btn.textContent = i === 0 ? '✋' : `✋${tone}`; btn.addEventListener('click', () => { state.currentSkinTone = tone; renderEmojiCat(cat); }); skinRow.appendChild(btn); });
       body.appendChild(skinRow);
       const grid = document.createElement('div'); grid.className = 'ep-grid';
-      base.forEach(em => {
-        const final = applyTone(em, state.currentSkinTone);
-        const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = final;
-        span.addEventListener('click', () => insertEmoji(final)); grid.appendChild(span);
-      });
+      base.forEach(em => { const final = applyTone(em, state.currentSkinTone); const span = document.createElement('span'); span.className = 'ep-emoji'; span.textContent = final; span.addEventListener('click', () => insertEmoji(final)); grid.appendChild(span); });
       body.appendChild(grid);
     }
   }
-  function insertEmoji(em) {
-    const inp = document.getElementById('msg-input');
-    const pos = inp.selectionStart || inp.value.length;
-    inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos);
-    inp.focus();
-    document.getElementById('emoji-panel').classList.remove('open');
-  }
+  function insertEmoji(em) { const inp = document.getElementById('msg-input'); const pos = inp.selectionStart || inp.value.length; inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos); inp.focus(); }
 
   function buildSwatches() { const grid = document.getElementById('cp-swatches'); SWATCHES.forEach(c => { const sw = document.createElement('div'); sw.className = 'swatch'; sw.dataset.color = c; sw.style.background = c; sw.addEventListener('click', () => { document.querySelectorAll('.swatch').forEach(s => s.classList.remove('selected')); sw.classList.add('selected'); }); grid.appendChild(sw); }); }
   function applyColor(color, save) { state.myColor = color; document.documentElement.style.setProperty('--tp', color); const lum = getLum(color); document.documentElement.style.setProperty('--tp-text', lum > 0.4 ? '#000' : '#fff'); if (save) localStorage.setItem('cz_color', color); }
-  function buildBgGrid() { const grid = document.getElementById('bg-grid'); if (!window.CHATZAO_BG) return; window.CHATZAO_BG.forEach((bg, i) => { const card = document.createElement('div'); card.className = 'bg-card'; card.dataset.bg = String(i); const img = document.createElement('img'); img.src = bg.src; img.loading = "lazy"; card.appendChild(img); grid.appendChild(card); }); }
-  function applyBg(key) {
-    state.activeBg = key;
-    const container = document.getElementById('messages');
-    document.querySelectorAll('.bg-card').forEach(c => c.classList.remove('active'));
-    const target = document.querySelector(`.bg-card[data-bg="${key}"]`);
-    if (target) target.classList.add('active');
-    if (key === 'none') {
-      container.style.backgroundImage = '';
-    } else {
-      const idx = parseInt(key, 10);
-      if (window.CHATZAO_BG && window.CHATZAO_BG[idx]) {
-        container.style.backgroundImage = `url(${window.CHATZAO_BG[idx].src})`;
-        container.style.backgroundSize = 'cover';
-        container.style.backgroundPosition = 'center';
-        container.style.backgroundRepeat = 'no-repeat';
-      }
-    }
-    localStorage.setItem('cz_bg', key);
+  
+  function buildBgGrid() { 
+    const grid = document.getElementById('bg-grid'); 
+    const bgList = window.CHATZAO_BG || window.BG_IMAGES;
+    if (!bgList) return; 
+    bgList.forEach((bg, i) => { 
+      const card = document.createElement('div'); 
+      card.className = 'bg-card'; 
+      card.dataset.bg = String(i); 
+      const img = document.createElement('img'); 
+      img.src = bg.src; 
+      img.loading = "lazy"; 
+      card.appendChild(img); 
+      grid.appendChild(card); 
+    }); 
+  }
+  function applyBg(key) { 
+    state.activeBg = key; 
+    const container = document.getElementById('messages'); 
+    const bgList = window.CHATZAO_BG || window.BG_IMAGES;
+    if (key === 'none') container.style.backgroundImage = ''; 
+    else if (bgList && bgList[parseInt(key, 10)]) container.style.backgroundImage = `url(${bgList[parseInt(key, 10)].src})`; 
+    localStorage.setItem('cz_bg', key); 
   }
   function setupAutoresize() { const ta = document.getElementById('msg-input'); if (ta) ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 100) + 'px'; }); }
+  
   function showMentionMenu(query, atIndex) {
     const menu = document.getElementById('mention-menu'); menu.innerHTML = '';
-    const senders = Array.from(new Set(Array.from(document.querySelectorAll('.msg-sender-name')).map(s => s.textContent)));
+    
+    // Limpa apelidos antigos mapeando apenas os usuários ativos no histórico atual de mensagens
+    const activeSenders = new Set();
+    document.querySelectorAll('.msg-sender-name').forEach(s => {
+      if (s.textContent) activeSenders.add(s.textContent.trim());
+    });
+    
+    const senders = Array.from(activeSenders);
     const filtered = senders.filter(u => u.toLowerCase().includes(query));
     if (filtered.length === 0) { menu.style.display = 'none'; return; }
     filtered.forEach(user => { const item = document.createElement('div'); item.className = 'mention-item'; item.textContent = `@${user}`; item.addEventListener('click', () => { const inp = document.getElementById('msg-input'); const txt = inp.value; inp.value = txt.slice(0, atIndex) + `@${user} ` + txt.slice(inp.selectionStart); menu.style.display = 'none'; inp.focus(); }); menu.appendChild(item); });
