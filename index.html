@@ -29,34 +29,10 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
       overflow-x: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
 
-    /* Contentor principal com tamanho máximo no PC */
-    #app-container {
-      width: 100%;
-      max-width: 420px;
-      height: 100dvh;
-      max-height: 100dvh;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      background: var(--bg0);
-    }
-
-    @media (min-width: 500px) {
-      #app-container {
-        border-left: 1px solid var(--border);
-        border-right: 1px solid var(--border);
-        box-shadow: 0 0 40px rgba(0,0,0,0.6);
-      }
-    }
-
-    /* Screens ocupam 100% do container */
-    .screen { display: none; flex-direction: column; height: 100dvh; width: 100%; }
+    /* ── SCREENS ── */
+    .screen { display: none; flex-direction: column; height: 100dvh; }
     .screen.active { display: flex; }
 
     /* ═══════════════════════════════
@@ -174,9 +150,8 @@
       display: flex; flex-direction: column; gap: 14px;
       min-height: 0;
       background-size: cover;
-      background-position: center center;
+      background-position: center;
       background-repeat: no-repeat;
-      background-attachment: local;
     }
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
@@ -494,7 +469,6 @@
   </style>
 </head>
 <body>
-<div id="app-container">
 
 <!-- ══ LOGIN ══ -->
 <div id="login-screen" class="screen active">
@@ -706,7 +680,7 @@
 
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
-  const EMOJI_REACTS = ['🙃','🫠','😉','😊','🥰','😍','🥲','🤗','🤭','🫣','🤔','😭','👀','🤌','🤘','❤️','🔥','😂','👍','🙏','😱','💀','🤣','😎','🥳','💯','😤','🤯','👏','🫶'];
+  const EMOJI_REACTS = ['🙃','🫠','😉','😊','🥰','😍','😘','☺️','🥲','🤗','🤭','🫣','🤔','🫡','🤨','😶‍🌫️','🙄','😮‍💨','🙂‍↔️','🙂‍↕️','🫩','🥵','🤓','🫤','🙁','🥺','🥹','😭','😈','💖','❣️','❤️‍🔥','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🖤','🤍','💬','🙏','👀','🫦','🏋️‍♀️','🫂','🐾','🥀','🚨','⭐','🔥','🎄','✨','🎀','🏆','🎯','🎮','🎭','💍','🔔','📚','📍','⚖️','🧿','🗿'];
   const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨','🙂‍↔️','🙂‍↕️','😌','😔','😪','🤤','😴','🫩','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊'];
   const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
   const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
@@ -960,7 +934,6 @@
     const wrap = document.createElement('div');
     wrap.dataset.id = docSnap.id;
     wrap.dataset.ts = tsKey;
-    if (d.seed) wrap.dataset.seed = d.seed;
 
     if (d.type === 'system') {
       wrap.className = 'sys-msg';
@@ -1289,28 +1262,13 @@
   function setupAutoresize() { const ta = document.getElementById('msg-input'); if (ta) ta.addEventListener('input', () => { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight, 100) + 'px'; }); }
   function showMentionMenu(query, atIndex) {
     const menu = document.getElementById('mention-menu'); menu.innerHTML = '';
-    // Pega apelidos únicos por seed (evita duplicar quando muda de apelido)
-    const seenSeeds = new Set();
-    const uniqueSenders = [];
-    document.querySelectorAll('.msg[data-seed]').forEach(msg => {
-      const seed = msg.dataset.seed;
-      const name = msg.querySelector('.msg-sender-name')?.textContent;
-      if (seed && name && !seenSeeds.has(seed)) {
-        seenSeeds.add(seed);
-        uniqueSenders.push(name);
-      }
-    });
-    // Fallback: se não tiver data-seed, pega do DOM normalmente mas deduplica
-    if (uniqueSenders.length === 0) {
-      Array.from(new Set(Array.from(document.querySelectorAll('.msg-sender-name')).map(s => s.textContent))).forEach(n => uniqueSenders.push(n));
-    }
-    const filtered = uniqueSenders.filter(u => u.toLowerCase().includes(query));
+    const senders = Array.from(new Set(Array.from(document.querySelectorAll('.msg-sender-name')).map(s => s.textContent)));
+    const filtered = senders.filter(u => u.toLowerCase().includes(query));
     if (filtered.length === 0) { menu.style.display = 'none'; return; }
     filtered.forEach(user => { const item = document.createElement('div'); item.className = 'mention-item'; item.textContent = `@${user}`; item.addEventListener('click', () => { const inp = document.getElementById('msg-input'); const txt = inp.value; inp.value = txt.slice(0, atIndex) + `@${user} ` + txt.slice(inp.selectionStart); menu.style.display = 'none'; inp.focus(); }); menu.appendChild(item); });
     menu.style.display = 'block';
   }
 })();
 </script>
-</div><!-- #app-container -->
 </body>
 </html>
