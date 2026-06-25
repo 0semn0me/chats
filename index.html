@@ -2,11 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">  <title>Chatzão</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Chatzão</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     /* ── RESET & BASE ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html { touch-action: manipulation; -ms-touch-action: manipulation; }
+    body { touch-action: manipulation; }
     :root {
       --tp: #F4D03F;
       --tp-text: #000;
@@ -101,7 +104,7 @@
     /* ═══════════════════════════════
        CHAT SCREEN
     ═══════════════════════════════ */
-    #chat-screen { position: relative; overflow: hidden; }
+    #chat-screen { position: relative; overflow-x: hidden; overflow-y: hidden; display: flex; flex-direction: column; }
 
     /* Topbar */
     #topbar {
@@ -210,11 +213,9 @@
       white-space: pre-wrap;
       position: relative; 
       transition: background 0.15s;
-      display: inline-flex;
-      flex-direction: column;
-      width: fit-content;
+      display: inline-block;
+      width: auto;
       max-width: 100%;
-      min-width: 0;
     }
     .mine .bubble {
       background: var(--bg3); 
@@ -355,11 +356,11 @@
 
     /* ── EMOJI PICKER ── */
     #emoji-panel {
-      display: none; position: fixed;
-      bottom: calc(62px + var(--safe-bottom, 0px)); right: 0; left: 0;
+      display: none; position: absolute;
+      bottom: calc(100% + 4px); right: 0; left: 0;
       background: var(--bg1); border: 1px solid var(--border);
       border-radius: 14px 14px 0 0;
-      z-index: 500; max-height: 320px;
+      z-index: 300; max-height: 300px;
       flex-direction: column;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
     }
@@ -632,7 +633,7 @@
 <script type="module">
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
   import {
-    getFirestore, collection, addDoc, onSnapshot,
+    getFirestore, collection, addDoc, onSnapshot, getDocs,
     query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc
   } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
@@ -650,7 +651,7 @@
   const db  = getFirestore(app);
 
   window.FirebaseEngine = {
-    db, collection, addDoc, onSnapshot, query, orderBy,
+    db, collection, addDoc, onSnapshot, getDocs, query, orderBy,
     serverTimestamp, doc, updateDoc, deleteDoc, pronto: true
   };
   window.dispatchEvent(new CustomEvent('firebase-ready'));
@@ -681,7 +682,7 @@
 
   const audioState = { recorder: null, chunks: [], timer: null, seconds: 0, paused: false, stream: null };
 
-  const EMOJI_REACTS = ['🙃','🫠','😉','😊','🥰','😍','🥲','🤗','🤭','🫣','🤔','😭','👀','🤌','🤘','❤️','🔥','😂','👍','🙏','😱','💀','😎','🥳','💯','🤣','😤','🤯','👏','🫶'];
+  const EMOJI_REACTS = ['🙃','🫠','😉','😊','🥰','😍','😘','☺️','🥲','🤗','🤭','🫣','🤔','🫡','🤨','😶‍🌫️','🙄','😮‍💨','🙂‍↔️','🙂‍↕️','🫩','🥵','🤓','🫤','🙁','🥺','🥹','😭','😈','💖','❣️','❤️‍🔥','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🖤','🤍','💬','🙏','👀','🫦','🏋️‍♀️','🫂','🐾','🥀','🚨','⭐','🔥','🎄','✨','🎀','🏆','🎯','🎮','🎭','💍','🔔','📚','📍','⚖️','🧿','🗿'];
   const EMOJI_FACES = ['😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','🫠','😉','😊','😇','🥰','😍','🤩','😘','😗','☺️','😚','😙','🥲','😋','😛','😜','🤪','😝','🤑','🤗','🤭','🫢','🫣','🤫','🤔','🫡','🤐','🤨','😐','😑','😶','🫥','😶‍🌫️','😏','😒','🙄','😬','😮‍💨','🤥','🫨','🙂‍↔️','🙂‍↕️','😌','😔','😪','🤤','😴','🫩','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶','🥴','😵','😵‍💫','🤯','🤠','🥳','🥸','😎','🤓','🧐','😕','🫤','😟','🙁','☹️','😮','😯','😲','😳','🥺','🥹','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣','😞','😓','😩','😫','🥱','😤','😡','😠','🤬','😈','👿','💀','☠️','💩','🤡','👹','👺','👻','👽','👾','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾','🙈','🙉','🙊'];
   const EMOJI_HEARTS = ['💋','💯','💢','💥','💫','💦','💨','🕳️','💤','🧠','🫀','🫁','🦷','🦴','👀','👁️','❤️‍🩹','❤️','🩷','🧡','💛','💚','💙','🩵','💜','🤎','🖤','🩶','🤍'];
   const EMOJI_SYMBOLS = ['🗣️','👤','👥','🫂','👣','🫆','⚠️','🚸','⛔','🚫','🚳','🚭','🚯','🚱','🚷','📵','🔞','☢️','☣️','👑','👒','🎩','🎓','🧢','🪖','⛑️','📿','💄','💍','💎','🔇','🔈','🔉','🔊','📢','📣','📯','🔔','🔕','🎼','🎵','🎶','🎙️','🎚️','🎛️','🎤','🎧','📻','🎷','🪗','🎸','🎹','🎺','🎻','🪕','🥁','🪘','🪇','🪈','🪉','📱','📲','☎️','📞','📟','📠','🔋','🪫','🔌','💻','🖥️','🖨️','⌨️','🖱️','🖲️','💽','💾','💿','📀','🧮','🎥','🎞️','📽️','🎬','📺','📷','📸','📹','📼','🔍','🔎','🕯️','💡','🔦','🏮','🪔','📔','📕','📖','📗','📘','📙','📚','📓','📒','📃','📜','📄','📰','🗞️','📑','🔖','🏷️','💰','🪙','💴','💵','💶','💷','💸','💳','🧾','💹','✉️','📧','📨','📩','📤','📥','📦','📫','📪','📬','📭','📮','🗳️','✏️','✒️','🖋️','🖊️','🖌️','🖍️','📝','💼','📁','📂','🗂️','📅','📆','🗒️','🗓️','📇','📈','📉','📊','📋','📌','📍','📎','🖇️','📏','📐','✂️','🗃️','🗄️','🗑️','🔒','🔓','🔏','🔐','🔑','🗝️','🔨','🪓','⛏️','⚒️','🛠️','🗡️','⚔️','💣','🪃','🏹','🛡️','🪚','🔧','🪛','🔩','⚙️','🗜️','⚖️','🦯','🔗','⛓️‍💥','⛓️','🪝','🧰','🧲','🪜','🪏','⚗️','🧪','🧫','🧬','🔬','🔭','📡','💉','🩸','💊','⚰️','🪦','⚱️','🧿','🪬','🗿','🌍','🌎','🌏','🌐','🗺️','🗾','🧭'];
@@ -717,7 +718,12 @@
     if (state.myNome && state.myApelido) {
       document.getElementById('input-nome').value = state.myNome;
       document.getElementById('input-apelido').value = state.myApelido;
-      entrar(state.myNome, state.myApelido);
+      // Aguarda Firebase estar pronto antes de entrar automaticamente
+      if (window.FirebaseEngine && window.FirebaseEngine.pronto) {
+        entrar(state.myNome, state.myApelido);
+      } else {
+        window.addEventListener('firebase-ready', () => entrar(state.myNome, state.myApelido), { once: true });
+      }
     }
   }
 
@@ -1129,9 +1135,11 @@
 
   async function clearHistory() {
     const fe = window.FirebaseEngine; if (!fe) return;
-    const snap = await fe.onSnapshot(fe.query(fe.collection(fe.db, 'mensagens')), s => {
-      s.docs.forEach(d => fe.deleteDoc(fe.doc(fe.db, 'mensagens', d.id)));
-    });
+    const snap = await fe.getDocs(fe.collection(fe.db, 'mensagens'));
+    const promises = snap.docs.map(d => fe.deleteDoc(fe.doc(fe.db, 'mensagens', d.id)));
+    await Promise.all(promises);
+    state.seenDeleted.clear();
+    document.getElementById('messages').innerHTML = '';
     document.getElementById('btn-close-drawer').click();
   }
 
