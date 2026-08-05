@@ -145,7 +145,7 @@
       min-height: 0;
       background-size: cover;
       background-position: center;
-      background-attachment: local;
+      background-attachment: scroll;
     }
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
@@ -166,9 +166,9 @@
       transition: background 0.15s;
     }
     .mine .bubble {
-      background: var(--bg3); color: var(--text);
+      background: var(--tp); color: var(--tp-text);
       border-bottom-right-radius: 3px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(0,0,0,0.12);
     }
     .theirs .bubble {
       background: var(--bg2); color: var(--text);
