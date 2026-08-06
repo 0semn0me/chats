@@ -146,8 +146,8 @@
       padding: 12px 14px;
       display: flex; flex-direction: column; gap: 10px;
       min-height: 0;
-      background-size: cover;
       background-position: center;
+      background-repeat: no-repeat;
       background-attachment: scroll;
     }
     #messages::-webkit-scrollbar { width: 3px; }
@@ -499,6 +499,17 @@
 
     /* Planos de fundo */
     .bg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .bg-zoom-row {
+      display: flex; align-items: center; gap: 8px;
+      margin-top: 12px; color: var(--muted); font-size: 15px;
+    }
+    .bg-zoom-row input[type="range"] {
+      flex: 1; accent-color: var(--tp); height: 4px;
+    }
+    .bg-zoom-val {
+      font-size: 11px; color: var(--muted);
+      min-width: 38px; text-align: right; font-variant-numeric: tabular-nums;
+    }
     .bg-card {
       border-radius: 10px; overflow: hidden;
       cursor: pointer; position: relative;
@@ -636,7 +647,7 @@
     <textarea id="msg-input" placeholder="Mensagem..." rows="1"></textarea>
     <button class="btn-icon" id="emoji-btn"><i class="ti ti-mood-smile"></i></button>
     <button class="btn-icon" id="camera-btn"><i class="ti ti-camera"></i></button>
-    <input type="file" id="camera-input" accept="image/*" capture="environment">
+    <input type="file" id="camera-input" accept="image/*">
     <button id="send-btn"><i class="ti ti-brand-telegram"></i></button>
 
     <!-- Emoji Panel (acima do inputbar) -->
@@ -720,6 +731,12 @@
         <i class="ti ti-circle-off" style="font-size:24px;"></i>
         <span>Nenhum</span>
       </div>
+    </div>
+    <div class="bg-zoom-row">
+      <i class="ti ti-zoom-out"></i>
+      <input type="range" id="bg-zoom" min="50" max="300" step="5" value="150">
+      <i class="ti ti-zoom-in"></i>
+      <span class="bg-zoom-val" id="bg-zoom-val">150%</span>
     </div>
   </div>
 
@@ -854,6 +871,7 @@ function init() {
   buildEmojiPanel();
   bindAll();
   loadSaved();
+  initBgZoom();
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -1038,12 +1056,23 @@ function bindAll() {
   // Emoji
   document.getElementById('emoji-btn').addEventListener('click', e => {
     e.stopPropagation();
-    document.getElementById('emoji-panel').classList.toggle('open');
+    const panel = document.getElementById('emoji-panel');
+    const willOpen = !panel.classList.contains('open');
+    panel.classList.toggle('open');
+    if (willOpen) {
+      // Ao abrir o painel, tira o foco do textarea pra não abrir o teclado
+      // por cima dele no celular.
+      document.getElementById('msg-input').blur();
+    } else {
+      document.getElementById('msg-input').focus();
+    }
   });
   document.addEventListener('click', e => {
     const panel = document.getElementById('emoji-panel');
     if (!e.target.closest('#emoji-panel') && !e.target.closest('#emoji-btn')) {
-      panel.classList.remove('open');
+      if (panel.classList.contains('open')) {
+        panel.classList.remove('open');
+      }
     }
   });
 
@@ -1670,8 +1699,11 @@ function insertEmoji(em) {
   const inp = document.getElementById('msg-input');
   const pos = inp.selectionStart || inp.value.length;
   inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos);
-  inp.focus();
-  document.getElementById('emoji-panel').classList.remove('open');
+  // Painel continua aberto e o textarea NÃO ganha foco de volta aqui —
+  // assim o teclado não sobe por cima do painel e dá pra escolher
+  // vários emojis seguidos. O foco volta ao fechar o painel.
+  const newPos = pos + em.length;
+  inp.setSelectionRange(newPos, newPos);
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -1827,7 +1859,29 @@ function applyBg(key) {
       msgs.style.backgroundImage = `url(${window.CHATZAO_BG[idx].src})`;
     }
   }
+  applyBgZoom();
   localStorage.setItem('cz_bg', key);
+}
+
+// Zoom do plano de fundo — controla o quanto a imagem preenche/corta a área
+let bgZoom = parseInt(localStorage.getItem('cz_bg_zoom')) || 150;
+
+function applyBgZoom() {
+  document.getElementById('messages').style.backgroundSize = bgZoom + '% ' + bgZoom + '%';
+}
+
+function initBgZoom() {
+  const slider = document.getElementById('bg-zoom');
+  const label  = document.getElementById('bg-zoom-val');
+  slider.value = bgZoom;
+  label.textContent = bgZoom + '%';
+  applyBgZoom();
+  slider.addEventListener('input', () => {
+    bgZoom = parseInt(slider.value);
+    label.textContent = bgZoom + '%';
+    applyBgZoom();
+    localStorage.setItem('cz_bg_zoom', bgZoom);
+  });
 }
 
 /* ────────────────────────────────────────────────────────────
