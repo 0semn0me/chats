@@ -1023,9 +1023,10 @@ function bindAll() {
 
   // Send
   document.getElementById('send-btn').addEventListener('click', sendMessage);
-  // Impede que o botão de enviar tire o foco do textarea (o que fechava o teclado no iOS)
+  // Impede que o botão de enviar tire o foco do textarea (fechava o teclado no iOS).
+  // OBS: só no mousedown — preventDefault em touchstart cancela o click sintético
+  // no Safari mobile e o botão parava de funcionar no toque.
   document.getElementById('send-btn').addEventListener('mousedown', e => e.preventDefault());
-  document.getElementById('send-btn').addEventListener('touchstart', e => e.preventDefault(), {passive: false});
   // Enter sempre quebra linha (comportamento padrão do textarea);
   // o envio agora é só pelo botão, permitindo mensagens com várias linhas.
 
