@@ -28,8 +28,8 @@
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       overflow: hidden;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
       touch-action: pan-x pan-y;
     }
 
@@ -156,8 +156,8 @@
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: scroll;
-      -webkit-text-size-adjust: 100% !important;
-      text-size-adjust: 100% !important;
+      -webkit-text-size-adjust: none !important;
+      text-size-adjust: none !important;
     }
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
@@ -176,8 +176,8 @@
       word-break: break-word; white-space: pre-wrap;
       cursor: pointer; position: relative;
       transition: background 0.15s;
-      -webkit-text-size-adjust: 100% !important;
-      text-size-adjust: 100% !important;
+      -webkit-text-size-adjust: none !important;
+      text-size-adjust: none !important;
     }
     .mine .bubble {
       background: var(--tp); color: var(--tp-text);
@@ -194,38 +194,6 @@
     .msg-meta { font-size: 10px; color: var(--muted); padding: 0 4px; }
     .msg-edited { font-size: 10px; color: var(--muted); font-style: italic; }
 
-    /* Msg action menu */
-    .msg-menu {
-      position: absolute; z-index: 200;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 10px; padding: 4px 0;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-      min-width: 120px;
-    }
-    .msg-menu button {
-      display: flex; align-items: center; gap: 8px;
-      width: 100%; padding: 9px 14px;
-      background: none; border: none; color: var(--text);
-      font-size: 13px; cursor: pointer; text-align: left;
-    }
-    .msg-menu button:hover { background: var(--bg3); }
-    .msg-menu .delete-btn { color: #E24B4A; }
-
-    /* Reações rápidas */
-    .reaction-picker {
-      position: absolute; z-index: 210;
-      display: flex; gap: 4px;
-      background: var(--bg2); border: 1px solid var(--border);
-      border-radius: 20px; padding: 6px 8px;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
-    }
-    .reaction-picker button {
-      background: none; border: none; font-size: 20px;
-      cursor: pointer; line-height: 1; padding: 2px;
-      transition: transform 0.1s;
-    }
-    .reaction-picker button:active { transform: scale(1.3); }
-
     .msg-reactions {
       display: flex; flex-wrap: wrap; gap: 4px;
       margin-top: 2px;
@@ -240,6 +208,17 @@
       border-color: var(--tp); background: rgba(255,255,255,0.06);
     }
     .msg-reactions .reaction-badge .rcount { color: var(--muted); font-size: 10.5px; }
+
+    /* Ícones de ação ao lado da bolha (sempre visíveis, sem menu) */
+    .msg-row { display: flex; align-items: flex-end; gap: 5px; max-width: 100%; }
+    .msg-action-btn {
+      flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--bg2); border: 1px solid var(--border);
+      color: var(--muted); font-size: 13px; cursor: pointer;
+      margin-bottom: 2px;
+    }
+    .msg-action-btn.delete-action-btn:active { color: #E24B4A; }
 
     /* System messages */
     .sys-msg {
@@ -390,6 +369,12 @@
       box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
     }
     #emoji-panel.open { display: flex; }
+    .ep-reacting-label {
+      display: none; text-align: center;
+      font-size: 12px; color: var(--tp); font-weight: 700;
+      padding: 8px 0 0; flex-shrink: 0;
+    }
+    #emoji-panel.reacting .ep-reacting-label { display: block; }
     .ep-tabs {
       display: flex; gap: 0;
       border-bottom: 1px solid var(--border);
@@ -696,6 +681,7 @@
 
     <!-- Emoji Panel (acima do inputbar) -->
     <div id="emoji-panel">
+      <div class="ep-reacting-label" id="ep-reacting-label">Escolha uma reação</div>
       <div class="ep-tabs">
         <button class="ep-tab active" data-cat="faces" title="Rostos">😀</button>
         <button class="ep-tab" data-cat="hands" title="Mãos">👋</button>
@@ -1123,6 +1109,8 @@ function bindAll() {
     const panel = document.getElementById('emoji-panel');
     const willOpen = !panel.classList.contains('open');
     panel.classList.toggle('open');
+    reactingDocId = null;
+    panel.classList.remove('reacting');
     if (willOpen) {
       // Ao abrir o painel, tira o foco do textarea pra não abrir o teclado
       // por cima dele no celular.
@@ -1133,9 +1121,11 @@ function bindAll() {
   });
   document.addEventListener('click', e => {
     const panel = document.getElementById('emoji-panel');
-    if (!e.target.closest('#emoji-panel') && !e.target.closest('#emoji-btn')) {
+    if (!e.target.closest('#emoji-panel') && !e.target.closest('#emoji-btn') && !e.target.closest('.bubble')) {
       if (panel.classList.contains('open')) {
         panel.classList.remove('open');
+        panel.classList.remove('reacting');
+        reactingDocId = null;
       }
     }
   });
@@ -1361,12 +1351,33 @@ function renderMsg(docSnap, container, modified = false) {
   lastKnownReactions[docSnap.id] = d.reactions || {};
   const reactionsHtml = buildReactionsHtml(docSnap.id, d.reactions);
 
-  wrap.innerHTML = `
-    ${senderHtml}
+  const bubbleHtml = `
     <div class="bubble${mentionsMe ? ' mentioned-me' : ''}" data-doc="${docSnap.id}" data-text="${escAttr(d.texto||'')}" data-mine="${isMine}" data-usuario="${escAttr(d.usuario||'')}">
       ${quoteHtml}
       ${contentHtml}
-    </div>
+    </div>`;
+
+  // Ícones fixos ao lado da bolha — sem menu, sem segurar.
+  // Mensagem de outra pessoa: só "responder". Mensagem minha: editar/apagar (se for texto).
+  const isMedia = !!(d.image || d.audio);
+  let actionsHtml = '';
+  if (!isMine) {
+    actionsHtml = `<button class="msg-action-btn reply-action-btn" title="Responder"><i class="ti ti-arrow-back-up"></i></button>`;
+  } else if (!isMedia) {
+    actionsHtml = `
+      <button class="msg-action-btn edit-action-btn" title="Editar"><i class="ti ti-pencil"></i></button>
+      <button class="msg-action-btn delete-action-btn" title="Apagar"><i class="ti ti-trash"></i></button>`;
+  } else {
+    actionsHtml = `<button class="msg-action-btn delete-action-btn" title="Apagar"><i class="ti ti-trash"></i></button>`;
+  }
+
+  const rowHtml = isMine
+    ? `<div class="msg-row">${actionsHtml}${bubbleHtml}</div>`
+    : `<div class="msg-row">${bubbleHtml}${actionsHtml}</div>`;
+
+  wrap.innerHTML = `
+    ${senderHtml}
+    ${rowHtml}
     ${reactionsHtml}
     <div class="msg-meta">${hora}</div>
   `;
@@ -1379,25 +1390,46 @@ function renderMsg(docSnap, container, modified = false) {
     });
   }
 
-  // Click nos badges de reação → alterna sua própria reação
-  wrap.querySelectorAll('.reaction-badge').forEach(badge => {
-    badge.addEventListener('click', async e => {
-      e.stopPropagation();
-      await toggleReaction(docSnap.id, badge.dataset.em);
+  // Click nos badges de reação → alterna sua própria reação (só em mensagens de outras pessoas)
+  if (!isMine) {
+    wrap.querySelectorAll('.reaction-badge').forEach(badge => {
+      badge.addEventListener('click', async e => {
+        e.stopPropagation();
+        await toggleReaction(docSnap.id, badge.dataset.em);
+      });
     });
+  }
+
+  // Toque na bolha: mensagens de outras pessoas abrem direto o painel de
+  // emoji (grande, com todas as opções) pra reagir. Nas minhas, não faz nada.
+  const bubble = wrap.querySelector('.bubble');
+  if (!isMine) {
+    bubble.addEventListener('click', e => {
+      e.stopPropagation();
+      openEmojiPanelForReaction(docSnap.id);
+    });
+  }
+
+  // Ícone de responder
+  const replyBtn = wrap.querySelector('.reply-action-btn');
+  if (replyBtn) replyBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    openReply(docSnap.id, d.usuario, d.texto || (isMedia ? '📎 Anexo' : ''));
   });
 
-  // Click na bolha → menu (Reagir/Responder sempre; Editar/Apagar só se for minha e não for mídia)
-  const bubble = wrap.querySelector('.bubble');
-  bubble.addEventListener('click', e => {
+  // Ícone de editar
+  const editBtn = wrap.querySelector('.edit-action-btn');
+  if (editBtn) editBtn.addEventListener('click', e => {
     e.stopPropagation();
-    openMsgMenu(e, {
-      docId   : docSnap.id,
-      texto   : d.texto || '',
-      usuario : d.usuario,
-      isMine  : isMine,
-      isMedia : !!(d.image || d.audio)
-    });
+    openEdit(docSnap.id, d.texto || '');
+  });
+
+  // Ícone de apagar
+  const delBtn = wrap.querySelector('.delete-action-btn');
+  if (delBtn) delBtn.addEventListener('click', async e => {
+    e.stopPropagation();
+    if (!confirm('Apagar esta mensagem?')) return;
+    await window.fbDeleteDoc(window.fbDoc(window.db, 'mensagens', docSnap.id));
   });
 
   container.appendChild(wrap);
@@ -1545,88 +1577,16 @@ async function sendAudio(blob) {
 }
 
 /* ────────────────────────────────────────────────────────────
-   MSG MENU (editar / apagar)
+   REAÇÕES — toque na mensagem abre direto o painel grande de emoji
 ──────────────────────────────────────────────────────────── */
-let activeMsgMenu = null;
+let reactingDocId = null; // qual mensagem estamos reagindo (painel de emoji em "modo reação")
 
-function openMsgMenu(e, info) {
-  const { docId, texto, usuario, isMine, isMedia } = info;
-  closeMsgMenu();
-  const menu = document.createElement('div');
-  menu.className = 'msg-menu';
-
-  let btns = `
-    <button class="react-msg-btn"><i class="ti ti-mood-plus"></i> Reagir</button>
-    <button class="reply-msg-btn"><i class="ti ti-arrow-back-up"></i> Responder</button>`;
-  if (isMine && !isMedia) {
-    btns += `
-      <button class="edit-msg-btn"><i class="ti ti-pencil"></i> Editar</button>
-      <button class="delete-btn"><i class="ti ti-trash"></i> Apagar</button>`;
-  } else if (isMine && isMedia) {
-    btns += `<button class="delete-btn"><i class="ti ti-trash"></i> Apagar</button>`;
-  }
-  menu.innerHTML = btns;
-
-  // Position near click
-  const bubble = e.currentTarget;
-  bubble.style.position = 'relative';
-  bubble.appendChild(menu);
-  activeMsgMenu = menu;
-
-  // Close on outside click
-  setTimeout(() => {
-    document.addEventListener('click', closeMsgMenu, {once: true});
-  }, 10);
-
-  menu.querySelector('.react-msg-btn').addEventListener('click', ev => {
-    ev.stopPropagation();
-    closeMsgMenu();
-    openReactionPicker(bubble, docId);
-  });
-  menu.querySelector('.reply-msg-btn').addEventListener('click', ev => {
-    ev.stopPropagation();
-    closeMsgMenu();
-    openReply(docId, usuario, texto || (isMedia ? '📎 Anexo' : ''));
-  });
-  const editBtn = menu.querySelector('.edit-msg-btn');
-  if (editBtn) editBtn.addEventListener('click', ev => {
-    ev.stopPropagation();
-    closeMsgMenu();
-    openEdit(docId, texto);
-  });
-  const delBtn = menu.querySelector('.delete-btn');
-  if (delBtn) delBtn.addEventListener('click', async ev => {
-    ev.stopPropagation();
-    closeMsgMenu();
-    await window.fbDeleteDoc(window.fbDoc(window.db, 'mensagens', docId));
-  });
-}
-
-/* ────────────────────────────────────────────────────────────
-   REAÇÕES
-──────────────────────────────────────────────────────────── */
-const QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
-
-function openReactionPicker(bubble, docId) {
-  closeMsgMenu();
-  const picker = document.createElement('div');
-  picker.className = 'reaction-picker';
-  picker.innerHTML = QUICK_REACTIONS.map(em => `<button data-em="${em}">${em}</button>`).join('');
-  bubble.style.position = 'relative';
-  bubble.appendChild(picker);
-  activeMsgMenu = picker;
-
-  setTimeout(() => {
-    document.addEventListener('click', closeMsgMenu, {once: true});
-  }, 10);
-
-  picker.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', async ev => {
-      ev.stopPropagation();
-      closeMsgMenu();
-      await toggleReaction(docId, btn.dataset.em);
-    });
-  });
+function openEmojiPanelForReaction(docId) {
+  reactingDocId = docId;
+  document.getElementById('msg-input').blur();
+  const panel = document.getElementById('emoji-panel');
+  panel.classList.add('open');
+  panel.classList.add('reacting');
 }
 
 async function toggleReaction(docId, emoji) {
@@ -1643,10 +1603,6 @@ async function toggleReaction(docId, emoji) {
   } catch (err) {
     console.warn('[Chatzão] falha ao reagir', err);
   }
-}
-
-function closeMsgMenu() {
-  if (activeMsgMenu) { activeMsgMenu.remove(); activeMsgMenu = null; }
 }
 
 /* ────────────────────────────────────────────────────────────
@@ -1856,6 +1812,18 @@ function renderEmojiCat(cat) {
 }
 
 function insertEmoji(em) {
+  // Modo reação: painel aberto a partir do toque numa mensagem — o emoji
+  // escolhido vira reação, não é inserido no texto.
+  if (reactingDocId) {
+    const docId = reactingDocId;
+    reactingDocId = null;
+    const panel = document.getElementById('emoji-panel');
+    panel.classList.remove('open');
+    panel.classList.remove('reacting');
+    toggleReaction(docId, em);
+    return;
+  }
+
   const inp = document.getElementById('msg-input');
   const pos = inp.selectionStart || inp.value.length;
   inp.value = inp.value.slice(0, pos) + em + inp.value.slice(pos);
