@@ -73,6 +73,13 @@
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; font-size: 12px; color: #000;
     }
+    .avatar-shuffle-btn {
+      position: absolute; bottom: 0; left: 0;
+      width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg2); border: 2px solid var(--bg1);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 13px; color: var(--text);
+    }
     #avatar-file-input { display: none; }
 
     .login-inputs { display: flex; flex-direction: column; gap: 10px; width: 100%; }
@@ -149,6 +156,8 @@
       background-position: center;
       background-repeat: no-repeat;
       background-attachment: scroll;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
     }
     #messages::-webkit-scrollbar { width: 3px; }
     #messages::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 99px; }
@@ -167,6 +176,8 @@
       word-break: break-word; white-space: pre-wrap;
       cursor: pointer; position: relative;
       transition: background 0.15s;
+      -webkit-text-size-adjust: 100% !important;
+      text-size-adjust: 100% !important;
     }
     .mine .bubble {
       background: var(--tp); color: var(--tp-text);
@@ -199,6 +210,36 @@
     }
     .msg-menu button:hover { background: var(--bg3); }
     .msg-menu .delete-btn { color: #E24B4A; }
+
+    /* Reações rápidas */
+    .reaction-picker {
+      position: absolute; z-index: 210;
+      display: flex; gap: 4px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 20px; padding: 6px 8px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    }
+    .reaction-picker button {
+      background: none; border: none; font-size: 20px;
+      cursor: pointer; line-height: 1; padding: 2px;
+      transition: transform 0.1s;
+    }
+    .reaction-picker button:active { transform: scale(1.3); }
+
+    .msg-reactions {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      margin-top: 2px;
+    }
+    .msg-reactions .reaction-badge {
+      display: flex; align-items: center; gap: 3px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1px 7px;
+      font-size: 12px; cursor: pointer;
+    }
+    .msg-reactions .reaction-badge.mine-reaction {
+      border-color: var(--tp); background: rgba(255,255,255,0.06);
+    }
+    .msg-reactions .reaction-badge .rcount { color: var(--muted); font-size: 10.5px; }
 
     /* System messages */
     .sys-msg {
@@ -585,6 +626,9 @@
     <div class="login-subtitle">Boas vindas!</div>
     <div class="avatar-ring">
       <img id="login-avatar" src="" alt="Avatar">
+      <div class="avatar-shuffle-btn" id="avatar-shuffle-btn" title="Sortear outro avatar">
+        <i class="ti ti-dice-5"></i>
+      </div>
       <div class="avatar-upload-btn" id="avatar-upload-btn">
         <i class="ti ti-camera"></i>
       </div>
@@ -763,7 +807,7 @@
   import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
   import {
     getFirestore, collection, addDoc, onSnapshot,
-    query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, setDoc
+    query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, setDoc, deleteField
   } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
   const cfg = {
@@ -790,6 +834,7 @@
   window.fbUpdateDoc  = updateDoc;
   window.fbDeleteDoc  = deleteDoc;
   window.fbSetDoc     = setDoc;
+  window.fbDeleteField = deleteField;
   window.FirebasePronto = true;
   console.log('[Chatzão] Firebase OK');
 </script>
@@ -809,6 +854,13 @@ let myAvatar  = '';          // base64 or dicebear URL
 let myColor   = '#F4D03F';   // cor do tema atual
 let activeBg  = 'none';
 
+// ID fixo deste dispositivo/navegador (persiste mesmo trocando de apelido)
+let myDeviceId = localStorage.getItem('cz_device_id') || '';
+if (!myDeviceId) {
+  myDeviceId = 'dev_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 10);
+  localStorage.setItem('cz_device_id', myDeviceId);
+}
+
 let recMediaRecorder = null;
 let recChunks        = [];
 let recTimer         = null;
@@ -825,6 +877,9 @@ let knownUsers  = [];   // [{apelido, nome, seed, avatar}] - inclui offline
 let unsubUsers  = null;
 let mentionQuery = null; // {start, end} posição do "@..." sendo digitado
 let mentionSelIdx = 0;
+
+// ── Reações ──
+const lastKnownReactions = {}; // { docId: { apelido: emoji } }
 
 // ── Responder mensagem ──
 let replyingTo = null; // {id, usuario, texto}
@@ -935,6 +990,14 @@ function bindAll() {
   // Avatar upload
   document.getElementById('avatar-upload-btn').addEventListener('click', () => {
     document.getElementById('avatar-file-input').click();
+  });
+  // Sortear outro avatar (gera um novo seed do DiceBear, descarta foto custom)
+  document.getElementById('avatar-shuffle-btn').addEventListener('click', () => {
+    mySeed = Math.random().toString(36).substring(7);
+    myAvatar = dicebear(mySeed);
+    document.getElementById('login-avatar').src = myAvatar;
+    localStorage.setItem('cz_seed', mySeed);
+    localStorage.setItem('cz_avatar', myAvatar);
   });
   document.getElementById('avatar-file-input').addEventListener('change', e => {
     const file = e.target.files[0];
@@ -1130,6 +1193,8 @@ function bindAll() {
    ENTRAR / SAIR
 ──────────────────────────────────────────────────────────── */
 function entrar(nome, apelido) {
+  const apelidoAnterior = localStorage.getItem('cz_apelido') || '';
+
   myNome    = nome;
   myApelido = apelido;
   localStorage.setItem('cz_nome',    nome);
@@ -1148,21 +1213,31 @@ function entrar(nome, apelido) {
   document.getElementById('chat-screen').classList.add('active');
 
   startChat();
-  registerKnownUser();
+  registerKnownUser(apelidoAnterior);
 }
 
 // Grava/atualiza este usuário na coleção "usuarios", para que @menções
-// funcionem mesmo quando a pessoa estiver offline.
-async function registerKnownUser() {
-  if (!window.FirebasePronto) { setTimeout(registerKnownUser, 300); return; }
+// funcionem mesmo quando a pessoa estiver offline. Cada dispositivo tem um
+// ID fixo (myDeviceId) — assim, se a pessoa trocar de apelido, atualizamos
+// o MESMO registro em vez de criar um novo (e removemos o apelido antigo
+// da lista de menções, se houver).
+async function registerKnownUser(apelidoAnterior) {
+  if (!window.FirebasePronto) { setTimeout(() => registerKnownUser(apelidoAnterior), 300); return; }
   try {
-    await window.fbSetDoc(window.fbDoc(window.db, 'usuarios', myApelido), {
+    await window.fbSetDoc(window.fbDoc(window.db, 'usuarios', myDeviceId), {
       apelido   : myApelido,
       nome      : myNome,
       seed      : mySeed,
       avatar    : myAvatar || dicebear(mySeed),
       lastSeen  : window.fbServerTS()
     }, { merge: true });
+
+    // Limpeza de registros antigos (de antes dessa correção), que ficavam
+    // guardados com o apelido como ID do documento.
+    if (apelidoAnterior && apelidoAnterior !== myApelido) {
+      await window.fbDeleteDoc(window.fbDoc(window.db, 'usuarios', apelidoAnterior)).catch(() => {});
+    }
+    await window.fbDeleteDoc(window.fbDoc(window.db, 'usuarios', myApelido)).catch(() => {});
   } catch (err) {
     console.warn('[Chatzão] falha ao registrar usuário conhecido', err);
   }
@@ -1232,14 +1307,20 @@ function startChat() {
 
 function renderMsg(docSnap, container, modified = false) {
   const d = docSnap.data();
-  if (!d.timestamp) return; // pending
 
   const isMine = d.usuario === myApelido;
-  const hora = d.timestamp.toDate().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+  const hora = d.timestamp
+    ? d.timestamp.toDate().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})
+    : new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
 
   const wrap = document.createElement('div');
   wrap.dataset.id = docSnap.id;
-  wrap.dataset.ts = d.timestamp.seconds + '_' + d.timestamp.nanoseconds;
+  // Enquanto o servidor não confirma o timestamp (mensagem "pendente"),
+  // usamos a hora local só pra manter a ordenação razoável — assim que o
+  // Firestore confirma, o evento "modified" substitui com o valor real.
+  wrap.dataset.ts = d.timestamp
+    ? d.timestamp.seconds + '_' + d.timestamp.nanoseconds
+    : String(Date.now());
 
   if (d.type === 'system') {
     wrap.className = 'sys-msg';
@@ -1277,12 +1358,16 @@ function renderMsg(docSnap, container, modified = false) {
       <span>${escHtml(d.usuario)}</span>
     </div>` : '';
 
+  lastKnownReactions[docSnap.id] = d.reactions || {};
+  const reactionsHtml = buildReactionsHtml(docSnap.id, d.reactions);
+
   wrap.innerHTML = `
     ${senderHtml}
     <div class="bubble${mentionsMe ? ' mentioned-me' : ''}" data-doc="${docSnap.id}" data-text="${escAttr(d.texto||'')}" data-mine="${isMine}" data-usuario="${escAttr(d.usuario||'')}">
       ${quoteHtml}
       ${contentHtml}
     </div>
+    ${reactionsHtml}
     <div class="msg-meta">${hora}</div>
   `;
 
@@ -1294,7 +1379,15 @@ function renderMsg(docSnap, container, modified = false) {
     });
   }
 
-  // Click na bolha → menu (Responder sempre; Editar/Apagar só se for minha e não for mídia)
+  // Click nos badges de reação → alterna sua própria reação
+  wrap.querySelectorAll('.reaction-badge').forEach(badge => {
+    badge.addEventListener('click', async e => {
+      e.stopPropagation();
+      await toggleReaction(docSnap.id, badge.dataset.em);
+    });
+  });
+
+  // Click na bolha → menu (Reagir/Responder sempre; Editar/Apagar só se for minha e não for mídia)
   const bubble = wrap.querySelector('.bubble');
   bubble.addEventListener('click', e => {
     e.stopPropagation();
@@ -1308,6 +1401,22 @@ function renderMsg(docSnap, container, modified = false) {
   });
 
   container.appendChild(wrap);
+}
+
+// Monta as bolinhas de reação agrupadas por emoji (com contagem)
+function buildReactionsHtml(docId, reactions) {
+  if (!reactions || !Object.keys(reactions).length) return '';
+  const counts = {}; // emoji -> count
+  let myReaction = null;
+  Object.entries(reactions).forEach(([apelido, emoji]) => {
+    counts[emoji] = (counts[emoji] || 0) + 1;
+    if (apelido === myApelido) myReaction = emoji;
+  });
+  const badges = Object.entries(counts).map(([emoji, count]) => `
+    <span class="reaction-badge${emoji === myReaction ? ' mine-reaction' : ''}" data-em="${emoji}">
+      ${emoji}<span class="rcount">${count}</span>
+    </span>`).join('');
+  return `<div class="msg-reactions">${badges}</div>`;
 }
 
 function jumpToMessage(docId) {
@@ -1446,7 +1555,9 @@ function openMsgMenu(e, info) {
   const menu = document.createElement('div');
   menu.className = 'msg-menu';
 
-  let btns = `<button class="reply-msg-btn"><i class="ti ti-arrow-back-up"></i> Responder</button>`;
+  let btns = `
+    <button class="react-msg-btn"><i class="ti ti-mood-plus"></i> Reagir</button>
+    <button class="reply-msg-btn"><i class="ti ti-arrow-back-up"></i> Responder</button>`;
   if (isMine && !isMedia) {
     btns += `
       <button class="edit-msg-btn"><i class="ti ti-pencil"></i> Editar</button>
@@ -1467,6 +1578,11 @@ function openMsgMenu(e, info) {
     document.addEventListener('click', closeMsgMenu, {once: true});
   }, 10);
 
+  menu.querySelector('.react-msg-btn').addEventListener('click', ev => {
+    ev.stopPropagation();
+    closeMsgMenu();
+    openReactionPicker(bubble, docId);
+  });
   menu.querySelector('.reply-msg-btn').addEventListener('click', ev => {
     ev.stopPropagation();
     closeMsgMenu();
@@ -1484,6 +1600,49 @@ function openMsgMenu(e, info) {
     closeMsgMenu();
     await window.fbDeleteDoc(window.fbDoc(window.db, 'mensagens', docId));
   });
+}
+
+/* ────────────────────────────────────────────────────────────
+   REAÇÕES
+──────────────────────────────────────────────────────────── */
+const QUICK_REACTIONS = ['👍', '❤️', '😂', '😮', '😢', '🙏'];
+
+function openReactionPicker(bubble, docId) {
+  closeMsgMenu();
+  const picker = document.createElement('div');
+  picker.className = 'reaction-picker';
+  picker.innerHTML = QUICK_REACTIONS.map(em => `<button data-em="${em}">${em}</button>`).join('');
+  bubble.style.position = 'relative';
+  bubble.appendChild(picker);
+  activeMsgMenu = picker;
+
+  setTimeout(() => {
+    document.addEventListener('click', closeMsgMenu, {once: true});
+  }, 10);
+
+  picker.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', async ev => {
+      ev.stopPropagation();
+      closeMsgMenu();
+      await toggleReaction(docId, btn.dataset.em);
+    });
+  });
+}
+
+async function toggleReaction(docId, emoji) {
+  const ref = window.fbDoc(window.db, 'mensagens', docId);
+  try {
+    // Se a pessoa já reagiu com esse mesmo emoji, remove (toggle). Senão, define/troca.
+    const current = lastKnownReactions[docId];
+    const mine = current && current[myApelido];
+    if (mine === emoji) {
+      await window.fbUpdateDoc(ref, { [`reactions.${myApelido}`]: window.fbDeleteField() });
+    } else {
+      await window.fbUpdateDoc(ref, { [`reactions.${myApelido}`]: emoji });
+    }
+  } catch (err) {
+    console.warn('[Chatzão] falha ao reagir', err);
+  }
 }
 
 function closeMsgMenu() {
